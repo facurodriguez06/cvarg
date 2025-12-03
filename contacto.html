@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portafolio y Contacto | ImpulsoPro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-blue: #044bab; --primary-dark: #022a61; --accent-yellow: #f3d136;
+            --text-dark: #1f2937; --text-gray: #6b7280; --white: #ffffff;
+            --bg-light: #f9fafb; --success: #10b981;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg-light); color: var(--text-dark); overflow-x: hidden; }
+
+        nav { padding: 1.5rem 5%; background: var(--white); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--primary-blue); display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--text-dark); font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--primary-blue); }
+        .btn-nav-contact { padding: 0.6rem 1.2rem; background-color: var(--accent-yellow); color: var(--text-dark); border-radius: 50px; font-weight: 600; transition: transform 0.2s; }
+        .btn-nav-contact:hover { transform: scale(1.05); }
+        .cart-link { text-decoration: none; color: var(--text-dark); font-weight: 600; margin-left: 15px; }
+
+        .page-header { text-align: center; padding: 4rem 20px 2rem; max-width: 800px; margin: 0 auto; }
+        .page-header h1 { font-size: 2.5rem; color: var(--text-dark); font-weight: 800; margin-bottom: 1rem; }
+        .page-header p { color: var(--text-gray); font-size: 1.1rem; line-height: 1.6; }
+
+        .comparison-section { padding: 2rem 20px 4rem; display: flex; justify-content: center; }
+        .comparison-container { position: relative; width: 100%; max-width: 900px; height: 500px; background: #e0e0e0; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.1); border: 4px solid var(--white); }
+        .img-comp-img { position: absolute; width: 100%; height: 100%; overflow: hidden; }
+        .img-after { background: linear-gradient(135deg, #f0f4ff 0%, #dbeafe 100%); display: flex; justify-content: center; align-items: center; flex-direction: column; }
+        .cv-mockup-modern { width: 60%; height: 80%; background: white; box-shadow: 0 10px 30px rgba(4, 75, 171, 0.15); padding: 20px; border-left: 5px solid var(--primary-blue); display: flex; flex-direction: column; gap: 10px; }
+        .line-modern { height: 8px; background: #eee; border-radius: 4px; }
+        .line-modern.blue { background: var(--primary-blue); width: 40%; }
+        .img-before { width: 50%; background: #f5f5f5; z-index: 2; border-right: 3px solid var(--white); display: flex; justify-content: center; align-items: center; }
+        .cv-mockup-old { width: 120%; height: 80%; background: white; border: 1px solid #ccc; padding: 20px; display: flex; flex-direction: column; gap: 15px; opacity: 0.6; }
+        .line-old { height: 6px; background: #999; width: 90%; }
+        .label-badge { position: absolute; top: 20px; padding: 5px 15px; border-radius: 20px; font-weight: 700; font-size: 0.8rem; z-index: 3; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .label-before { left: 20px; background: #fee2e2; color: #ef4444; }
+        .label-after { right: 20px; background: var(--primary-blue); color: var(--white); z-index: 1; }
+        .slider-handle { position: absolute; z-index: 10; top: 50%; left: 50%; width: 40px; height: 40px; background-color: var(--accent-yellow); border: 3px solid var(--white); border-radius: 50%; cursor: ew-resize; transform: translate(-50%, -50%); display: flex; justify-content: center; align-items: center; box-shadow: 0 0 10px rgba(0,0,0,0.2); transition: background 0.2s; }
+        .slider-handle i { color: var(--text-dark); font-size: 0.9rem; }
+        .slider-handle:hover { transform: translate(-50%, -50%) scale(1.1); }
+
+        .contact-wrapper { max-width: 1000px; margin: 0 auto; background: var(--white); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); padding: 3rem; margin-bottom: 5rem; }
+        .contact-title { text-align: center; margin-bottom: 3rem; }
+        .contact-title h2 { font-size: 2rem; color: var(--text-dark); margin-bottom: 0.5rem; }
+        .contact-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 4rem; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-dark); }
+        .form-input, .form-textarea { width: 100%; padding: 1rem; background: var(--bg-light); border: 1px solid #eee; border-radius: 8px; transition: all 0.3s; font-size: 0.95rem; }
+        .form-input:focus, .form-textarea:focus { outline: none; border-color: var(--primary-blue); background: var(--white); box-shadow: 0 0 0 3px rgba(4, 75, 171, 0.1); }
+        .btn-submit { width: 100%; padding: 1rem; background-color: var(--primary-blue); color: var(--white); border: none; border-radius: 8px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s; }
+        .btn-submit:hover { background-color: var(--primary-dark); transform: translateY(-2px); }
+        .contact-info-card { background: var(--bg-light); padding: 2rem; border-radius: 12px; display: flex; flex-direction: column; gap: 2rem; }
+        .info-item { display: flex; gap: 15px; align-items: flex-start; }
+        .info-icon { width: 40px; height: 40px; background: var(--white); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: var(--primary-blue); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .info-text h4 { font-size: 0.95rem; color: var(--text-gray); margin-bottom: 5px; }
+        .info-text p { font-weight: 600; color: var(--text-dark); }
+        .mini-map { width: 100%; height: 150px; background-color: #e5e7eb; border-radius: 8px; margin-top: auto; display: flex; justify-content: center; align-items: center; color: var(--text-gray); font-size: 0.8rem; background-image: url('https://placehold.co/300x150/e5e7eb/a3a3a3?text=Mapa+Zona+Centro'); background-size: cover; }
+        .whatsapp-float { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background-color: var(--success); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2rem; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); z-index: 100; cursor: pointer; transition: transform 0.3s; text-decoration: none; }
+        .whatsapp-float:hover { transform: scale(1.1) rotate(10deg); }
+        footer { text-align: center; padding: 2rem; border-top: 1px solid #eee; color: var(--text-gray); font-size: 0.9rem; background: var(--white); }
+        @media (max-width: 768px) { .contact-grid { grid-template-columns: 1fr; gap: 2rem; } .comparison-container { height: 350px; } .contact-wrapper { padding: 1.5rem; } }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="logo">
+            <i class="fas fa-rocket"></i> ImpulsoPro
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="catalogo.html">Servicios</a></li>
+            <li><a href="#" style="color:var(--primary-blue)">Portafolio</a></li>
+            <li><a href="#" class="btn-nav-contact">Contacto</a></li>
+        </ul>
+        <a href="carrito.html" class="cart-link">
+            <i class="fas fa-shopping-cart"></i> (<span id="cart-count">0</span>)
+        </a>
+    </nav>
+
+    <header class="page-header">
+        <h1>Transformamos tu Perfil</h1>
+        <p>Desliza para revelar el impacto de un diseño profesional.</p>
+    </header>
+
+    <section class="comparison-section">
+        <div class="comparison-container" id="sliderContainer">
+            <div class="img-comp-img img-after">
+                <div class="label-badge label-after">Después (ImpulsoPro)</div>
+                <div class="cv-mockup-modern">
+                    <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px;"><div style="width:40px; height:40px; background:#ccc; border-radius:50%"></div><div class="line-modern blue"></div></div>
+                    <div class="line-modern" style="width:80%"></div><div class="line-modern" style="width:90%"></div>
+                    <div style="margin-top:10px; display:grid; grid-template-columns:1fr 1fr; gap:5px;"><div class="line-modern" style="height:40px; background:#f0f4ff"></div><div class="line-modern" style="height:40px; background:#f0f4ff"></div></div>
+                </div>
+            </div>
+            <div id="imgBefore" class="img-comp-img img-before">
+                <div class="label-badge label-before">Antes</div>
+                <div class="cv-mockup-old">
+                    <div style="text-align:center; margin-bottom:10px; font-family:'Times New Roman', serif;">CURRICULUM VITAE</div>
+                    <div class="line-old"></div><div class="line-old"></div><div class="line-old" style="width:60%"></div><br><div class="line-old"></div><div class="line-old"></div>
+                </div>
+            </div>
+            <div id="sliderHandle" class="slider-handle"><i class="fas fa-arrows-alt-h"></i></div>
+        </div>
+    </section>
+
+    <section class="contact-wrapper">
+        <div class="contact-title">
+            <h2>¿Listo para Empezar?</h2>
+            <p style="color:var(--text-gray)">Envíanos un mensaje o contáctanos directamente. Estamos aquí para ayudarte.</p>
+        </div>
+        <div class="contact-grid">
+            <form>
+                <div class="form-group"><label>Nombre Completo</label><input type="text" class="form-input" placeholder="¿Cuál es tu nombre?"></div>
+                <div class="form-group"><label>Asunto</label><select class="form-input"><option>Mejora de CV</option><option>Perfil de LinkedIn</option><option>Traducción</option><option>Otro</option></select></div>
+                <div class="form-group"><label>Mensaje</label><textarea class="form-textarea" rows="5" placeholder="Cuéntanos cómo podemos ayudarte a alcanzar tus metas..."></textarea></div>
+                <button type="button" class="btn-submit">Enviar Mensaje</button>
+            </form>
+            <aside class="contact-info-card">
+                <div class="info-item"><div class="info-icon"><i class="far fa-envelope"></i></div><div class="info-text"><h4>Email</h4><p>hola@impulsopro.com</p></div></div>
+                <div class="info-item"><div class="info-icon"><i class="fas fa-phone-alt"></i></div><div class="info-text"><h4>Teléfono / WhatsApp</h4><p>+54 9 11 1234 5678</p></div></div>
+                <div class="info-item"><div class="info-icon"><i class="fas fa-map-marker-alt"></i></div><div class="info-text"><h4>Oficina</h4><p>Buenos Aires, Argentina</p></div></div>
+                <div class="mini-map"><i class="fas fa-map-marked-alt" style="font-size:2rem; margin-right:10px;"></i>Mapa de Ubicación</div>
+            </aside>
+        </div>
+    </section>
+
+    <footer>&copy; 2024 ImpulsoPro. Todos los derechos reservados.</footer>
+    <a href="#" class="whatsapp-float"><i class="fab fa-whatsapp"></i></a>
+
+    <script>
+        const container = document.getElementById('sliderContainer');
+        const imgBefore = document.getElementById('imgBefore');
+        const handle = document.getElementById('sliderHandle');
+        let isDragging = false;
+        handle.addEventListener('mousedown', () => isDragging = true);
+        window.addEventListener('mouseup', () => isDragging = false);
+        container.addEventListener('mousemove', (e) => { if (!isDragging) return; moveSlider(e.pageX); });
+        handle.addEventListener('touchstart', () => isDragging = true);
+        window.addEventListener('touchend', () => isDragging = false);
+        container.addEventListener('touchmove', (e) => { if (!isDragging) return; moveSlider(e.touches[0].pageX); });
+        function moveSlider(pageX) {
+            const containerRect = container.getBoundingClientRect();
+            let x = pageX - containerRect.left;
+            if (x < 0) x = 0; if (x > containerRect.width) x = containerRect.width;
+            const percent = (x / containerRect.width) * 100;
+            imgBefore.style.width = percent + "%";
+            handle.style.left = percent + "%";
+        }
+        container.addEventListener('click', (e) => { moveSlider(e.pageX); });
+
+        // --- LÓGICA DEL CARRITO ---
+        document.addEventListener('DOMContentLoaded', updateCartCounter);
+        function updateCartCounter() {
+            let cart = JSON.parse(localStorage.getItem('impulsopro_cart')) || [];
+            let totalQty = cart.reduce((acc, item) => acc + item.quantity, 0);
+            const counterElement = document.getElementById('cart-count');
+            if(counterElement) counterElement.innerText = totalQty;
+        }
+    </script>
+</body>
+</html>
