@@ -1,257 +1,1020 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ImpulsoPro | Inicio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <link rel="icon" href="img/logo.png" type="image/png" sizes="50x50"">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
     <style>
-        /* --- VARIABLES & RESET --- */
-        :root {
-            --primary-blue: #044bab;
-            --primary-dark: #022a61;
-            --accent-yellow: #f3d136;
-            --text-dark: #333333;
-            --text-light: #666666;
-            --white: #ffffff;
-            --bg-light: #f8f9fa;
-            --success: #10b981;
+      /* --- VARIABLES & RESET --- */
+      :root {
+        --primary-blue: #044bab;
+        --primary-dark: #022a61;
+        --accent-yellow: #f3d136;
+        --text-dark: #333333;
+        --text-light: #666666;
+        --white: #ffffff;
+        --bg-light: #f8f9fa;
+        --success: #10b981;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+        scroll-behavior: smooth;
+      }
+
+      /* SCROLLBAR PERSONALIZADO */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--primary-blue);
+        border-radius: 5px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--primary-dark);
+      }
+
+      body {
+        background-color: var(--bg-light);
+        overflow-x: hidden;
+      }
+
+      /* NOTIFICACIONES */
+      .notification-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 2000;
+        width: auto;
+        max-width: 90%;
+      }
+      .toast {
+        background: rgba(4, 75, 171, 0.95);
+        backdrop-filter: blur(5px);
+        color: var(--white);
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        margin-top: 10px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        transform: translateX(150%);
+        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        font-weight: 500;
+        border-left: 5px solid var(--accent-yellow);
+        font-size: 0.9rem;
+      }
+      .toast.show {
+        transform: translateX(0);
+      }
+      .toast.success i {
+        color: var(--accent-yellow);
+        font-size: 1.2rem;
+      }
+
+      /* NAVBAR */
+      nav {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        padding: 1.5rem 5% 0 5%;
+        display: flex;
+        align-items: flex-start;
+        z-index: 1000;
+        transition: all 0.4s ease;
+        background: transparent;
+        height: auto;
+      }
+      nav.scrolled {
+        background: var(--primary-blue);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        padding-bottom: 1rem;
+      }
+
+      .logo {
+        display: flex;
+        align-items: flex-start;
+        cursor: pointer;
+        margin-right: auto;
+        margin-top: -10px;
+        z-index: 1001;
+      }
+      .logo-img {
+        height: 100px;
+        width: auto;
+        object-fit: contain;
+        transition: height 0.3s ease;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 3rem;
+        list-style: none;
+        margin-right: 3rem;
+        margin-top: 25px;
+      }
+      .nav-links a {
+        text-decoration: none;
+        color: var(--white);
+        font-weight: 500;
+        position: relative;
+        transition: all 0.3s;
+        font-size: 1.1rem;
+        opacity: 0.9;
+      }
+      .nav-links a:hover {
+        opacity: 1;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      }
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 3px;
+        bottom: -5px;
+        left: 0;
+        background-color: var(--accent-yellow);
+        transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 0 10px var(--accent-yellow);
+      }
+      .nav-links a:hover::after {
+        width: 100%;
+      }
+
+      .cart-icon-link {
+        text-decoration: none;
+        display: block;
+        margin-top: 23px;
+        z-index: 1001;
+      }
+      .cart-icon {
+        position: relative;
+        color: var(--white);
+        font-size: 1.4rem;
+        cursor: pointer;
+        transition: color 0.3s;
+      }
+      .cart-icon:hover {
+        color: var(--accent-yellow);
+      }
+      .cart-count {
+        position: absolute;
+        top: -8px;
+        right: -10px;
+        background: var(--accent-yellow);
+        color: var(--primary-dark);
+        font-size: 0.75rem;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: 800;
+        animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      /* HERO SECTION */
+      .hero {
+        min-height: 100vh;
+        background-color: var(--primary-blue);
+        background-image: none;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 0 5%;
+        position: relative;
+        overflow: hidden;
+      }
+      .blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.4;
+        z-index: 1;
+        pointer-events: none;
+      }
+      .blob-1 {
+        width: 500px;
+        height: 500px;
+        background: #0056b3;
+        top: -10%;
+        left: -10%;
+        animation: float 8s ease-in-out infinite;
+      }
+      .blob-2 {
+        width: 400px;
+        height: 400px;
+        background: rgba(243, 209, 54, 0.1);
+        bottom: 10%;
+        right: -5%;
+        animation: float 10s ease-in-out infinite reverse;
+      }
+
+      .hero-content {
+        z-index: 10;
+        max-width: 900px;
+        position: relative;
+        width: 100%;
+      }
+      .hero h1 {
+        font-size: clamp(2.5rem, 5vw, 4rem); /* Responsive Font Size */
+        margin-bottom: 1.5rem;
+        line-height: 1.1;
+        font-weight: 800;
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 0.8s forwards 0.2s;
+        background: linear-gradient(
+          to right,
+          #ffffff 0%,
+          #ffffff 70%,
+          var(--accent-yellow) 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -1px;
+      }
+      .hero p {
+        font-size: clamp(1rem, 2vw, 1.3rem);
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 3rem;
+        font-weight: 300;
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 0.8s forwards 0.4s;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .btn-cta {
+        padding: 1.2rem 3.5rem;
+        font-size: 1.2rem;
+        background-color: var(--accent-yellow);
+        color: var(--primary-dark);
+        border: none;
+        border-radius: 50px;
+        font-weight: 700;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        position: relative;
+        overflow: hidden;
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 0.8s forwards 0.6s;
+        box-shadow: 0 10px 25px rgba(243, 209, 54, 0.4);
+        transition: all 0.3s;
+      }
+      .btn-cta:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(243, 209, 54, 0.6);
+      }
+      .btn-cta::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.6),
+          transparent
+        );
+        transition: 0.5s;
+        transform: skewX(-20deg);
+      }
+      .btn-cta:hover::before {
+        left: 100%;
+      }
+
+      /* SERVICIOS */
+      .services-section {
+        padding: 6rem 5%;
+        background-color: var(--bg-light);
+        text-align: center;
+        position: relative;
+      }
+      .section-title {
+        font-size: clamp(2rem, 4vw, 2.8rem);
+        color: var(--text-dark);
+        margin-bottom: 4rem;
+        font-weight: 800;
+        position: relative;
+        display: inline-block;
+      }
+      .section-title::after {
+        content: "";
+        display: block;
+        width: 80px;
+        height: 6px;
+        background: var(--accent-yellow);
+        margin: 15px auto 0;
+        border-radius: 10px;
+      }
+
+      .cards-container {
+        display: grid;
+        /* Ajuste: minmax 280px para que entre en celulares pequeños */
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        align-items: stretch;
+      }
+      .card {
+        background: var(--white);
+        padding: 2.5rem 1.5rem;
+        border-radius: 24px;
+        text-align: left;
+        transition: all 0.4s ease;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        position: relative;
+        overflow: hidden;
+        opacity: 0;
+        transform: translateY(50px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      }
+      .reveal {
+        animation: cardReveal 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      }
+      .card:hover {
+        transform: translateY(-15px);
+        box-shadow: 0 20px 50px rgba(4, 75, 171, 0.15);
+        border-color: transparent;
+      }
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(
+          90deg,
+          var(--primary-blue),
+          var(--accent-yellow)
+        );
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.4s ease;
+      }
+      .card:hover::before {
+        transform: scaleX(1);
+      }
+      .card i {
+        font-size: 2.5rem;
+        color: var(--primary-blue);
+        margin-bottom: 1.5rem;
+        display: inline-block;
+        padding: 18px;
+        background: rgba(4, 75, 171, 0.08);
+        border-radius: 16px;
+        transition: all 0.4s;
+      }
+      .card:hover i {
+        background: var(--primary-blue);
+        color: var(--white);
+        transform: scale(1.1) rotate(10deg);
+        box-shadow: 0 10px 20px rgba(4, 75, 171, 0.3);
+      }
+      .card h3 {
+        font-size: 1.4rem;
+        color: var(--primary-dark);
+        margin-bottom: 1rem;
+        font-weight: 700;
+      }
+      .card p {
+        color: var(--text-light);
+        font-size: 0.95rem;
+        line-height: 1.7;
+        margin-bottom: 2rem;
+      }
+      .price {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--text-dark);
+        display: block;
+        margin-bottom: 5px;
+        letter-spacing: -1px;
+      }
+      .price span {
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--text-light);
+        letter-spacing: 0;
+      }
+
+      .card.popular {
+        border: 2px solid var(--accent-yellow);
+        transform: scale(1.05);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        z-index: 2;
+      }
+      .card.popular:hover {
+        transform: translateY(-15px) scale(1.05);
+        box-shadow: 0 30px 60px rgba(243, 209, 54, 0.2);
+      }
+
+      .badge {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: var(--accent-yellow);
+        color: var(--primary-dark);
+        padding: 8px 20px;
+        font-size: 0.85rem;
+        font-weight: 800;
+        border-bottom-left-radius: 20px;
+        box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.1);
+      }
+      .btn-card {
+        margin-top: auto;
+        display: block;
+        text-align: center;
+        padding: 1rem 1.5rem;
+        border: 2px solid var(--primary-blue);
+        color: var(--primary-blue);
+        text-decoration: none;
+        font-weight: 700;
+        border-radius: 12px;
+        transition: all 0.3s;
+        cursor: pointer;
+        background: transparent;
+      }
+      .btn-card:hover {
+        background: var(--primary-blue);
+        color: var(--white);
+        box-shadow: 0 5px 15px rgba(4, 75, 171, 0.3);
+        transform: translateY(-2px);
+      }
+      .card.popular .btn-card {
+        background: var(--accent-yellow);
+        border-color: var(--accent-yellow);
+        color: var(--primary-dark);
+        box-shadow: 0 5px 15px rgba(243, 209, 54, 0.3);
+      }
+      .card.popular .btn-card:hover {
+        background: #e0c02b;
+        color: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(243, 209, 54, 0.4);
+      }
+
+      /* FOOTER */
+      footer {
+        background: linear-gradient(
+          to bottom,
+          var(--primary-blue),
+          var(--primary-dark)
+        );
+        color: var(--white);
+        padding: 5rem 5% 2rem;
+        text-align: center;
+        clip-path: polygon(0 50px, 100% 0, 100% 100%, 0% 100%);
+        margin-top: -50px;
+        padding-top: 8rem;
+      }
+
+      .footer-content {
+        display: grid;
+        /* DESKTOP: 3 columnas iguales */
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 2rem;
+        margin-bottom: 3rem;
+        text-align: left;
+        max-width: 1400px;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+      }
+
+      .footer-col {
+        margin-bottom: 1rem;
+      }
+
+      /* Columna Central (Desktop) */
+      .footer-col:nth-child(2) {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      /* Ajuste subrayado columna central desktop */
+      .footer-col:nth-child(2) h4::after {
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .footer-col h4 {
+        color: var(--accent-yellow);
+        margin-bottom: 1.5rem;
+        font-size: 1.2rem;
+        position: relative;
+        display: inline-block;
+      }
+      .footer-col h4::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -5px;
+        width: 30px;
+        height: 2px;
+        background: var(--accent-yellow);
+      }
+      .footer-col ul {
+        list-style: none;
+      }
+      .footer-col ul li {
+        margin-bottom: 0.8rem;
+      }
+      .footer-col a {
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        transition: all 0.3s;
+        display: inline-block;
+      }
+      .footer-col a:hover {
+        color: var(--white);
+        transform: translateX(5px);
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+      }
+      .copyright {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 2rem;
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      .menu-toggle {
+        display: none;
+        font-size: 1.8rem;
+        color: var(--white);
+        cursor: pointer;
+        margin-right: 20px;
+        transition: transform 0.3s;
+        margin-top: 10px;
+        z-index: 1001;
+      }
+      .menu-toggle:hover {
+        transform: rotate(90deg);
+        color: var(--accent-yellow);
+      }
+
+      /* Keyframes */
+      @keyframes float {
+        0% {
+          transform: translate(0, 0) rotate(0deg);
+        }
+        50% {
+          transform: translate(20px, 40px) rotate(10deg);
+        }
+        100% {
+          transform: translate(0, 0) rotate(0deg);
+        }
+      }
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(40px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes cardReveal {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes popIn {
+        0% {
+          transform: scale(0);
+        }
+        80% {
+          transform: scale(1.2);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      /* --- MEDIA QUERIES (RESPONSIVE) --- */
+
+      /* TABLET (Max 1024px) */
+      @media (max-width: 1024px) {
+        .footer-content {
+          gap: 1.5rem;
+        }
+        .hero h1 {
+          font-size: 3.5rem;
+        }
+        .nav-links {
+          gap: 2rem;
+          margin-right: 1.5rem;
+        }
+      }
+
+      /* MÓVIL Y TABLET PEQUEÑA (Max 768px) */
+      @media (max-width: 768px) {
+        .menu-toggle {
+          display: block;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background-color: var(--bg-light); overflow-x: hidden; }
+        /* Navbar móvil */
+        nav {
+          align-items: center;
+          padding: 0.8rem 5%;
+          background: var(--primary-blue);
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .logo {
+          margin-top: 0;
+        }
+        .logo-img {
+          height: 60px; /* Logo más pequeño en móvil */
+        }
+        .cart-icon-link {
+          margin-top: 0;
+        } /* Reset margen del carrito */
 
-        /* NOTIFICACIONES */
-        .notification-container { position: fixed; bottom: 20px; right: 20px; z-index: 2000; }
+        .nav-links {
+          position: fixed;
+          top: 0;
+          right: -100%;
+          height: 100vh;
+          width: 80%;
+          max-width: 300px;
+          background: rgba(4, 75, 171, 0.98);
+          backdrop-filter: blur(10px);
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 0;
+          margin: 0;
+          gap: 3rem;
+          transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+          box-shadow: -10px 0 30px rgba(0, 0, 0, 0.2);
+          z-index: 1000;
+        }
+        .nav-links.active {
+          right: 0;
+        }
+
+        .nav-links a {
+          font-size: 1.5rem;
+        } /* Links más grandes para dedo */
+
+        /* Hero móvil */
+        .hero {
+          padding-top: 80px;
+        } /* Espacio para el nav fijo */
+        .blob {
+          width: 300px;
+          height: 300px;
+        }
+        .btn-cta {
+          width: 100%;
+          max-width: 300px;
+          padding: 1rem 2rem;
+        }
+
+        /* Tarjetas */
+        .card.popular {
+          transform: scale(1);
+        }
+        .card.popular:hover {
+          transform: translateY(-10px);
+        }
+
+        /* Footer Móvil - Stack vertical */
+        .footer-content {
+          grid-template-columns: 1fr; /* Una sola columna */
+          gap: 3rem;
+          text-align: center;
+        }
+
+        .footer-col {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        .footer-col:nth-child(2) {
+          align-items: center;
+        } /* Mantener centrado */
+        .footer-col h4::after {
+          left: 50%;
+          transform: translateX(-50%);
+        } /* Centrar todos los subrayados */
+
+        /* Ajuste de enlaces del footer para que sean más fáciles de tocar */
+        .footer-col ul li {
+          margin-bottom: 1rem;
+        }
+        .footer-col a {
+          padding: 5px;
+        }
+      }
+
+      /* MÓVIL PEQUEÑO (Max 480px) */
+      @media (max-width: 480px) {
+        .logo-img {
+          height: 50px;
+        }
+        .section-title {
+          font-size: 2rem;
+        }
+        .card {
+          padding: 2rem 1.5rem;
+        }
+        .notification-container {
+          bottom: 10px;
+          right: 10px;
+          left: 10px;
+          max-width: 100%;
+        }
         .toast {
-            background: var(--primary-dark); color: var(--white); padding: 1rem 2rem; border-radius: 50px;
-            margin-top: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 10px;
-            transform: translateX(120%); transition: transform 0.3s ease; font-weight: 500;
+          width: 100%;
+          justify-content: center;
         }
-        .toast.show { transform: translateX(0); }
-        .toast.success i { color: var(--accent-yellow); }
-
-        /* NAVBAR */
-        nav { position: fixed; top: 0; width: 100%; padding: 1.2rem 5%; display: flex; justify-content: space-between; align-items: center; z-index: 1000; transition: all 0.4s ease; background: transparent; }
-        nav.scrolled { background: rgba(4, 75, 171, 0.95); backdrop-filter: blur(10px); padding: 0.8rem 5%; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-        .logo { font-size: 1.5rem; font-weight: 700; color: var(--white); display: flex; align-items: center; gap: 10px; cursor: pointer; }
-        .logo i { color: var(--accent-yellow); }
-        .nav-links { display: flex; gap: 2rem; list-style: none; }
-        .nav-links a { text-decoration: none; color: var(--white); font-weight: 500; position: relative; transition: color 0.3s; }
-        .nav-links a::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; left: 0; background-color: var(--accent-yellow); transition: width 0.3s; }
-        .nav-links a:hover::after { width: 100%; }
-        .cart-icon-link { text-decoration: none; display: block; }
-        .cart-icon { position: relative; color: var(--white); font-size: 1.2rem; cursor: pointer; }
-        .cart-count { position: absolute; top: -8px; right: -8px; background: var(--accent-yellow); color: var(--text-dark); font-size: 0.7rem; width: 18px; height: 18px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 700; }
-
-        /* HERO & OTHERS (Estilos originales conservados) */
-        .hero { height: 100vh; background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-dark) 100%); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 5%; position: relative; overflow: hidden; }
-        .hero::before { content: ''; position: absolute; width: 600px; height: 600px; background: rgba(255, 255, 255, 0.05); border-radius: 50%; top: -100px; left: -100px; filter: blur(80px); animation: float 6s ease-in-out infinite; }
-        .hero::after { content: ''; position: absolute; width: 400px; height: 400px; background: rgba(243, 209, 54, 0.1); border-radius: 50%; bottom: 50px; right: -50px; filter: blur(60px); animation: float 8s ease-in-out infinite reverse; }
-        .hero-content { z-index: 10; max-width: 800px; }
-        .hero h1 { font-size: 3.5rem; color: var(--white); margin-bottom: 1.5rem; line-height: 1.2; opacity: 0; transform: translateY(30px); animation: fadeInUp 0.8s forwards 0.2s; }
-        .hero p { font-size: 1.2rem; color: rgba(255, 255, 255, 0.9); margin-bottom: 2.5rem; font-weight: 300; opacity: 0; transform: translateY(30px); animation: fadeInUp 0.8s forwards 0.4s; }
-        .btn-cta { padding: 1rem 2.5rem; font-size: 1.1rem; background-color: var(--accent-yellow); color: var(--text-dark); border: none; border-radius: 50px; font-weight: 700; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; text-decoration: none; display: inline-block; opacity: 0; transform: translateY(30px); animation: fadeInUp 0.8s forwards 0.6s, pulse-glow 2s infinite 2s; }
-        .btn-cta:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        .services-section { padding: 5rem 10%; background-color: var(--bg-light); text-align: center; }
-        .section-title { font-size: 2.5rem; color: var(--text-dark); margin-bottom: 3rem; font-weight: 700; position: relative; display: inline-block; }
-        .section-title::after { content: ''; display: block; width: 60px; height: 4px; background: var(--accent-yellow); margin: 10px auto 0; border-radius: 2px; }
-        .cards-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; align-items: stretch; }
-        .card { background: var(--white); padding: 2.5rem; border-radius: 20px; text-align: left; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: 1px solid rgba(0,0,0,0.05); position: relative; overflow: hidden; opacity: 0; transform: translateY(50px); }
-        .reveal { opacity: 1; transform: translateY(0); }
-        .card:hover { transform: translateY(-15px); box-shadow: 0 20px 40px rgba(4, 75, 171, 0.15); }
-        .card i { font-size: 2.5rem; color: var(--primary-blue); margin-bottom: 1.5rem; display: inline-block; padding: 15px; background: rgba(4, 75, 171, 0.1); border-radius: 12px; transition: all 0.3s; }
-        .card:hover i { background: var(--primary-blue); color: var(--white); transform: rotateY(360deg); }
-        .card h3 { font-size: 1.4rem; color: var(--primary-blue); margin-bottom: 1rem; }
-        .card p { color: var(--text-light); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem; }
-        .price { font-size: 1.8rem; font-weight: 800; color: var(--text-dark); display: block; margin-bottom: 5px; }
-        .price span { font-size: 0.9rem; font-weight: 400; color: var(--text-light); }
-        .card.popular { border: 2px solid var(--accent-yellow); transform: scale(1.05); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
-        .card.popular:hover { transform: translateY(-15px) scale(1.05); }
-        .badge { position: absolute; top: 0; right: 0; background: var(--accent-yellow); color: var(--text-dark); padding: 5px 15px; font-size: 0.8rem; font-weight: 700; border-bottom-left-radius: 15px; }
-        .btn-card { margin-top: auto; display: inline-block; padding: 0.8rem 1.5rem; border: 2px solid var(--primary-blue); color: var(--primary-blue); text-decoration: none; font-weight: 600; border-radius: 8px; transition: all 0.3s; cursor: pointer; }
-        .btn-card:hover { background: var(--primary-blue); color: var(--white); }
-        .card.popular .btn-card { background: var(--accent-yellow); border-color: var(--accent-yellow); color: var(--text-dark); }
-        .card.popular .btn-card:hover { background: #e0c02b; color: var(--text-dark); }
-        footer { background-color: var(--primary-blue); color: var(--white); padding: 3rem 5%; text-align: center; }
-        .footer-content { display: flex; justify-content: space-between; flex-wrap: wrap; margin-bottom: 2rem; text-align: left; }
-        .footer-col { flex: 1; min-width: 200px; margin-bottom: 1rem; }
-        .footer-col h4 { color: var(--accent-yellow); margin-bottom: 1rem; }
-        .footer-col ul { list-style: none; }
-        .footer-col ul li { margin-bottom: 0.5rem; }
-        .footer-col a { color: rgba(255,255,255,0.8); text-decoration: none; transition: color 0.3s; }
-        .footer-col a:hover { color: var(--white); text-decoration: underline; }
-        .copyright { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; font-size: 0.9rem; color: rgba(255, 255, 255, 0.7); }
-        .menu-toggle { display: none; font-size: 1.5rem; color: var(--white); cursor: pointer; }
-        
-        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-20px); } 100% { transform: translateY(0px); } }
-        @keyframes pulse-glow { 0% { box-shadow: 0 0 0 0 rgba(243, 209, 54, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(243, 209, 54, 0); } 100% { box-shadow: 0 0 0 0 rgba(243, 209, 54, 0); } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-
-        @media (max-width: 768px) { .hero h1 { font-size: 2.5rem; } .menu-toggle { display: block; } .nav-links { position: absolute; top: 70px; right: -100%; background: var(--primary-blue); width: 100%; flex-direction: column; align-items: center; padding: 2rem 0; transition: right 0.4s ease; box-shadow: 0 10px 10px rgba(0,0,0,0.1); } .nav-links.active { right: 0; } .card.popular { transform: scale(1); } .card.popular:hover { transform: translateY(-10px); } }
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <div class="notification-container" id="notificationContainer"></div>
 
     <nav id="navbar">
-        <div class="logo">
-            <i class="fas fa-rocket"></i>
-            ImpulsoPro
+      <div class="logo">
+        <img src="img/logo.png" alt="Logo ImpulsoPro" class="logo-img" />
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html" onclick="closeMenu()">Inicio</a></li>
+        <li><a href="catalogo.html" onclick="closeMenu()">Servicios</a></li>
+        <li><a href="contacto.html" onclick="closeMenu()">Contacto</a></li>
+      </ul>
+      <div class="menu-toggle">
+        <i class="fas fa-bars"></i>
+      </div>
+      <a href="carrito.html" class="cart-icon-link">
+        <div class="cart-icon">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="cart-count" id="cart-count">0</span>
         </div>
-        <ul class="nav-links">
-            <li><a href="index.html">Inicio</a></li>
-            <li><a href="catalogo.html">Servicios</a></li>
-            <li><a href="#">Portafolio</a></li>
-            <li><a href="contacto.html">Contacto</a></li>
-        </ul>
-        <div class="menu-toggle">
-            <i class="fas fa-bars"></i>
-        </div>
-        <a href="carrito.html" class="cart-icon-link">
-            <div class="cart-icon">
-                <i class="fas fa-shopping-cart"></i>
-                <span class="cart-count" id="cart-count">0</span>
-            </div>
-        </a>
+      </a>
     </nav>
 
-    <header class="hero">
-        <div class="hero-content">
-            <h1>Potencia tu carrera profesional al máximo</h1>
-            <p>Creamos CVs de alto impacto, perfiles de LinkedIn magnéticos y traducciones certificadas. Deja de buscar trabajo, empieza a atraerlo.</p>
-            <a href="catalogo.html" class="btn-cta">Ver Servicios</a>
-        </div>
+    <header class="hero" id="home">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="hero-content" id="heroContent">
+        <h1>
+          Potencia tu carrera <br />
+          profesional al máximo
+        </h1>
+        <p>
+          Creamos CVs de alto impacto, perfiles de LinkedIn magnéticos y
+          traducciones certificadas. Deja de buscar trabajo, empieza a atraerlo.
+        </p>
+        <a href="catalogo.html" class="btn-cta"
+          >Ver Servicios
+          <i
+            class="fas fa-arrow-right"
+            style="margin-left: 8px; font-size: 0.9em"
+          ></i
+        ></a>
+      </div>
     </header>
 
     <section id="services" class="services-section">
-        <h2 class="section-title">Servicios Destacados</h2>
-        
-        <div class="cards-container">
-            <article class="card">
-                <i class="fas fa-file-alt"></i>
-                <h3>Optimización de CV</h3>
-                <p>Análisis ATS, redacción persuasiva y diseño moderno. Convierte tu experiencia en entrevistas.</p>
-                <div class="price">$25 <span>USD</span></div>
-                <a href="#" class="btn-card" onclick="addToCart('cv-opt', 'Optimización de CV', 25, 'fas fa-file-alt'); return false;">Añadir al Carrito</a>
-            </article>
+      <h2 class="section-title">Servicios Destacados</h2>
+      <div class="cards-container">
+        <article class="card">
+          <i class="fas fa-file-alt"></i>
+          <h3>Optimización de CV</h3>
+          <p>
+            Análisis ATS, redacción persuasiva y diseño moderno. Convierte tu
+            experiencia en entrevistas exitosas.
+          </p>
+          <div class="price">$25 <span>USD</span></div>
+          <a
+            href="#"
+            class="btn-card"
+            onclick="addToCart('cv-opt', 'Optimización de CV', 25, 'fas fa-file-alt'); return false;"
+            >Añadir al Carrito</a
+          >
+        </article>
 
-            <article class="card popular">
-                <div class="badge">POPULAR</div>
-                <i class="fab fa-linkedin"></i>
-                <h3>Perfil LinkedIn Premium</h3>
-                <p>Transformamos tu perfil en una landing page de ventas personal. Incluye banner y optimización SEO.</p>
-                <div class="price">$45 <span>USD</span></div>
-                <a href="#" class="btn-card" onclick="addToCart('linkedin-prem', 'Perfil LinkedIn Premium', 45, 'fab fa-linkedin'); return false;">Añadir al Carrito</a>
-            </article>
+        <article class="card popular">
+          <div class="badge">POPULAR</div>
+          <i class="fab fa-linkedin"></i>
+          <h3>Perfil LinkedIn Premium</h3>
+          <p>
+            Transformamos tu perfil en una landing page de ventas personal.
+            Incluye banner profesional y SEO.
+          </p>
+          <div class="price">$45 <span>USD</span></div>
+          <a
+            href="#"
+            class="btn-card"
+            onclick="addToCart('linkedin-prem', 'Perfil LinkedIn Premium', 45, 'fab fa-linkedin'); return false;"
+            >Añadir al Carrito</a
+          >
+        </article>
 
-            <article class="card">
-                <i class="fas fa-language"></i>
-                <h3>Traducción Profesional</h3>
-                <p>Traducción de CV y Cover Letter al Inglés técnico. Realizado por traductores nativos certificados.</p>
-                <div class="price">$30 <span>USD</span></div>
-                <a href="#" class="btn-card" onclick="addToCart('traduccion', 'Traducción Profesional', 30, 'fas fa-language'); return false;">Añadir al Carrito</a>
-            </article>
-        </div>
+        <article class="card">
+          <i class="fas fa-language"></i>
+          <h3>Traducción Profesional</h3>
+          <p>
+            Traducción de CV y Cover Letter al Inglés técnico. Realizado por
+            traductores nativos certificados.
+          </p>
+          <div class="price">$30 <span>USD</span></div>
+          <a
+            href="#"
+            class="btn-card"
+            onclick="addToCart('traduccion', 'Traducción Profesional', 30, 'fas fa-language'); return false;"
+            >Añadir al Carrito</a
+          >
+        </article>
+      </div>
     </section>
 
     <footer>
-        <div class="footer-content">
-            <div class="footer-col">
-                <div class="logo" style="margin-bottom: 1rem;">ImpulsoPro</div>
-                <p style="font-size: 0.9rem; opacity: 0.8;">Ayudando a profesionales a conseguir el trabajo de sus sueños desde 2023.</p>
-            </div>
-            <div class="footer-col">
-                <h4>Enlaces Rápidos</h4>
-                <ul>
-                    <li><a href="#">Inicio</a></li>
-                    <li><a href="#">Sobre Nosotros</a></li>
-                    <li><a href="#">Blog de Carrera</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Legales</h4>
-                <ul>
-                    <li><a href="#">Términos y Condiciones</a></li>
-                    <li><a href="#">Política de Privacidad</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Contacto</h4>
-                <ul>
-                    <li><i class="fab fa-whatsapp" style="color: var(--accent-yellow)"></i> +54 9 11 1234 5678</li>
-                    <li><i class="far fa-envelope" style="color: var(--accent-yellow)"></i> hola@impulsopro.com</li>
-                </ul>
-            </div>
+      <div class="footer-content">
+        <div class="footer-col">
+          <div
+            class="logo"
+            style="margin-bottom: 1rem; font-size: 1.5rem; font-weight: 700"
+          >
+            Cv Arg
+          </div>
+          <p style="font-size: 0.95rem; opacity: 0.7; line-height: 1.6">
+            Ayudando a profesionales a conseguir el trabajo de sus sueños con
+            herramientas digitales de alto nivel.
+          </p>
         </div>
-        <div class="copyright">
-            &copy; 2024 ImpulsoPro. Todos los derechos reservados.
+        <div class="footer-col">
+          <h4>Enlaces Rápidos</h4>
+          <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="catalogo.html">Servicios</a></li>
+            <li><a href="#">Blog de Carrera</a></li>
+          </ul>
         </div>
+        <div class="footer-col">
+          <h4>Contacto</h4>
+          <ul>
+            <li>
+              <a href="#"
+                ><i
+                  class="fab fa-whatsapp"
+                  style="color: var(--accent-yellow); width: 20px"
+                ></i>
+                +54 9 261 499-4711</a
+              >
+            </li>
+            <li>
+              <a href="#"
+                ><i
+                  class="far fa-envelope"
+                  style="color: var(--accent-yellow); width: 20px"
+                ></i>
+                curriculumvitaeargentina@gmail.com</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="copyright">
+        &copy; 2025 CvArg. Todos los derechos reservados.
+      </div>
     </footer>
 
     <script>
-        // JS Original
-        window.addEventListener("scroll", function() {
-            var navbar = document.getElementById("navbar");
-            if (window.scrollY > 50) navbar.classList.add("scrolled");
-            else navbar.classList.remove("scrolled");
+      // 1. Scroll Navigation Effect
+      window.addEventListener("scroll", function () {
+        var navbar = document.getElementById("navbar");
+        if (window.scrollY > 50) navbar.classList.add("scrolled");
+        else navbar.classList.remove("scrolled");
+      });
+
+      // 2. Mobile Menu Logic
+      const menuToggle = document.querySelector(".menu-toggle");
+      const navLinks = document.querySelector(".nav-links");
+
+      menuToggle.addEventListener("click", () => {
+        navLinks.classList.toggle("active");
+        toggleMenuIcon();
+      });
+
+      function closeMenu() {
+        navLinks.classList.remove("active");
+        toggleMenuIcon();
+      }
+
+      function toggleMenuIcon() {
+        const icon = menuToggle.querySelector("i");
+        if (navLinks.classList.contains("active")) {
+          icon.classList.remove("fa-bars");
+          icon.classList.add("fa-times");
+        } else {
+          icon.classList.remove("fa-times");
+          icon.classList.add("fa-bars");
+        }
+      }
+
+      // 3. Scroll Reveal Animations
+      const observerOptions = {
+        threshold: 0.15,
+        rootMargin: "0px 0px -50px 0px",
+      };
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("reveal");
+            observer.unobserve(entry.target);
+          }
         });
+      }, observerOptions);
+      document.querySelectorAll(".card").forEach((card) => {
+        observer.observe(card);
+      });
 
-        const menuToggle = document.querySelector('.menu-toggle');
-        const navLinks = document.querySelector('.nav-links');
-        menuToggle.addEventListener('click', () => { navLinks.classList.toggle('active'); });
+      // 4. Parallax (Desactivado en móviles para rendimiento)
+      if (window.innerWidth > 768) {
+        document.addEventListener("mousemove", (e) => {
+          const x = (window.innerWidth - e.pageX) / 50;
+          const y = (window.innerHeight - e.pageY) / 50;
+          const heroContent = document.getElementById("heroContent");
+          if (window.scrollY < window.innerHeight) {
+            heroContent.style.transform = `translate(${x}px, ${y}px)`;
+          }
+        });
+      }
 
-        const observerOptions = { threshold: 0.1 };
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('reveal');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, observerOptions);
-        document.querySelectorAll('.card').forEach(card => { observer.observe(card); });
+      // 5. Logic del Carrito
+      document.addEventListener("DOMContentLoaded", updateCartCounter);
 
-        // --- LÓGICA DEL CARRITO UNIFICADA ---
-        document.addEventListener('DOMContentLoaded', updateCartCounter);
-
-        function addToCart(id, name, price, icon) {
-            let cart = JSON.parse(localStorage.getItem('impulsopro_cart')) || [];
-            let existingItem = cart.find(item => item.id === id);
-            
-            if (existingItem) {
-                existingItem.quantity += 1;
-            } else {
-                cart.push({ id, name, price, icon, quantity: 1 });
-            }
-            
-            localStorage.setItem('impulsopro_cart', JSON.stringify(cart));
-            updateCartCounter();
-            showToast(`${name} añadido al carrito`);
+      function addToCart(id, name, price, icon) {
+        let cart = JSON.parse(localStorage.getItem("impulsopro_cart")) || [];
+        let existingItem = cart.find((item) => item.id === id);
+        if (existingItem) {
+          existingItem.quantity += 1;
+        } else {
+          cart.push({ id, name, price, icon, quantity: 1 });
         }
+        localStorage.setItem("impulsopro_cart", JSON.stringify(cart));
+        updateCartCounter();
+        const cartIcon = document.querySelector(".cart-icon");
+        cartIcon.style.transform = "scale(1.3)";
+        setTimeout(() => (cartIcon.style.transform = "scale(1)"), 200);
+        showToast(`${name} añadido al carrito`);
+      }
 
-        function updateCartCounter() {
-            let cart = JSON.parse(localStorage.getItem('impulsopro_cart')) || [];
-            let totalQty = cart.reduce((acc, item) => acc + item.quantity, 0);
-            const counterElement = document.getElementById('cart-count');
-            if(counterElement) counterElement.innerText = totalQty;
+      function updateCartCounter() {
+        let cart = JSON.parse(localStorage.getItem("impulsopro_cart")) || [];
+        let totalQty = cart.reduce((acc, item) => acc + item.quantity, 0);
+        const counterElement = document.getElementById("cart-count");
+        if (counterElement) {
+          counterElement.innerText = totalQty;
+          if (totalQty === 0) counterElement.style.display = "none";
+          else counterElement.style.display = "flex";
         }
+      }
 
-        function showToast(message) {
-            const container = document.getElementById('notificationContainer');
-            const toast = document.createElement('div');
-            toast.className = 'toast success';
-            toast.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
-            container.appendChild(toast);
-            setTimeout(() => toast.classList.add('show'), 100);
-            setTimeout(() => { 
-                toast.classList.remove('show'); 
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
+      function showToast(message) {
+        const container = document.getElementById("notificationContainer");
+        const toast = document.createElement("div");
+        toast.className = "toast success";
+        toast.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+        container.appendChild(toast);
+        setTimeout(() => toast.classList.add("show"), 100);
+        setTimeout(() => {
+          toast.classList.remove("show");
+          setTimeout(() => toast.remove(), 500);
+        }, 3000);
+      }
     </script>
-</body>
+  </body>
 </html>

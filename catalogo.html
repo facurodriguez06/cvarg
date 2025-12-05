@@ -1,255 +1,864 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ImpulsoPro | Catálogo</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
     <style>
-        :root {
-            --primary-blue: #044bab; --primary-dark: #022a61; --primary-light: #e6effa;
-            --accent-yellow: #f3d136; --text-dark: #1f2937; --text-gray: #6b7280;
-            --white: #ffffff; --bg-light: #f3f4f6; --success: #10b981;
+      /* --- MASTER VARIABLES (Consistentes con Contacto) --- */
+      :root {
+        --primary: #044bab;
+        --primary-dark: #022a61;
+        --accent: #f3d136;
+        --bg-body: #f8fafc;
+        --text-main: #1e293b;
+        --text-light: #64748b;
+        --white: #ffffff;
+        --glass-border: rgba(255, 255, 255, 0.6);
+        --card-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.08);
+        --card-hover: 0 30px 60px -15px rgba(4, 75, 171, 0.2);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background-color: var(--bg-body);
+        color: var(--text-main);
+        overflow-x: hidden;
+        /* Fondo Aurora */
+        background-image: radial-gradient(
+            at 0% 0%,
+            rgba(4, 75, 171, 0.08) 0px,
+            transparent 50%
+          ),
+          radial-gradient(
+            at 100% 0%,
+            rgba(243, 209, 54, 0.08) 0px,
+            transparent 50%
+          ),
+          radial-gradient(
+            at 100% 100%,
+            rgba(4, 75, 171, 0.05) 0px,
+            transparent 50%
+          );
+        background-attachment: fixed;
+      }
+
+      /* --- NAVBAR FLOTANTE (ESTILO CÁPSULA) --- */
+      nav {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        max-width: 1200px;
+        padding: 0.8rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 1000;
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: 100px;
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+      }
+      .logo-img {
+        height: 45px;
+        width: auto;
+        object-fit: contain;
+      }
+
+      .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+      }
+      .nav-links {
+        display: flex;
+        gap: 30px;
+        list-style: none;
+        margin: 0;
+      }
+      .nav-links a {
+        text-decoration: none;
+        color: var(--text-main);
+        font-weight: 600;
+        font-size: 0.95rem;
+        position: relative;
+        transition: 0.3s;
+      }
+      .nav-links a:hover,
+      .nav-links a.active {
+        color: var(--primary);
+      }
+      .nav-links a.active::after {
+        content: "";
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        background: var(--accent);
+        border-radius: 50%;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .cart-wrapper {
+        position: relative;
+        cursor: pointer;
+        color: var(--text-main);
+        transition: 0.3s;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+      }
+      .cart-wrapper:hover {
+        color: var(--primary);
+        transform: scale(1.1);
+      }
+      .cart-count {
+        position: absolute;
+        top: -5px;
+        right: -8px;
+        background: var(--accent);
+        color: var(--primary);
+        font-size: 0.7rem;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: 800;
+      }
+
+      /* --- HEADER --- */
+      .catalog-header {
+        padding: 180px 5% 40px;
+        max-width: 1400px;
+        margin: 0 auto;
+        text-align: center;
+        position: relative;
+      }
+      .catalog-title {
+        font-size: clamp(3rem, 6vw, 4.5rem);
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 20px;
+        background: linear-gradient(
+          135deg,
+          var(--text-main) 30%,
+          var(--primary) 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        opacity: 0;
+        animation: fadeUp 0.8s forwards 0.2s;
+        letter-spacing: -1px;
+      }
+      .catalog-subtitle {
+        font-size: 1.25rem;
+        color: var(--text-light);
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+        opacity: 0;
+        animation: fadeUp 0.8s forwards 0.4s;
+      }
+
+      /* --- FILTROS (Adaptados al nuevo estilo) --- */
+      .filters-wrapper {
+        position: relative;
+        z-index: 10;
+        padding: 20px 5%;
+        margin-bottom: 2rem;
+        opacity: 0;
+        animation: fadeUp 0.8s forwards 0.5s;
+      }
+      .filter-container {
+        display: inline-flex;
+        gap: 10px;
+        padding: 8px;
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(20px);
+        border-radius: 100px;
+        border: 1px solid var(--glass-border);
+        box-shadow: var(--card-shadow);
+        margin: 0 auto;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .filter-pill {
+        padding: 10px 24px;
+        border-radius: 50px;
+        background: transparent;
+        border: 1px solid transparent;
+        color: var(--text-light);
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .filter-pill:hover {
+        color: var(--primary);
+        background: rgba(255, 255, 255, 0.8);
+      }
+      .filter-pill.active {
+        background: var(--primary);
+        color: var(--white);
+        box-shadow: 0 10px 20px -5px rgba(4, 75, 171, 0.4);
+      }
+
+      /* --- GRID PRODUCTOS --- */
+      .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 3rem;
+        padding: 2rem 5% 8rem;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      .product-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 30px;
+        overflow: hidden;
+        border: 1px solid var(--white);
+        box-shadow: var(--card-shadow);
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        display: flex;
+        flex-direction: column;
+        opacity: 0;
+        animation: fadeUp 0.8s forwards;
+      }
+
+      .product-card:hover {
+        transform: translateY(-12px);
+        box-shadow: var(--card-hover);
+        background: #ffffff;
+      }
+
+      .card-image {
+        height: 240px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      }
+      /* Gradientes sutiles */
+      .product-card[data-category="cv"] .card-image {
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      }
+      .product-card[data-category="linkedin"] .card-image {
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      }
+      .product-card[data-category="pack"] .card-image {
+        background: linear-gradient(135deg, #f8fafc 0%, #1e293b 100%);
+      }
+      .product-card[data-category="pack"] .card-icon {
+        color: var(--accent);
+        opacity: 0.8;
+      }
+
+      .card-icon {
+        font-size: 5rem;
+        color: var(--primary);
+        opacity: 0.15;
+        transition: 0.5s ease;
+      }
+      .product-card:hover .card-icon {
+        transform: scale(1.15) rotate(5deg);
+        opacity: 0.25;
+      }
+
+      .badge {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        padding: 8px 16px;
+        background: var(--white);
+        border-radius: 100px;
+        font-weight: 700;
+        font-size: 0.75rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        color: var(--text-main);
+        z-index: 2;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+      .badge.pop {
+        background: var(--accent);
+        color: var(--primary-dark);
+      }
+
+      .card-content {
+        padding: 2rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      .card-title {
+        font-size: 1.35rem;
+        font-weight: 800;
+        margin-bottom: 8px;
+        color: var(--text-main);
+        line-height: 1.3;
+      }
+      .card-desc {
+        font-size: 0.95rem;
+        color: var(--text-light);
+        line-height: 1.6;
+        margin-bottom: 25px;
+        flex-grow: 1;
+      }
+
+      .card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: auto;
+      }
+      .price {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: var(--text-main);
+        letter-spacing: -0.5px;
+      }
+      .price span {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--text-light);
+      }
+
+      .btn-add {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: none;
+        cursor: pointer;
+        background: var(--bg-body);
+        color: var(--primary);
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .product-card:hover .btn-add {
+        background: var(--primary);
+        color: var(--white);
+        box-shadow: 0 10px 20px rgba(4, 75, 171, 0.3);
+        transform: rotate(90deg);
+      }
+
+      /* --- FOOTER MINIMALISTA --- */
+      footer {
+        background: linear-gradient(to bottom, var(--primary), #022a61);
+        color: var(--white);
+        padding: 6rem 5% 2rem;
+        text-align: center;
+        clip-path: polygon(0 60px, 100% 0, 100% 100%, 0% 100%);
+        margin-top: 60px;
+      }
+      .copyright-only {
+        font-size: 0.95rem;
+        opacity: 0.8;
+        letter-spacing: 0.5px;
+      }
+
+      /* UTILS */
+      .whatsapp-float {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 65px;
+        height: 65px;
+        background: #25d366;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 2rem;
+        z-index: 100;
+        box-shadow: 0 10px 30px rgba(37, 211, 102, 0.4);
+        transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        text-decoration: none;
+      }
+      .whatsapp-float:hover {
+        transform: scale(1.1) rotate(10deg);
+      }
+
+      .notification-container {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 2000;
+        width: auto;
+      }
+      .toast {
+        background: rgba(15, 23, 42, 0.9);
+        backdrop-filter: blur(10px);
+        color: var(--white);
+        padding: 1rem 2rem;
+        border-radius: 100px;
+        margin-top: 10px;
+        font-weight: 600;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        transform: translateY(100px);
+        opacity: 0;
+        transition: 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      }
+      .toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      .menu-toggle {
+        display: none;
+        font-size: 1.5rem;
+        color: var(--text-main);
+        cursor: pointer;
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background-color: var(--bg-light); color: var(--text-dark); overflow-x: hidden; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-
-        /* NOTIFICACIONES */
-        .notification-container { position: fixed; bottom: 20px; right: 20px; z-index: 2000; }
-        .toast {
-            background: var(--primary-dark); color: var(--white); padding: 1rem 2rem; border-radius: 50px;
-            margin-top: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 10px;
-            transform: translateX(120%); transition: transform 0.3s ease; font-weight: 500;
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
-        .toast.show { transform: translateX(0); }
-        .toast.success i { color: var(--accent-yellow); }
+      }
 
-        nav { position: fixed; top: 0; width: 100%; padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; z-index: 1000; background: rgba(255, 255, 255, 0.95); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
-        .logo { font-size: 1.5rem; font-weight: 800; color: var(--primary-blue); display: flex; align-items: center; gap: 10px; text-decoration: none; }
-        .nav-links { display: flex; gap: 2rem; list-style: none; }
-        .nav-links a { text-decoration: none; color: var(--text-dark); font-weight: 500; transition: color 0.3s; }
-        .nav-links a:hover, .nav-links a.active { color: var(--primary-blue); }
-        .cart-icon-link { text-decoration: none; }
-        .cart-icon { position: relative; color: var(--primary-blue); font-size: 1.2rem; cursor: pointer; width: 40px; height: 40px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; transition: transform 0.2s; }
-        .cart-icon:hover { transform: scale(1.1); }
-        .cart-count { position: absolute; top: -5px; right: -5px; background: var(--accent-yellow); color: var(--primary-dark); font-size: 0.7rem; width: 20px; height: 20px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 700; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+      /* --- RESPONSIVE --- */
+      @media (max-width: 768px) {
+        nav {
+          width: 100%;
+          top: 0;
+          border-radius: 0;
+          padding: 1rem 5%;
+          justify-content: space-between;
+        }
+        .menu-toggle {
+          display: block;
+        }
+        .nav-right {
+          gap: 20px;
+        }
+        .logo-img {
+          height: 60px;
+        }
 
-        .catalog-header { padding: 120px 0 40px; text-align: center; background: var(--white); }
-        .catalog-title { font-size: 2.5rem; color: var(--primary-blue); font-weight: 800; margin-bottom: 0.5rem; }
-        .filters-container { display: flex; justify-content: center; gap: 2rem; padding: 3rem 0; flex-wrap: wrap; }
-        .filter-item { display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer; transition: all 0.3s ease; }
-        .filter-circle { width: 70px; height: 70px; border-radius: 50%; background-color: var(--white); display: flex; justify-content: center; align-items: center; font-size: 1.8rem; color: var(--text-gray); box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: all 0.3s; border: 2px solid transparent; }
-        .filter-item.active .filter-circle { background-color: var(--primary-blue); color: var(--white); transform: translateY(-5px); border-color: var(--accent-yellow); }
-        .filter-text { font-weight: 600; font-size: 0.9rem; color: var(--text-gray); }
-        .filter-item.active .filter-text { color: var(--primary-blue); }
+        .nav-links {
+          position: fixed;
+          top: 0;
+          right: -100%;
+          height: 100vh;
+          width: 100%;
+          background: rgba(255, 255, 255, 0.98);
+          backdrop-filter: blur(20px);
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 3rem;
+          transition: 0.4s;
+          z-index: 999;
+        }
+        .nav-links.active {
+          right: 0;
+        }
+        .nav-links a {
+          font-size: 1.5rem;
+          opacity: 1;
+        }
 
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2.5rem; padding: 2rem 0 5rem; }
-        .product-card { background: var(--white); border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.04); transition: all 0.4s ease; position: relative; display: flex; flex-direction: column; border: 1px solid rgba(0,0,0,0.02); animation: fadeIn 0.6s forwards; }
-        .product-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(4, 75, 171, 0.12); }
-        .card-image { height: 200px; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden; }
-        .bg-blue-gradient { background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); }
-        .bg-yellow-gradient { background: linear-gradient(135deg, #fef9c3 0%, #fde047 100%); }
-        .bg-green-gradient { background: linear-gradient(135deg, #dcfce7 0%, #86efac 100%); }
-        .card-icon-big { font-size: 5rem; color: rgba(4, 75, 171, 0.15); transition: transform 0.5s ease; }
-        .product-card:hover .card-icon-big { transform: scale(1.1) rotate(5deg); color: rgba(4, 75, 171, 0.25); }
-        .floating-element { position: absolute; font-size: 2.5rem; color: var(--primary-blue); z-index: 2; animation: float 4s ease-in-out infinite; }
-        .badge-popular { position: absolute; top: 20px; right: -5px; background: var(--accent-yellow); color: var(--primary-dark); font-weight: 700; font-size: 0.8rem; padding: 5px 15px; transform: rotate(3deg); z-index: 10; }
-        .badge-popular::after { content: ''; position: absolute; bottom: -5px; right: 0; border-width: 5px 5px 0 0; border-style: solid; border-color: #dcb311 transparent transparent; }
-        
-        .card-body { padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column; }
-        .card-title { font-size: 1.15rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.5rem; }
-        .card-price-pill { background-color: var(--primary-light); color: var(--primary-blue); font-weight: 700; padding: 5px 12px; border-radius: 50px; font-size: 0.9rem; display: inline-block; margin-bottom: 1rem; align-self: flex-start; }
-        .card-description { font-size: 0.9rem; color: var(--text-gray); margin-bottom: 1.5rem; flex-grow: 1; }
-        .btn-card-full { width: 100%; padding: 0.9rem; background: var(--primary-blue); color: var(--white); border: none; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; justify-content: center; align-items: center; gap: 10px; text-decoration: none; }
-        .btn-card-full:hover { background: var(--primary-dark); transform: translateY(-2px); }
-        footer { background-color: var(--white); border-top: 1px solid #eee; padding: 3rem 5%; text-align: center; color: var(--text-dark); }
-        
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
-        @media (max-width: 768px) { .catalog-title { font-size: 2rem; } .filters-container { gap: 1rem; overflow-x: auto; justify-content: flex-start; padding: 2rem 5%; } .products-grid { grid-template-columns: 1fr; padding: 0 5%; } }
+        .catalog-header {
+          padding-top: 130px;
+          padding-bottom: 20px;
+        }
+
+        .filters-wrapper {
+          padding: 10px 0;
+        }
+        .filter-container {
+          width: 100%;
+          border-radius: 0;
+          justify-content: flex-start;
+          overflow-x: auto;
+          padding: 15px 5%;
+          left: 0;
+          transform: none;
+          border: none;
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        .filter-pill {
+          padding: 8px 18px;
+          white-space: nowrap;
+        }
+
+        .products-grid {
+          grid-template-columns: 1fr;
+          gap: 2rem;
+          padding-top: 1rem;
+        }
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <div class="notification-container" id="notificationContainer"></div>
 
     <nav>
-        <a href="index.html" class="logo">
-            <i class="fas fa-rocket" style="color: var(--primary-blue)"></i>
-            ImpulsoPro
-        </a>
-        <ul class="nav-links" id="desktop-menu">
-            <li><a href="index.html">Inicio</a></li>
-            <li><a href="#" class="active">Catálogo</a></li>
-            <li><a href="#">Portafolio</a></li>
+      <a href="index.html" class="logo">
+        <img src="img/logo azul 1.png" alt="Logo" class="logo-img" />
+      </a>
+
+      <div class="nav-right">
+        <ul class="nav-links">
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="catalogo.html" class="active">Catálogo</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
         </ul>
-        <a href="carrito.html" class="cart-icon-link">
-            <div class="cart-icon">
-                <i class="fas fa-shopping-bag"></i>
-                <span class="cart-count" id="cart-count">0</span>
-            </div>
+
+        <a href="carrito.html" class="cart-wrapper">
+          <i class="fas fa-shopping-cart" style="font-size: 1.3rem"></i>
+          <span class="cart-count" id="cart-count">0</span>
         </a>
+
+        <div class="menu-toggle"><i class="fas fa-bars"></i></div>
+      </div>
     </nav>
 
     <header class="catalog-header">
-        <div class="container">
-            <h1 class="catalog-title">Catálogo de Servicios</h1>
-            <p class="catalog-subtitle">Encuentra el impulso exacto que tu carrera necesita.</p>
-        </div>
+      <h1 class="catalog-title">Catálogo Premium</h1>
+      <p class="catalog-subtitle">
+        Herramientas de alto impacto diseñadas para acelerar tu trayectoria
+        profesional.
+      </p>
     </header>
 
-    <main class="container">
-        
-        <div class="filters-container">
-            <div class="filter-item active" onclick="filterProducts('all', this)"><div class="filter-circle"><i class="fas fa-star"></i></div><span class="filter-text">Todos</span></div>
-            <div class="filter-item" onclick="filterProducts('cv', this)"><div class="filter-circle"><i class="fas fa-file-alt"></i></div><span class="filter-text">Redacción CV</span></div>
-            <div class="filter-item" onclick="filterProducts('linkedin', this)"><div class="filter-circle"><i class="fas fa-globe"></i></div><span class="filter-text">Perfiles Online</span></div>
-            <div class="filter-item" onclick="filterProducts('traduccion', this)"><div class="filter-circle"><i class="fas fa-language"></i></div><span class="filter-text">Traducciones</span></div>
-            <div class="filter-item" onclick="filterProducts('pack', this)"><div class="filter-circle"><i class="fas fa-box-open"></i></div><span class="filter-text">Packs</span></div>
+    <div class="filters-wrapper">
+      <div class="filter-container">
+        <button
+          class="filter-pill active"
+          onclick="filterProducts('all', this)"
+        >
+          <i class="fas fa-layer-group"></i> Todos
+        </button>
+        <button class="filter-pill" onclick="filterProducts('cv', this)">
+          <i class="fas fa-file-contract"></i> Redacción CV
+        </button>
+        <button class="filter-pill" onclick="filterProducts('linkedin', this)">
+          <i class="fab fa-linkedin"></i> LinkedIn
+        </button>
+        <button
+          class="filter-pill"
+          onclick="filterProducts('traduccion', this)"
+        >
+          <i class="fas fa-globe"></i> Traducción
+        </button>
+        <button class="filter-pill" onclick="filterProducts('pack', this)">
+          <i class="fas fa-box-open"></i> Packs
+        </button>
+      </div>
+    </div>
+
+    <main class="products-grid">
+      <article
+        class="product-card"
+        data-category="cv"
+        style="animation-delay: 0.1s"
+      >
+        <div class="card-image">
+          <i class="fas fa-file-signature card-icon"></i>
+          <div class="badge pop">Popular</div>
         </div>
-
-        <div class="products-grid" id="productsContainer">
-            
-            <article class="product-card" data-category="cv">
-                <div class="badge-popular">¡Éxito de ventas!</div>
-                <div class="card-image bg-blue-gradient" onclick="window.location.href='detalle.html'">
-                    <i class="fas fa-file-contract card-icon-big"></i>
-                    <i class="fas fa-pen-fancy floating-element"></i>
-                </div>
-                <div class="card-body">
-                    <h3 class="card-title">Redacción de CV Profesional</h3>
-                    <span class="card-price-pill">120 €</span>
-                    <p class="card-description">Diseño moderno y redacción optimizada para pasar filtros ATS.</p>
-                    <button class="btn-card-full" onclick="addToCart('cv-pro', 'Redacción de CV Profesional', 120, 'fas fa-file-contract')">Añadir al Carrito <i class="fas fa-cart-plus"></i></button>
-                </div>
-            </article>
-
-            <article class="product-card" data-category="linkedin">
-                <div class="card-image bg-white" onclick="window.location.href='detalle.html'">
-                    <i class="fab fa-linkedin card-icon-big" style="color: #0077b5;"></i>
-                </div>
-                <div class="card-body">
-                    <h3 class="card-title">Optimización de Perfil LinkedIn</h3>
-                    <span class="card-price-pill">90 €</span>
-                    <p class="card-description">Transformamos tu perfil en una landing page de ventas. Incluye banner.</p>
-                    <button class="btn-card-full" onclick="addToCart('linkedin-opt', 'Optimización LinkedIn', 90, 'fab fa-linkedin')">Añadir al Carrito <i class="fas fa-cart-plus"></i></button>
-                </div>
-            </article>
-
-            <article class="product-card" data-category="traduccion">
-                <div class="card-image bg-green-gradient" onclick="window.location.href='detalle.html'">
-                    <i class="fas fa-globe-americas card-icon-big" style="color:rgba(16, 185, 129, 0.2)"></i>
-                    <i class="fas fa-check-circle floating-element" style="color:var(--success)"></i>
-                </div>
-                <div class="card-body">
-                    <h3 class="card-title">Traducción de CV (Inglés/Español)</h3>
-                    <span class="card-price-pill">75 €</span>
-                    <p class="card-description">Traducción certificada por nativos. Adaptamos la terminología técnica.</p>
-                    <button class="btn-card-full" onclick="addToCart('traduccion', 'Traducción de CV', 75, 'fas fa-language')">Añadir al Carrito <i class="fas fa-cart-plus"></i></button>
-                </div>
-            </article>
-
-            <article class="product-card" data-category="pack">
-                <div class="badge-popular">¡Más vendido!</div>
-                <div class="card-image" style="background:#1f2937" onclick="window.location.href='detalle.html'">
-                    <i class="fas fa-rocket card-icon-big" style="color:rgba(243, 209, 54, 0.2)"></i>
-                    <i class="fas fa-briefcase floating-element" style="color:var(--accent-yellow)"></i>
-                </div>
-                <div class="card-body">
-                    <h3 class="card-title">Pack Despegue Profesional</h3>
-                    <span class="card-price-pill">180 €</span>
-                    <p class="card-description"><strong>Ahorra 20%</strong>. Incluye Redacción de CV + Carta de Presentación + LinkedIn.</p>
-                    <button class="btn-card-full" onclick="addToCart('pack-despegue', 'Pack Despegue Profesional', 180, 'fas fa-rocket')">Añadir al Carrito <i class="fas fa-cart-plus"></i></button>
-                </div>
-            </article>
-
-            <article class="product-card" data-category="cv">
-                <div class="card-image bg-yellow-gradient" onclick="window.location.href='detalle.html'">
-                    <i class="fas fa-comments card-icon-big" style="color:rgba(255,150,0,0.2)"></i>
-                    <i class="fas fa-handshake floating-element" style="color:#d97706"></i>
-                </div>
-                <div class="card-body">
-                    <h3 class="card-title">Asesoría de Entrevista (1 Hora)</h3>
-                    <span class="card-price-pill">100 €</span>
-                    <p class="card-description">Simulacro de entrevista por videollamada con feedback inmediato.</p>
-                    <button class="btn-card-full" onclick="addToCart('asesoria', 'Asesoría Entrevista', 100, 'fas fa-comments')">Añadir al Carrito <i class="fas fa-cart-plus"></i></button>
-                </div>
-            </article>
-
-            <article class="product-card" data-category="pack">
-                <div class="badge-popular">VIP</div>
-                <div class="card-image bg-blue-gradient" onclick="window.location.href='detalle.html'">
-                    <i class="fas fa-plane-departure card-icon-big"></i>
-                    <i class="fas fa-passport floating-element"></i>
-                </div>
-                <div class="card-body">
-                    <h3 class="card-title">Pack Carrera Internacional</h3>
-                    <span class="card-price-pill">250 €</span>
-                    <p class="card-description">Todo lo del Pack Despegue + Traducción completa al Inglés.</p>
-                    <button class="btn-card-full" onclick="addToCart('pack-inter', 'Pack Carrera Internacional', 250, 'fas fa-plane-departure')">Añadir al Carrito <i class="fas fa-cart-plus"></i></button>
-                </div>
-            </article>
-
+        <div class="card-content">
+          <h3 class="card-title">CV de Alto Impacto</h3>
+          <p class="card-desc">
+            Redacción estratégica y diseño visual optimizado para superar
+            filtros ATS.
+          </p>
+          <div class="card-footer">
+            <div class="price">$120 <span>USD</span></div>
+            <button
+              class="btn-add"
+              onclick="addToCart('cv-pro', 'CV Alto Impacto', 120)"
+            >
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
         </div>
+      </article>
+
+      <article
+        class="product-card"
+        data-category="linkedin"
+        style="animation-delay: 0.2s"
+      >
+        <div class="card-image">
+          <i class="fab fa-linkedin-in card-icon" style="color: #0a66c2"></i>
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">Perfil LinkedIn Pro</h3>
+          <p class="card-desc">
+            Transforma tu perfil en un imán de oportunidades. Incluye banner y
+            SEO.
+          </p>
+          <div class="card-footer">
+            <div class="price">$90 <span>USD</span></div>
+            <button
+              class="btn-add"
+              onclick="addToCart('linkedin', 'LinkedIn Pro', 90)"
+            >
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
+        </div>
+      </article>
+
+      <article
+        class="product-card"
+        data-category="pack"
+        style="animation-delay: 0.3s"
+      >
+        <div class="card-image">
+          <i class="fas fa-rocket card-icon"></i>
+          <div class="badge" style="background: var(--primary); color: white">
+            Ahorra 20%
+          </div>
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">Pack Despegue Total</h3>
+          <p class="card-desc">
+            La solución definitiva: CV + Carta de Presentación + LinkedIn
+            Optimizado.
+          </p>
+          <div class="card-footer">
+            <div class="price">$180 <span>USD</span></div>
+            <button
+              class="btn-add"
+              onclick="addToCart('pack-total', 'Pack Despegue', 180)"
+            >
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
+        </div>
+      </article>
+
+      <article
+        class="product-card"
+        data-category="traduccion"
+        style="animation-delay: 0.4s"
+      >
+        <div class="card-image">
+          <i class="fas fa-language card-icon" style="color: #10b981"></i>
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">Traducción Certificada</h3>
+          <p class="card-desc">
+            Tu CV en Inglés técnico perfecto. Adaptado por nativos al mercado
+            global.
+          </p>
+          <div class="card-footer">
+            <div class="price">$75 <span>USD</span></div>
+            <button
+              class="btn-add"
+              onclick="addToCart('trad', 'Traducción CV', 75)"
+            >
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
+        </div>
+      </article>
+
+      <article
+        class="product-card"
+        data-category="cv"
+        style="animation-delay: 0.5s"
+      >
+        <div class="card-image">
+          <i class="fas fa-headset card-icon" style="color: #f97316"></i>
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">Simulacro Entrevista</h3>
+          <p class="card-desc">
+            Sesión de 1 hora con experto en RRHH. Feedback en tiempo real para
+            mejorar.
+          </p>
+          <div class="card-footer">
+            <div class="price">$100 <span>USD</span></div>
+            <button
+              class="btn-add"
+              onclick="addToCart('interview', 'Simulacro Entrevista', 100)"
+            >
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
+        </div>
+      </article>
+
+      <article
+        class="product-card"
+        data-category="pack"
+        style="animation-delay: 0.6s"
+      >
+        <div class="card-image">
+          <i
+            class="fas fa-globe card-icon"
+            style="color: var(--primary-dark)"
+          ></i>
+          <div class="badge">VIP</div>
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">Pack Carrera Global</h3>
+          <p class="card-desc">
+            Todo incluido: Pack Despegue + Traducción completa para mercados
+            internacionales.
+          </p>
+          <div class="card-footer">
+            <div class="price">$250 <span>USD</span></div>
+            <button
+              class="btn-add"
+              onclick="addToCart('pack-global', 'Pack Global', 250)"
+            >
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
+        </div>
+      </article>
     </main>
 
     <footer>
-        <div class="container">
-            <p>&copy; 2024 ImpulsoPro. Todos los derechos reservados.</p>
-        </div>
+      <div class="copyright-only">
+        &copy; 2025 CvArg. Todos los derechos reservados.
+      </div>
     </footer>
 
+    <a href="https://wa.me/5491112345678" class="whatsapp-float"
+      ><i class="fab fa-whatsapp"></i
+    ></a>
+
     <script>
-        function filterProducts(category, element) {
-            const buttons = document.querySelectorAll('.filter-item');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            element.classList.add('active');
-            const cards = document.querySelectorAll('.product-card');
-            cards.forEach(card => {
-                card.style.animation = 'none'; card.offsetHeight;
-                if (category === 'all' || card.dataset.category === category) {
-                    card.style.display = 'flex'; card.style.animation = 'fadeIn 0.6s forwards';
-                } else { card.style.display = 'none'; }
-            });
+      // Navbar Scroll
+      window.addEventListener("scroll", function () {
+        var nav = document.querySelector("nav");
+        if (window.scrollY > 20) {
+          nav.style.background = "rgba(255, 255, 255, 0.9)";
+          nav.style.boxShadow = "0 10px 30px -10px rgba(0,0,0,0.1)";
+        } else {
+          nav.style.background = "rgba(255, 255, 255, 0.7)";
+          nav.style.boxShadow = "0 10px 30px -10px rgba(0,0,0,0.1)";
         }
+      });
 
-        // --- LÓGICA DEL CARRITO ---
-        document.addEventListener('DOMContentLoaded', updateCartCounter);
+      // Menu Mobile
+      const menuToggle = document.querySelector(".menu-toggle");
+      const navLinks = document.querySelector(".nav-links");
+      menuToggle.addEventListener("click", () => {
+        navLinks.classList.toggle("active");
+        const icon = menuToggle.querySelector("i");
+        icon.classList.toggle("fa-bars");
+        icon.classList.toggle("fa-times");
+      });
 
-        function addToCart(id, name, price, icon) {
-            let cart = JSON.parse(localStorage.getItem('impulsopro_cart')) || [];
-            let existingItem = cart.find(item => item.id === id);
-            
-            if (existingItem) {
-                existingItem.quantity += 1;
-            } else {
-                cart.push({ id, name, price, icon, quantity: 1 });
-            }
-            
-            localStorage.setItem('impulsopro_cart', JSON.stringify(cart));
-            updateCartCounter();
-            showToast(`${name} añadido al carrito`);
+      // Filtros Lógica
+      function filterProducts(category, btn) {
+        document
+          .querySelectorAll(".filter-pill")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        const cards = document.querySelectorAll(".product-card");
+        cards.forEach((card) => {
+          if (category === "all" || card.dataset.category === category) {
+            card.style.display = "flex";
+            card.style.animation = "none";
+            card.offsetHeight;
+            card.style.animation =
+              "fadeUp 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards";
+          } else {
+            card.style.display = "none";
+          }
+        });
+      }
+
+      // Carrito
+      document.addEventListener("DOMContentLoaded", updateCartCounter);
+      function addToCart(id, name, price) {
+        let cart = JSON.parse(localStorage.getItem("impulsopro_cart")) || [];
+        let existingItem = cart.find((item) => item.id === id);
+        if (existingItem) {
+          existingItem.quantity += 1;
+        } else {
+          cart.push({ id, name, price, quantity: 1 });
         }
+        localStorage.setItem("impulsopro_cart", JSON.stringify(cart));
+        updateCartCounter();
 
-        function updateCartCounter() {
-            let cart = JSON.parse(localStorage.getItem('impulsopro_cart')) || [];
-            let totalQty = cart.reduce((acc, item) => acc + item.quantity, 0);
-            const counterElement = document.getElementById('cart-count');
-            if(counterElement) counterElement.innerText = totalQty;
+        const btn = event.target.closest(".btn-add");
+        btn.style.transform = "scale(1.2) rotate(90deg)";
+        setTimeout(() => (btn.style.transform = "scale(1) rotate(0deg)"), 300);
+        showToast(`${name} añadido`);
+      }
+      function updateCartCounter() {
+        let cart = JSON.parse(localStorage.getItem("impulsopro_cart")) || [];
+        let totalQty = cart.reduce((acc, item) => acc + item.quantity, 0);
+        const badge = document.getElementById("cart-count");
+        if (badge) {
+          badge.innerText = totalQty;
+          badge.style.display = totalQty === 0 ? "none" : "flex";
         }
-
-        function showToast(message) {
-            const container = document.getElementById('notificationContainer');
-            const toast = document.createElement('div');
-            toast.className = 'toast success';
-            toast.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
-            container.appendChild(toast);
-            setTimeout(() => toast.classList.add('show'), 100);
-            setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 3000);
-        }
+      }
+      function showToast(msg) {
+        const container = document.getElementById("notificationContainer");
+        const toast = document.createElement("div");
+        toast.className = "toast";
+        toast.innerHTML = `<i class="fas fa-check-circle" style="color: #10b981; font-size: 1.2rem;"></i> ${msg}`;
+        container.appendChild(toast);
+        setTimeout(() => toast.classList.add("show"), 50);
+        setTimeout(() => {
+          toast.classList.remove("show");
+          setTimeout(() => toast.remove(), 300);
+        }, 2500);
+      }
     </script>
-</body>
+  </body>
 </html>

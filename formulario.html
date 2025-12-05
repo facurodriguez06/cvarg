@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crear tu Perfil | ImpulsoPro</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+      /* --- MASTER VARIABLES --- */
+      :root {
+        --primary: #044bab;
+        --primary-light: #4f83cc;
+        --accent: #f3d136;
+        --bg-body: #f0f4f8;
+        --text-main: #1e293b;
+        --text-muted: #64748b;
+        --white: #ffffff;
+        --glass-bg: rgba(255, 255, 255, 0.75);
+        --glass-border: rgba(255, 255, 255, 0.6);
+        --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        --success: #10b981;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        scroll-behavior: smooth;
+      }
+
+      body {
+        /* Fondo Mesh Animado */
+        background: linear-gradient(120deg, #f0f4ff, #e0f2fe, #f0fdf4, #fff7ed);
+        background-size: 300% 300%;
+        animation: gradientBG 20s ease infinite;
+        color: var(--text-main);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+        overflow-x: hidden;
+      }
+
+      @keyframes gradientBG {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      /* --- BOTÓN VOLVER FLOTANTE --- */
+      .nav-back {
+        position: absolute;
+        top: 30px;
+        left: 30px;
+        z-index: 100;
+      }
+      .btn-back {
+        text-decoration: none;
+        color: var(--text-main);
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 24px;
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(10px);
+        border-radius: 50px;
+        border: 1px solid var(--white);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        transition: 0.3s;
+        font-size: 0.9rem;
+      }
+      .btn-back:hover {
+        transform: translateX(-5px);
+        background: var(--white);
+        color: var(--primary);
+      }
+
+      /* --- CONTENEDOR WIZARD --- */
+      .wizard-container {
+        width: 100%;
+        max-width: 900px;
+        background: var(--glass-bg);
+        backdrop-filter: blur(40px);
+        -webkit-backdrop-filter: blur(40px);
+        border-radius: 32px;
+        border: 1px solid var(--glass-border);
+        box-shadow: var(--shadow-xl);
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+        /* Levitación Sutil */
+        animation: floatCard 8s ease-in-out infinite;
+      }
+
+      @keyframes floatCard {
+        0% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-8px);
+        }
+        100% {
+          transform: translateY(0px);
+        }
+      }
+
+      /* Barra Superior Color */
+      .wizard-container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 6px;
+        background: linear-gradient(90deg, var(--primary), var(--accent));
+        z-index: 10;
+      }
+
+      /* HEADER Y PROGRESO */
+      .wizard-header {
+        padding: 40px 50px 20px;
+        background: rgba(255, 255, 255, 0.4);
+      }
+      .progress-info {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-weight: 700;
+        color: var(--primary);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      .progress-track {
+        width: 100%;
+        height: 6px;
+        background: rgba(0, 0, 0, 0.05);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        background: var(--primary);
+        width: 16%;
+        transition: width 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+        border-radius: 10px;
+      }
+
+      /* CUERPO DEL FORMULARIO */
+      .wizard-body {
+        padding: 30px 50px 40px;
+        position: relative;
+        min-height: 500px;
+      }
+
+      .step {
+        display: none;
+        opacity: 0;
+        animation: fadeIn 0.6s forwards;
+      }
+      .step.active {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .step-title {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: var(--text-main);
+        margin-bottom: 10px;
+      }
+      .step-desc {
+        color: var(--text-muted);
+        margin-bottom: 30px;
+        font-size: 1rem;
+        line-height: 1.5;
+      }
+      .info-box {
+        background: rgba(4, 75, 171, 0.05);
+        border-left: 4px solid var(--primary);
+        padding: 15px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        margin-bottom: 25px;
+      }
+
+      /* INPUTS MODERNOS */
+      .form-grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+        margin-bottom: 25px;
+      }
+      .form-group {
+        margin-bottom: 25px;
+        position: relative;
+      }
+
+      .form-label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: var(--text-main);
+        font-size: 0.95rem;
+      }
+      .form-input,
+      .form-select,
+      .form-textarea {
+        width: 100%;
+        padding: 14px 18px;
+        font-size: 1rem;
+        background: rgba(255, 255, 255, 0.6);
+        border: 2px solid transparent;
+        border-radius: 14px;
+        outline: none;
+        transition: 0.3s;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.01);
+        color: var(--text-main);
+        font-family: inherit;
+      }
+      .form-input:focus,
+      .form-select:focus,
+      .form-textarea:focus {
+        background: var(--white);
+        border-color: var(--primary);
+        box-shadow: 0 5px 15px rgba(4, 75, 171, 0.1);
+      }
+
+      /* TOGGLE BUTTONS (SI/NO) */
+      .toggle-group {
+        display: flex;
+        gap: 15px;
+      }
+      .toggle-option {
+        position: relative;
+        cursor: pointer;
+      }
+      .toggle-option input {
+        display: none;
+      }
+      .toggle-btn {
+        padding: 10px 25px;
+        background: rgba(255, 255, 255, 0.5);
+        border: 2px solid rgba(0, 0, 0, 0.1);
+        border-radius: 50px;
+        font-weight: 600;
+        color: var(--text-muted);
+        transition: 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .toggle-option input:checked + .toggle-btn {
+        background: var(--primary);
+        color: var(--white);
+        border-color: var(--primary);
+        box-shadow: 0 5px 15px rgba(4, 75, 171, 0.3);
+      }
+      /* Campos condicionales ocultos */
+      .conditional-field {
+        display: none;
+        margin-top: 15px;
+        animation: slideDown 0.3s forwards;
+      }
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* AREA TEXTO GUIADA */
+      .guided-textarea {
+        font-family: monospace;
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      /* FILE UPLOADS */
+      .file-upload {
+        border: 2px dashed #cbd5e1;
+        border-radius: 20px;
+        padding: 30px;
+        text-align: center;
+        cursor: pointer;
+        transition: 0.3s;
+        background: rgba(255, 255, 255, 0.4);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      .file-upload:hover {
+        border-color: var(--primary);
+        background: rgba(4, 75, 171, 0.03);
+      }
+      .file-upload i {
+        font-size: 2rem;
+        color: var(--text-muted);
+        margin-bottom: 10px;
+      }
+
+      /* Foto circular preview */
+      .photo-preview {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: #e2e8f0;
+        margin: 0 auto 15px;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 4px solid var(--white);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+      .photo-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: none;
+      }
+      .photo-preview i {
+        font-size: 3rem;
+        color: #94a3b8;
+      }
+
+      /* SOFT SKILLS CLOUD */
+      .skills-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .skill-tag {
+        position: relative;
+        cursor: pointer;
+      }
+      .skill-tag input {
+        display: none;
+      }
+      .skill-chip {
+        padding: 8px 16px;
+        background: var(--white);
+        border-radius: 50px;
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        transition: 0.3s;
+        display: inline-block;
+        font-weight: 500;
+      }
+      .skill-tag:hover .skill-chip {
+        border-color: var(--primary);
+        color: var(--primary);
+      }
+      .skill-tag input:checked + .skill-chip {
+        background: var(--primary);
+        color: var(--white);
+        border-color: var(--primary);
+        box-shadow: 0 4px 10px rgba(4, 75, 171, 0.2);
+        transform: translateY(-2px);
+      }
+
+      /* FOOTER BOTONES */
+      .wizard-footer {
+        padding: 20px 50px 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .btn {
+        padding: 14px 32px;
+        border-radius: 50px;
+        font-weight: 700;
+        cursor: pointer;
+        border: none;
+        font-size: 1rem;
+        transition: 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .btn-prev {
+        background: transparent;
+        color: var(--text-muted);
+      }
+      .btn-prev:hover {
+        background: rgba(0, 0, 0, 0.05);
+        color: var(--text-main);
+      }
+      .btn-next {
+        background: var(--primary);
+        color: var(--white);
+        box-shadow: 0 10px 25px rgba(4, 75, 171, 0.3);
+      }
+      .btn-next:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(4, 75, 171, 0.4);
+        background: #003a8c;
+      }
+
+      /* SUCCESS VIEW */
+      .success-view {
+        text-align: center;
+        display: none;
+        padding: 40px 0;
+      }
+      .confetti-icon {
+        font-size: 4rem;
+        color: var(--success);
+        margin-bottom: 20px;
+        animation: popIn 0.5s;
+      }
+      @keyframes popIn {
+        0% {
+          transform: scale(0);
+        }
+        80% {
+          transform: scale(1.2);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        body {
+          padding: 80px 10px 20px;
+          align-items: flex-start;
+        }
+        .wizard-container {
+          animation: none;
+          border-radius: 20px;
+        }
+        .form-grid-2 {
+          grid-template-columns: 1fr;
+          gap: 15px;
+        }
+        .wizard-header,
+        .wizard-body,
+        .wizard-footer {
+          padding: 25px;
+        }
+        .step-title {
+          font-size: 1.8rem;
+        }
+        .nav-back {
+          top: 20px;
+          left: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="nav-back">
+      <a href="catalogo.html" class="btn-back"
+        ><i class="fas fa-chevron-left"></i> Volver al Catálogo</a
+      >
+    </div>
+
+    <div class="wizard-container">
+      <div class="wizard-header">
+        <div class="progress-info">
+          <span id="stepCounter">Paso 1 de 6</span>
+          <span>Progreso</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progressBar"></div>
+        </div>
+      </div>
+
+      <form id="cvForm" class="wizard-body" onsubmit="return false;">
+        <div class="step active" id="step1">
+          <h2 class="step-title">Datos Personales</h2>
+          <p class="step-desc">
+            Esta información irá directo a tu encabezado. Revisa que todo esté
+            correcto.
+          </p>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Nombres</label
+              ><input type="text" class="form-input" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Apellidos</label
+              ><input type="text" class="form-input" required />
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Edad</label
+              ><input type="number" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Fecha de Nacimiento</label
+              ><input type="date" class="form-input" />
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Nacionalidad</label
+              ><input type="text" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Estado Civil</label>
+              <select class="form-select form-input">
+                <option>Soltero/a</option>
+                <option>Casado/a</option>
+                <option>Divorciado/a</option>
+                <option>Viudo/a</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Email</label
+              ><input
+                type="email"
+                class="form-input"
+                placeholder="nombre@mail.com"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Teléfono</label
+              ><input type="tel" class="form-input" placeholder="+54 9..." />
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">DNI</label
+              ><input type="text" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Provincia / Ciudad</label>
+              <input
+                type="text"
+                class="form-input"
+                placeholder="Ej: Mendoza, Argentina"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">¿Tenés LinkedIn?</label>
+            <div class="toggle-group">
+              <label class="toggle-option"
+                ><input
+                  type="radio"
+                  name="hasLinkedin"
+                  value="no"
+                  checked
+                  onchange="toggleField('linkedinField', false)"
+                /><span class="toggle-btn">No</span></label
+              >
+              <label class="toggle-option"
+                ><input
+                  type="radio"
+                  name="hasLinkedin"
+                  value="si"
+                  onchange="toggleField('linkedinField', true)"
+                /><span class="toggle-btn">Sí</span></label
+              >
+            </div>
+            <div id="linkedinField" class="conditional-field">
+              <label class="form-label" style="margin-top: 10px"
+                >Link de tu perfil</label
+              >
+              <input
+                type="url"
+                class="form-input"
+                placeholder="https://linkedin.com/in/tu-perfil"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">¿Querés agregar tu CUIL?</label>
+            <div class="toggle-group">
+              <label class="toggle-option"
+                ><input
+                  type="radio"
+                  name="hasCuil"
+                  value="no"
+                  checked
+                  onchange="toggleField('cuilField', false)"
+                /><span class="toggle-btn">No</span></label
+              >
+              <label class="toggle-option"
+                ><input
+                  type="radio"
+                  name="hasCuil"
+                  value="si"
+                  onchange="toggleField('cuilField', true)"
+                /><span class="toggle-btn">Sí</span></label
+              >
+            </div>
+            <div id="cuilField" class="conditional-field">
+              <label class="form-label" style="margin-top: 10px"
+                >Número de CUIL</label
+              >
+              <input type="text" class="form-input" />
+            </div>
+          </div>
+        </div>
+
+        <div class="step" id="step2">
+          <h2 class="step-title">Experiencia Laboral</h2>
+          <div class="info-box">
+            <i class="fas fa-info-circle"></i> Tip: Sé preciso con las fechas y
+            las tareas.
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Disponibilidad</label>
+            <select class="form-select form-input">
+              <option>Full Time</option>
+              <option>Part Time</option>
+              <option>Freelance</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Detalle de Experiencia</label>
+            <p
+              style="
+                font-size: 0.85rem;
+                color: var(--text-muted);
+                margin-bottom: 5px;
+              "
+            >
+              Formato: EMPRESA + PUESTO + TIEMPO + TAREAS
+            </p>
+            <textarea
+              class="form-textarea form-input guided-textarea"
+              rows="6"
+              placeholder="Ej: Carpintería Argentina - Mendoza - 2000 a 2005 - Cortar madera y atención al cliente..."
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="step" id="step3">
+          <h2 class="step-title">Educación</h2>
+          <div class="form-group">
+            <label class="form-label">Detalle de Estudios</label>
+            <p
+              style="
+                font-size: 0.85rem;
+                color: var(--text-muted);
+                margin-bottom: 5px;
+              "
+            >
+              Formato: NIVEL + INSTITUCIÓN + LUGAR + TÍTULO + AÑO
+            </p>
+            <textarea
+              class="form-textarea form-input guided-textarea"
+              rows="6"
+              placeholder="Ej: Universitario - UTN - Mendoza - Ing. en Sistemas - 2015 a 2020..."
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="step" id="step4">
+          <h2 class="step-title">Cursos e Idiomas</h2>
+
+          <div class="form-group">
+            <label class="form-label">Cursos y Capacitaciones</label>
+            <p
+              style="
+                font-size: 0.85rem;
+                color: var(--text-muted);
+                margin-bottom: 5px;
+              "
+            >
+              Formato: NOMBRE + ENTIDAD + LUGAR + ROL + AÑO + HORAS
+            </p>
+            <textarea
+              class="form-textarea form-input guided-textarea"
+              rows="4"
+              placeholder="Ej: Excel Avanzado - Coursera - Online - Alumno - 2023 - 40hs"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Idiomas</label>
+            <p
+              style="
+                font-size: 0.85rem;
+                color: var(--text-muted);
+                margin-bottom: 5px;
+              "
+            >
+              Formato: IDIOMA + INSTITUTO + NIVEL + AÑOS
+            </p>
+            <textarea
+              class="form-textarea form-input guided-textarea"
+              rows="3"
+              placeholder="Ej: Inglés - Cambridge - B2 Intermedio - 2010"
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="step" id="step5">
+          <h2 class="step-title">Documentación</h2>
+
+          <div class="form-group">
+            <label class="form-label">¿Tenés CV viejo para basarnos?</label>
+            <div class="toggle-group" style="margin-bottom: 15px">
+              <label class="toggle-option"
+                ><input
+                  type="radio"
+                  name="oldCv"
+                  value="no"
+                  checked
+                  onchange="toggleField('uploadCv', false)"
+                /><span class="toggle-btn">No</span></label
+              >
+              <label class="toggle-option"
+                ><input
+                  type="radio"
+                  name="oldCv"
+                  value="si"
+                  onchange="toggleField('uploadCv', true)"
+                /><span class="toggle-btn">Sí</span></label
+              >
+            </div>
+            <div id="uploadCv" class="conditional-field">
+              <div
+                class="file-upload"
+                onclick="document.getElementById('cvFile').click()"
+              >
+                <input type="file" id="cvFile" hidden />
+                <i class="fas fa-file-pdf"></i>
+                <span>Subir CV Viejo (PDF/Word)</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top: 30px">
+            <label class="form-label">Foto de Perfil</label>
+            <p
+              style="
+                font-size: 0.85rem;
+                color: var(--text-muted);
+                margin-bottom: 10px;
+              "
+            >
+              Buena luz, fondo liso, ¡sonríe!
+            </p>
+
+            <div class="photo-preview" id="photoPreview">
+              <i class="fas fa-user"></i>
+              <img id="previewImg" src="" alt="Preview" />
+            </div>
+            <div
+              class="file-upload"
+              onclick="document.getElementById('photoFile').click()"
+            >
+              <input
+                type="file"
+                id="photoFile"
+                hidden
+                accept="image/*"
+                onchange="previewPhoto(this)"
+              />
+              <i class="fas fa-camera"></i>
+              <span>Subir Foto</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="step" id="step6">
+          <h2 class="step-title">Información Extra</h2>
+
+          <div class="form-group">
+            <label class="form-label"
+              >Habilidades Profesionales (Hard Skills)</label
+            >
+            <input
+              type="text"
+              class="form-input"
+              placeholder="Ej: Photoshop (Experto), Java (Intermedio)..."
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Habilidades Blandas (Soft Skills)</label>
+            <div class="skills-container">
+              <label class="skill-tag"
+                ><input type="checkbox" /><span class="skill-chip"
+                  >Liderazgo</span
+                ></label
+              >
+              <label class="skill-tag"
+                ><input type="checkbox" /><span class="skill-chip"
+                  >Trabajo en equipo</span
+                ></label
+              >
+              <label class="skill-tag"
+                ><input type="checkbox" /><span class="skill-chip"
+                  >Empatía</span
+                ></label
+              >
+              <label class="skill-tag"
+                ><input type="checkbox" /><span class="skill-chip"
+                  >Proactividad</span
+                ></label
+              >
+              <label class="skill-tag"
+                ><input type="checkbox" /><span class="skill-chip"
+                  >Comunicación</span
+                ></label
+              >
+              <label class="skill-tag"
+                ><input type="checkbox" /><span class="skill-chip"
+                  >Creatividad</span
+                ></label
+              >
+              <label class="skill-tag"
+                ><input type="checkbox" /><span class="skill-chip"
+                  >Resolución conflictos</span
+                ></label
+              >
+              <label class="skill-tag"
+                ><input type="checkbox" /><span class="skill-chip"
+                  >Adaptabilidad</span
+                ></label
+              >
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Orientación Específica (Opcional)</label>
+            <input
+              type="text"
+              class="form-input"
+              placeholder="¿Apuntas a un puesto en concreto?"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Comentarios Adicionales</label>
+            <textarea class="form-textarea form-input" rows="3"></textarea>
+          </div>
+        </div>
+
+        <div class="success-view" id="successView">
+          <div class="confetti-icon"><i class="fas fa-check-circle"></i></div>
+          <h2 style="color: var(--success)">¡Todo Listo!</h2>
+          <p class="step-desc">
+            Hemos recibido toda tu información. Nuestros expertos comenzarán a
+            trabajar en tu perfil estelar.
+          </p>
+          <a
+            href="catalogo.html"
+            class="btn-next"
+            style="
+              display: inline-flex;
+              text-decoration: none;
+              margin-top: 20px;
+            "
+            >Volver al Catálogo</a
+          >
+        </div>
+      </form>
+
+      <div class="wizard-footer" id="wizardFooter">
+        <button
+          class="btn btn-prev"
+          id="btnPrev"
+          onclick="prevStep()"
+          style="visibility: hidden"
+        >
+          Atrás
+        </button>
+        <button class="btn btn-next" id="btnNext" onclick="nextStep()">
+          Siguiente <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <script>
+      let currentStep = 1;
+      const totalSteps = 6;
+
+      function updateUI() {
+        // Progreso
+        const progress = (currentStep / totalSteps) * 100;
+        document.getElementById("progressBar").style.width = `${progress}%`;
+        document.getElementById(
+          "stepCounter"
+        ).innerText = `Paso ${currentStep} de ${totalSteps}`;
+
+        // Botones
+        const btnPrev = document.getElementById("btnPrev");
+        const btnNext = document.getElementById("btnNext");
+
+        btnPrev.style.visibility = currentStep === 1 ? "hidden" : "visible";
+
+        if (currentStep === totalSteps) {
+          btnNext.innerHTML = 'Finalizar <i class="fas fa-check"></i>';
+          btnNext.style.background = "#10b981"; // Green
+        } else {
+          btnNext.innerHTML = 'Siguiente <i class="fas fa-arrow-right"></i>';
+          btnNext.style.background = "var(--primary)";
+        }
+      }
+
+      function nextStep() {
+        if (currentStep < totalSteps) {
+          // Animación Salida
+          const currentEl = document.getElementById(`step${currentStep}`);
+          currentEl.style.display = "none";
+
+          currentStep++;
+
+          // Animación Entrada
+          const nextEl = document.getElementById(`step${currentStep}`);
+          nextEl.style.display = "block";
+          updateUI();
+          window.scrollTo(0, 0); // Subir al inicio del form
+        } else {
+          submitForm();
+        }
+      }
+
+      function prevStep() {
+        if (currentStep > 1) {
+          document.getElementById(`step${currentStep}`).style.display = "none";
+          currentStep--;
+          document.getElementById(`step${currentStep}`).style.display = "block";
+          updateUI();
+        }
+      }
+
+      // Lógica Condicional (LinkedIn, CUIL, CV Viejo)
+      function toggleField(fieldId, show) {
+        const field = document.getElementById(fieldId);
+        field.style.display = show ? "block" : "none";
+      }
+
+      // Preview Foto
+      function previewPhoto(input) {
+        if (input.files && input.files[0]) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            document.getElementById("previewImg").src = e.target.result;
+            document.getElementById("previewImg").style.display = "block";
+            document.querySelector(".photo-preview i").style.display = "none";
+          };
+          reader.readAsDataURL(input.files[0]);
+        }
+      }
+
+      // Simulación Envío
+      function submitForm() {
+        const btn = document.getElementById("btnNext");
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+        setTimeout(() => {
+          document.querySelector(".wizard-header").style.display = "none";
+          document.getElementById("wizardFooter").style.display = "none";
+          document
+            .querySelectorAll(".step")
+            .forEach((s) => (s.style.display = "none"));
+          document.getElementById("successView").style.display = "block";
+        }, 2000);
+      }
+    </script>
+  </body>
+</html>
