@@ -3,9 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Portafolio y Contacto | CV Arg</title>
+    <title>Contacto | CV Arg</title>
+    <link rel="icon" href="img/logo.png" type="image/png" sizes="50x50" />
+
     <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
     <link
@@ -14,81 +16,58 @@
     />
 
     <style>
-      /* --- MASTER VARIABLES --- */
+      /* --- VARIABLES --- */
       :root {
-        --primary: #044bab;
-        --primary-glow: #3b82f6;
-        --accent: #f3d136;
-        --dark-bg: #0f172a;
-        --card-bg: rgba(255, 255, 255, 0.9);
-        --text-main: #1e293b;
-        --text-light: #64748b;
+        --primary-blue: #044bab;
+        --primary-dark: #022a61;
+        --accent-yellow: #f3d136;
+        --text-dark: #1f2937;
+        --text-light: #6b7280;
         --white: #ffffff;
+        --bg-light: #f8fafc;
         --glass-border: rgba(255, 255, 255, 0.6);
-        --shadow-soft: 0 20px 40px -10px rgba(0, 0, 0, 0.08);
-        --shadow-glow: 0 0 20px rgba(4, 75, 171, 0.15);
       }
 
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        font-family: "Plus Jakarta Sans", sans-serif;
+        font-family: "Poppins", sans-serif;
         scroll-behavior: smooth;
       }
-
       body {
-        background-color: #f8fafc;
-        color: var(--text-main);
+        background-color: var(--bg-light);
+        color: var(--text-dark);
         overflow-x: hidden;
-        /* Fondo Animado Sutil tipo Aurora */
-        background-image: radial-gradient(
-            at 0% 0%,
-            rgba(4, 75, 171, 0.08) 0px,
-            transparent 50%
-          ),
-          radial-gradient(
-            at 100% 0%,
-            rgba(243, 209, 54, 0.08) 0px,
-            transparent 50%
-          ),
-          radial-gradient(
-            at 100% 100%,
-            rgba(4, 75, 171, 0.05) 0px,
-            transparent 50%
-          );
-        background-attachment: fixed;
       }
 
-      /* --- NAVBAR GLASS FLOTANTE --- */
+      /* --- NAVBAR --- */
       nav {
         position: fixed;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 90%;
-        max-width: 1200px;
-        padding: 0.8rem 2rem;
+        top: 0;
+        width: 100%;
+        padding: 1.5rem 5% 0 5%;
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-start;
         z-index: 1000;
-        background: rgba(255, 255, 255, 0.7);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid var(--glass-border);
-        border-radius: 100px;
-        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
+        transition: all 0.4s ease;
+        background: transparent;
+      }
+      nav.scrolled {
+        background: var(--primary-blue);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        padding-bottom: 1rem;
       }
 
       .logo {
         display: flex;
         align-items: center;
         text-decoration: none;
+        margin-top: -10px;
       }
       .logo-img {
-        height: 45px;
+        height: 100px;
         width: auto;
         object-fit: contain;
       }
@@ -97,6 +76,7 @@
         display: flex;
         align-items: center;
         gap: 30px;
+        margin-top: 25px;
       }
       .nav-links {
         display: flex;
@@ -106,48 +86,37 @@
       }
       .nav-links a {
         text-decoration: none;
-        color: var(--text-main);
-        font-weight: 600;
-        font-size: 0.95rem;
-        position: relative;
+        color: var(--white);
+        font-weight: 500;
+        font-size: 1.1rem;
         transition: 0.3s;
+        opacity: 0.9;
       }
       .nav-links a:hover,
       .nav-links a.active {
-        color: var(--primary);
+        opacity: 1;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
       }
-      .nav-links a.active::after {
-        content: "";
-        position: absolute;
-        width: 6px;
-        height: 6px;
-        background: var(--accent);
-        border-radius: 50%;
-        bottom: -8px;
-        left: 50%;
-        transform: translateX(-50%);
+      .nav-links a.active {
+        border-bottom: 3px solid var(--accent-yellow);
       }
 
       .cart-wrapper {
         position: relative;
         cursor: pointer;
-        color: var(--text-main);
-        transition: 0.3s;
+        color: var(--white);
+        font-size: 1.4rem;
         text-decoration: none;
-      }
-      .cart-wrapper:hover {
-        color: var(--primary);
-        transform: scale(1.1);
       }
       .cart-count {
         position: absolute;
-        top: -5px;
-        right: -8px;
-        background: var(--accent);
-        color: var(--primary);
-        font-size: 0.7rem;
-        width: 18px;
-        height: 18px;
+        top: -8px;
+        right: -10px;
+        background: var(--accent-yellow);
+        color: var(--primary-dark);
+        font-size: 0.75rem;
+        width: 20px;
+        height: 20px;
         border-radius: 50%;
         display: flex;
         justify-content: center;
@@ -155,49 +124,48 @@
         font-weight: 800;
       }
 
-      /* --- HERO SECTION --- */
+      /* --- HERO SECTION (Ajustado para no tocar el slider) --- */
       .hero-section {
-        padding: 180px 5% 80px;
+        padding: 180px 5% 100px; /* Menos padding abajo */
         text-align: center;
+        background: var(--primary-blue);
+        color: var(--white);
+        clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
         position: relative;
+        z-index: 1;
+        margin-bottom: 0;
       }
       .hero-title {
-        font-size: clamp(3rem, 7vw, 5rem);
+        font-size: clamp(2.5rem, 6vw, 4rem);
         font-weight: 800;
         line-height: 1.1;
         margin-bottom: 20px;
         background: linear-gradient(
           135deg,
-          var(--text-main) 30%,
-          var(--primary) 100%
+          #ffffff 30%,
+          var(--accent-yellow) 100%
         );
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        opacity: 0;
-        animation: fadeUp 0.8s forwards;
       }
       .hero-subtitle {
         font-size: 1.25rem;
-        color: var(--text-light);
+        color: rgba(255, 255, 255, 0.9);
         max-width: 600px;
         margin: 0 auto;
         line-height: 1.6;
-        opacity: 0;
-        animation: fadeUp 0.8s forwards 0.2s;
       }
 
-      /* --- SLIDER "SCANNER" INTERACTIVO --- */
+      /* --- SLIDER "SCANNER" (Separado totalmente) --- */
       .comparison-wrapper {
         position: relative;
         max-width: 1000px;
-        margin: 0 auto 100px;
+        margin: 50px auto 100px; /* Margen positivo arriba (50px) para separarlo */
         padding: 20px;
-        background: rgba(255, 255, 255, 0.5);
+        background: var(--white);
         border-radius: 30px;
-        border: 1px solid var(--white);
-        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.5), var(--shadow-soft);
-        opacity: 0;
-        animation: fadeUp 0.8s forwards 0.4s;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+        z-index: 10;
       }
 
       .comparison-container {
@@ -219,23 +187,18 @@
         overflow: hidden;
       }
 
-      /* Capa "DESPUÉS" (Top Layer con corte y sombra) */
       .layer-after {
         background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
         width: 50%;
         z-index: 2;
-        border-right: 3px solid var(--accent);
-        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.2);
+        border-right: 3px solid var(--accent-yellow);
       }
-
-      /* Capa "ANTES" (Bottom Layer) */
       .layer-before {
         background: #cbd5e1;
         width: 100%;
         z-index: 1;
       }
 
-      /* Contenido de los Mockups */
       .mockup-content {
         position: absolute;
         top: 50%;
@@ -251,10 +214,9 @@
         pointer-events: none;
       }
 
-      /* Diseño CV Moderno (CSS puro) */
+      /* Estilos Internos CV */
       .cv-modern {
-        border-left: 6px solid var(--primary);
-        border-radius: 4px;
+        border-left: 6px solid var(--primary-blue);
       }
       .mod-header {
         display: flex;
@@ -281,7 +243,7 @@
         width: 100%;
       }
       .line.blue {
-        background: var(--primary);
+        background: var(--primary-blue);
         width: 60%;
         height: 16px;
       }
@@ -300,7 +262,6 @@
         height: 100%;
       }
 
-      /* Diseño CV Viejo */
       .cv-old {
         font-family: "Times New Roman", serif;
         opacity: 0.7;
@@ -321,7 +282,6 @@
         border-radius: 0;
       }
 
-      /* Handle del Slider (Manija) */
       .slider-handle {
         position: absolute;
         top: 50%;
@@ -329,7 +289,7 @@
         transform: translate(-50%, -50%);
         width: 56px;
         height: 56px;
-        background: var(--accent);
+        background: var(--accent-yellow);
         border: 4px solid var(--white);
         border-radius: 50%;
         z-index: 10;
@@ -339,14 +299,10 @@
         box-shadow: 0 0 0 4px rgba(243, 209, 54, 0.3),
           0 10px 20px rgba(0, 0, 0, 0.2);
         pointer-events: none;
-        transition: 0.2s;
-      }
-      .slider-handle i {
-        color: var(--text-main);
+        color: var(--text-dark);
         font-size: 1.2rem;
       }
 
-      /* Badges Flotantes */
       .badge-float {
         position: absolute;
         top: 30px;
@@ -359,18 +315,18 @@
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         z-index: 5;
       }
-      .badge-after {
-        right: 30px;
-        background: var(--primary);
-        color: white;
-      }
       .badge-before {
         left: 30px;
         background: #fff;
-        color: #64748b;
+        color: var(--text-light);
+      }
+      .badge-after {
+        right: 30px;
+        background: var(--primary-blue);
+        color: var(--white);
       }
 
-      /* --- CONTACT SECTION (Layout Dividido) --- */
+      /* --- CONTACT SECTION --- */
       .contact-section {
         max-width: 1200px;
         margin: 0 auto 100px;
@@ -381,15 +337,11 @@
         align-items: start;
       }
 
-      /* Panel Izquierdo: Info */
-      .info-panel {
-        padding-top: 20px;
-      }
       .info-title {
         font-size: 2.5rem;
         font-weight: 800;
         margin-bottom: 20px;
-        color: var(--text-main);
+        color: var(--primary-blue);
       }
       .info-desc {
         color: var(--text-light);
@@ -414,17 +366,17 @@
       .contact-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 15px 35px -5px rgba(4, 75, 171, 0.1);
-        border-color: rgba(4, 75, 171, 0.1);
       }
+
       .icon-box {
         width: 50px;
         height: 50px;
-        background: linear-gradient(135deg, #eff6ff, #dbeafe);
+        background: #e6effa;
         border-radius: 14px;
         display: flex;
         justify-content: center;
         align-items: center;
-        color: var(--primary);
+        color: var(--primary-blue);
         font-size: 1.2rem;
       }
       .card-text h4 {
@@ -435,10 +387,9 @@
       .card-text p {
         font-weight: 600;
         font-size: 1.05rem;
-        color: var(--text-main);
+        color: var(--text-dark);
       }
 
-      /* Panel Derecho: Formulario Holográfico */
       .form-panel {
         background: var(--white);
         padding: 3rem;
@@ -448,7 +399,6 @@
         position: relative;
         overflow: hidden;
       }
-      /* Barra superior de color */
       .form-panel::before {
         content: "";
         position: absolute;
@@ -456,10 +406,13 @@
         left: 0;
         width: 100%;
         height: 6px;
-        background: linear-gradient(90deg, var(--primary), var(--accent));
+        background: linear-gradient(
+          90deg,
+          var(--primary-blue),
+          var(--accent-yellow)
+        );
       }
 
-      /* Inputs Animados */
       .input-group {
         position: relative;
         margin-bottom: 25px;
@@ -471,32 +424,29 @@
         border: 2px solid transparent;
         border-radius: 12px;
         font-size: 1rem;
-        color: var(--text-main);
+        color: var(--text-dark);
         transition: 0.3s;
         outline: none;
-        font-family: inherit;
       }
       .input-field:focus {
         background: var(--white);
-        border-color: var(--primary);
+        border-color: var(--primary-blue);
         box-shadow: 0 0 0 4px rgba(4, 75, 171, 0.1);
       }
       .input-label {
         position: absolute;
         left: 20px;
         top: 15px;
-        color: #94a3b8;
+        color: #9ca3af;
         pointer-events: none;
         transition: 0.3s;
-        font-size: 1rem;
       }
-      /* Animación del label al hacer foco o si hay texto */
       .input-field:focus ~ .input-label,
       .input-field:not(:placeholder-shown) ~ .input-label {
         top: -10px;
         left: 15px;
         font-size: 0.8rem;
-        color: var(--primary);
+        color: var(--primary-blue);
         background: var(--white);
         padding: 0 5px;
         font-weight: 600;
@@ -505,8 +455,8 @@
       .btn-submit {
         width: 100%;
         padding: 16px;
-        background: var(--primary);
-        color: white;
+        background: var(--primary-blue);
+        color: var(--white);
         border: none;
         border-radius: 14px;
         font-size: 1.1rem;
@@ -517,31 +467,36 @@
         justify-content: center;
         align-items: center;
         gap: 10px;
-        box-shadow: 0 10px 20px rgba(4, 75, 171, 0.2);
       }
       .btn-submit:hover {
-        background: var(--white);
-        color: var(--primary);
         transform: translateY(-3px);
-        box-shadow: 0 15px 30px rgba(4, 75, 171, 0.3);
+        background: var(--primary-dark);
       }
 
-      /* --- FOOTER MINIMALISTA --- */
+      /* --- FOOTER --- */
       footer {
-        background: linear-gradient(to bottom, var(--primary), #022a61);
+        background: linear-gradient(
+          to bottom,
+          var(--primary-blue),
+          var(--primary-dark)
+        );
         color: var(--white);
-        padding: 6rem 5% 2rem;
+        padding: 4rem 5% 2rem;
         text-align: center;
-        clip-path: polygon(0 60px, 100% 0, 100% 100%, 0% 100%);
-        margin-top: 60px;
+        margin-top: auto;
       }
       .copyright {
         opacity: 0.7;
         font-size: 0.95rem;
-        letter-spacing: 0.5px;
       }
 
-      /* UTILS & CORRECCIÓN WHATSAPP */
+      .menu-toggle {
+        display: none;
+        font-size: 1.5rem;
+        color: var(--white);
+        cursor: pointer;
+        margin-right: 20px;
+      }
       .whatsapp-float {
         position: fixed;
         bottom: 30px;
@@ -557,65 +512,24 @@
         font-size: 2rem;
         z-index: 100;
         box-shadow: 0 10px 30px rgba(37, 211, 102, 0.4);
-        transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        text-decoration: none; /* <<<--- CORRECCIÓN AQUÍ: Elimina el subrayado */
+        text-decoration: none;
+        transition: 0.3s;
       }
       .whatsapp-float:hover {
-        transform: scale(1.1) rotate(10deg);
-      }
-
-      .menu-toggle {
-        display: none;
-        font-size: 1.5rem;
-        color: var(--text-main);
-        cursor: pointer;
-      }
-
-      @keyframes fadeUp {
-        from {
-          opacity: 0;
-          transform: translateY(30px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      /* --- RESPONSIVE --- */
-      @media (max-width: 1024px) {
-        .contact-section {
-          grid-template-columns: 1fr;
-          gap: 40px;
-        }
-        .comparison-container {
-          height: 450px;
-        }
-        nav {
-          top: 0;
-          width: 100%;
-          border-radius: 0;
-          max-width: none;
-          padding: 1rem 5%;
-        }
+        transform: scale(1.1);
       }
 
       @media (max-width: 768px) {
         .menu-toggle {
           display: block;
         }
-        .nav-right {
-          gap: 20px;
-        }
-
         .nav-links {
           position: fixed;
           top: 0;
           right: -100%;
           height: 100vh;
           width: 100%;
-          background: rgba(255, 255, 255, 0.98);
-          backdrop-filter: blur(20px);
+          background: rgba(4, 75, 171, 0.98);
           flex-direction: column;
           align-items: center;
           justify-content: center;
@@ -626,43 +540,38 @@
         .nav-links.active {
           right: 0;
         }
-        .nav-links a {
-          font-size: 1.5rem;
-        }
-
-        .hero-section {
-          padding-top: 120px;
-        }
-        .hero-title {
-          font-size: 2.8rem;
+        .contact-section {
+          grid-template-columns: 1fr;
+          gap: 40px;
         }
         .comparison-container {
           height: 350px;
         }
-        .form-panel {
-          padding: 2rem;
+        nav {
+          background: var(--primary-blue);
+          align-items: center;
+        }
+        .logo-img {
+          height: 60px;
         }
       }
     </style>
   </head>
   <body>
-    <nav>
+    <nav id="navbar">
       <a href="index.html" class="logo">
-        <img src="img/logo azul 1.png" alt="Logo" class="logo-img" />
+        <img src="img/logo.png" alt="Logo" class="logo-img" />
       </a>
-
       <div class="nav-right">
         <ul class="nav-links">
           <li><a href="index.html">Inicio</a></li>
-          <li><a href="catalogo.html">Servicios</a></li>
+          <li><a href="catalogo.html">Catálogo</a></li>
           <li><a href="contacto.html" class="active">Contacto</a></li>
         </ul>
-
         <a href="carrito.html" class="cart-wrapper">
-          <i class="fas fa-shopping-cart" style="font-size: 1.3rem"></i>
+          <i class="fas fa-shopping-cart"></i>
           <span class="cart-count" id="cart-count">0</span>
         </a>
-
         <div class="menu-toggle"><i class="fas fa-bars"></i></div>
       </div>
     </nav>
@@ -735,7 +644,10 @@
           transformemos tu carrera hoy mismo.
         </p>
 
-        <a href="mailto:curriculumvitaeargentina@gmail.com" class="contact-card">
+        <a
+          href="mailto:curriculumvitaeargentina@gmail.com"
+          class="contact-card"
+        >
           <div class="icon-box"><i class="far fa-envelope"></i></div>
           <div class="card-text">
             <h4>Email</h4>
@@ -765,7 +677,7 @@
           style="
             margin-bottom: 2rem;
             font-size: 1.5rem;
-            color: var(--primary);
+            color: var(--primary-blue);
             font-weight: 700;
           "
         >
@@ -785,10 +697,11 @@
           <div class="input-group">
             <select
               class="input-field"
-              style="color: var(--text-main); appearance: none"
+              style="color: var(--text-dark); appearance: none"
             >
               <option>Mejora de CV</option>
               <option>Perfil LinkedIn</option>
+              <option>Portafolio Web (Nuevo)</option>
               <option>Pack Completo</option>
               <option>Otro</option>
             </select>
@@ -798,7 +711,7 @@
                 position: absolute;
                 right: 20px;
                 top: 20px;
-                color: #94a3b8;
+                color: #9ca3af;
                 pointer-events: none;
               "
             ></i>
@@ -832,6 +745,13 @@
     ></a>
 
     <script>
+      // Navbar Scroll
+      window.addEventListener("scroll", function () {
+        var navbar = document.getElementById("navbar");
+        if (window.scrollY > 50) navbar.classList.add("scrolled");
+        else navbar.classList.remove("scrolled");
+      });
+
       // Menu Mobile
       const menuToggle = document.querySelector(".menu-toggle");
       const navLinks = document.querySelector(".nav-links");
@@ -842,39 +762,7 @@
         icon.classList.toggle("fa-times");
       });
 
-      // --- LÓGICA DEL SLIDER INTERACTIVO ---
-      const container = document.getElementById("compContainer");
-      const layerAfter = document.getElementById("layerAfter");
-      const handle = document.getElementById("sliderHandle");
-
-      // Inicializar en el centro
-      window.addEventListener("load", () => {
-        layerAfter.style.width = "50%";
-        handle.style.left = "50%";
-      });
-
-      const moveSlider = (e) => {
-        const rect = container.getBoundingClientRect();
-        // Detectar si es touch o mouse
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-
-        let x = clientX - rect.left;
-
-        // Restringir límites
-        if (x < 0) x = 0;
-        if (x > rect.width) x = rect.width;
-
-        const percent = (x / rect.width) * 100;
-
-        layerAfter.style.width = `${percent}%`;
-        handle.style.left = `${percent}%`;
-      };
-
-      // Eventos de movimiento
-      container.addEventListener("mousemove", moveSlider);
-      container.addEventListener("touchmove", moveSlider);
-
-      // Lógica del Carrito (Contador)
+      // Cart Logic
       document.addEventListener("DOMContentLoaded", () => {
         let cart = JSON.parse(localStorage.getItem("impulsopro_cart")) || [];
         let totalQty = cart.reduce((acc, item) => acc + item.quantity, 0);
@@ -884,6 +772,32 @@
           badge.style.display = totalQty === 0 ? "none" : "flex";
         }
       });
+
+      // --- LÓGICA DEL SLIDER (ORIGINAL) ---
+      const container = document.getElementById("compContainer");
+      const layerAfter = document.getElementById("layerAfter");
+      const handle = document.getElementById("sliderHandle");
+
+      window.addEventListener("load", () => {
+        layerAfter.style.width = "50%";
+        handle.style.left = "50%";
+      });
+
+      const moveSlider = (e) => {
+        const rect = container.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        let x = clientX - rect.left;
+
+        if (x < 0) x = 0;
+        if (x > rect.width) x = rect.width;
+
+        const percent = (x / rect.width) * 100;
+        layerAfter.style.width = `${percent}%`;
+        handle.style.left = `${percent}%`;
+      };
+
+      container.addEventListener("mousemove", moveSlider);
+      container.addEventListener("touchmove", moveSlider);
     </script>
   </body>
 </html>
