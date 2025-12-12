@@ -127,13 +127,12 @@
         font-weight: 800;
       }
 
-      /* HEADER SIMPLE (Sin superposiciones raras) */
+      /* HEADER SIMPLE */
       .page-header {
         padding: 160px 5% 80px;
         background: var(--primary-blue);
         color: var(--white);
         text-align: center;
-        /* Corte suave abajo */
         clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
         margin-bottom: 0;
       }
@@ -149,7 +148,7 @@
         animation: fadeDown 0.8s ease 0.2s backwards;
       }
 
-      /* LAYOUT CARRITO (Separado del header) */
+      /* LAYOUT CARRITO */
       .cart-section {
         max-width: 1200px;
         margin: 40px auto 80px;
@@ -157,7 +156,6 @@
         display: grid;
         grid-template-columns: 1.5fr 1fr;
         gap: 40px;
-        /* Animación de entrada */
         animation: fadeUp 0.8s ease backwards 0.4s;
       }
 
@@ -358,7 +356,6 @@
         box-shadow: 0 15px 30px rgba(4, 75, 171, 0.4);
       }
 
-      /* ANIMACIONES */
       @keyframes fadeDown {
         from {
           opacity: 0;
@@ -578,6 +575,10 @@
     </footer>
 
     <script>
+      // --- CONFIGURACIÓN ---
+      // Pega aquí la URL de tu Google Apps Script desplegado como Web App
+      const SCRIPT_URL = "PEGAR_TU_URL_DE_APPS_SCRIPT_AQUI";
+
       // Navbar Scroll
       window.addEventListener("scroll", function () {
         var navbar = document.getElementById("navbar");
@@ -636,7 +637,6 @@
           const itemTotal = item.price * item.quantity;
           subtotal += itemTotal;
 
-          // Determinar icono según nombre
           let iconClass = "fas fa-star";
           const nameLower = item.name.toLowerCase();
           if (nameLower.includes("cv")) iconClass = "fas fa-file-contract";
@@ -714,18 +714,60 @@
         }
       }
 
-      function proceedToCheckout() {
+      // --- INTEGRACIÓN MERCADO PAGO ---
+      async function proceedToCheckout() {
         const btn = document.querySelector(".btn-checkout");
         const originalText = btn.innerHTML;
+        const cart = JSON.parse(localStorage.getItem("impulsopro_cart")) || [];
 
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+        if (cart.length === 0) return;
+
+        // UI Loading
+        btn.innerHTML =
+          '<i class="fas fa-spinner fa-spin"></i> Generando pago...';
         btn.style.opacity = "0.7";
         btn.style.pointerEvents = "none";
 
-        setTimeout(() => {
-          // Redirigir al formulario de carga de datos tras el "pago"
-          window.location.href = "formulario.html";
-        }, 1500);
+        // Formatear items para MP
+        const items = cart.map((item) => ({
+          title: item.name,
+          quantity: item.quantity,
+          currency_id: "ARS", // O "USD" según corresponda
+          unit_price: item.price,
+        }));
+
+        // Payload
+        const payload = {
+          action: "create_preference",
+          items: items,
+        };
+
+        try {
+          // LLAMADA AL BACKEND (Google Apps Script)
+          const response = await fetch(SCRIPT_URL, {
+            method: "POST",
+            mode: "cors", // Importante para Apps Script
+            headers: { "Content-Type": "text/plain;charset=utf-8" }, // Truco para evitar preflight
+            body: JSON.stringify(payload),
+          });
+
+          const data = await response.json();
+
+          if (data.init_point) {
+            // REDIRECCIÓN A MERCADO PAGO
+            window.location.href = data.init_point;
+          } else {
+            throw new Error("No se recibió link de pago");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert(
+            "Hubo un error al conectar con Mercado Pago. Por favor, intenta de nuevo."
+          );
+          btn.innerHTML = originalText;
+          btn.style.opacity = "1";
+          btn.style.pointerEvents = "auto";
+        }
       }
     </script>
   </body>
