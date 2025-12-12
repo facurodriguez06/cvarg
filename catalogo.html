@@ -639,9 +639,7 @@
                     <h3 class="card-title">${prod.titulo}</h3>
                     <p class="card-desc">${prod.descripcion}</p>
                     <div class="card-footer">
-                        <div class="price">$${
-                          prod.precio
-                        } <small>USD</small></div>
+                        <div class="price">${prod.precio} <small>ARS</small></div>
                         <button class="btn-add" onclick="addToCart('${
                           prod.id
                         }', '${prod.titulo}', ${prod.precio}, '${iconClass}')">
