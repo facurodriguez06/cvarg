@@ -16,7 +16,7 @@
     />
 
     <style>
-      /* --- VARIABLES --- */
+      /* Estilos CSS Base */
       :root {
         --primary-blue: #044bab;
         --primary-dark: #022a61;
@@ -28,7 +28,6 @@
         --success: #10b981;
         --danger: #ef4444;
       }
-
       * {
         margin: 0;
         padding: 0;
@@ -43,8 +42,6 @@
         flex-direction: column;
         min-height: 100vh;
       }
-
-      /* NAVBAR */
       nav {
         position: fixed;
         top: 0;
@@ -62,7 +59,6 @@
         box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         padding-bottom: 1rem;
       }
-
       .logo {
         display: flex;
         align-items: center;
@@ -74,7 +70,6 @@
         width: auto;
         object-fit: contain;
       }
-
       .nav-right {
         display: flex;
         align-items: center;
@@ -103,7 +98,6 @@
       .nav-links a.active {
         border-bottom: 3px solid var(--accent-yellow);
       }
-
       .cart-wrapper {
         position: relative;
         cursor: pointer;
@@ -126,8 +120,6 @@
         align-items: center;
         font-weight: 800;
       }
-
-      /* HEADER SIMPLE */
       .page-header {
         padding: 160px 5% 80px;
         background: var(--primary-blue);
@@ -147,8 +139,6 @@
         font-size: 1.1rem;
         animation: fadeDown 0.8s ease 0.2s backwards;
       }
-
-      /* LAYOUT CARRITO */
       .cart-section {
         max-width: 1200px;
         margin: 40px auto 80px;
@@ -158,14 +148,11 @@
         gap: 40px;
         animation: fadeUp 0.8s ease backwards 0.4s;
       }
-
-      /* LISTA DE ITEMS */
       .cart-items {
         display: flex;
         flex-direction: column;
         gap: 20px;
       }
-
       .cart-item {
         background: var(--white);
         padding: 25px;
@@ -175,17 +162,13 @@
         align-items: center;
         gap: 20px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        transition: all 0.3s;
         border: 1px solid rgba(0, 0, 0, 0.05);
-        position: relative;
-        overflow: hidden;
       }
       .cart-item:hover {
         transform: translateY(-5px);
         box-shadow: 0 20px 40px rgba(4, 75, 171, 0.15);
-        border-color: rgba(4, 75, 171, 0.1);
       }
-
       .item-icon {
         width: 70px;
         height: 70px;
@@ -197,7 +180,6 @@
         font-size: 1.8rem;
         color: var(--primary-blue);
       }
-
       .item-info h3 {
         font-size: 1.1rem;
         font-weight: 700;
@@ -208,13 +190,11 @@
         font-size: 0.9rem;
         color: var(--text-light);
       }
-
       .item-price {
         font-size: 1.2rem;
         font-weight: 700;
         color: var(--text-dark);
       }
-
       .btn-remove {
         color: #cbd5e1;
         cursor: pointer;
@@ -228,8 +208,6 @@
         color: var(--danger);
         transform: scale(1.2) rotate(10deg);
       }
-
-      /* RESUMEN DE PAGO */
       .cart-summary {
         background: var(--white);
         padding: 30px;
@@ -247,7 +225,6 @@
         border-bottom: 2px solid #f1f5f9;
         padding-bottom: 15px;
       }
-
       .summary-row {
         display: flex;
         justify-content: space-between;
@@ -268,8 +245,6 @@
         display: none;
         font-weight: 600;
       }
-
-      /* CUPÓN */
       .coupon-box {
         display: flex;
         gap: 10px;
@@ -281,7 +256,6 @@
         border: 2px solid #f1f5f9;
         border-radius: 12px;
         outline: none;
-        font-family: inherit;
         transition: 0.3s;
       }
       .coupon-input:focus {
@@ -302,8 +276,6 @@
         background: var(--primary-blue);
         transform: translateY(-2px);
       }
-
-      /* BOTÓN PAGO */
       .btn-checkout {
         width: 100%;
         padding: 16px;
@@ -327,8 +299,6 @@
         transform: translateY(-3px);
         box-shadow: 0 15px 35px rgba(0, 158, 227, 0.4);
       }
-
-      /* EMPTY STATE */
       .empty-cart {
         grid-column: 1 / -1;
         text-align: center;
@@ -353,7 +323,69 @@
       .btn-shop:hover {
         background: var(--primary-dark);
         transform: translateY(-3px);
-        box-shadow: 0 15px 30px rgba(4, 75, 171, 0.4);
+      }
+
+      /* Modal Personalizado */
+      .custom-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(5px);
+        z-index: 2000;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        animation: fadeIn 0.3s ease;
+      }
+      .custom-modal {
+        background: var(--white);
+        padding: 40px;
+        border-radius: 24px;
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        transform: scale(0.8);
+        animation: popIn 0.3s forwards;
+      }
+      .modal-icon {
+        font-size: 3rem;
+        margin-bottom: 20px;
+        color: var(--primary-blue);
+      }
+      .modal-icon.error {
+        color: var(--danger);
+      }
+      .modal-icon.success {
+        color: var(--success);
+      }
+      .modal-title {
+        font-size: 1.5rem;
+        font-weight: 800;
+        margin-bottom: 10px;
+        color: var(--text-dark);
+      }
+      .modal-msg {
+        color: var(--text-light);
+        margin-bottom: 25px;
+        font-size: 0.95rem;
+      }
+      .modal-btn {
+        background: var(--primary-blue);
+        color: var(--white);
+        padding: 12px 30px;
+        border-radius: 50px;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+        font-size: 1rem;
+      }
+      .modal-btn:hover {
+        background: var(--primary-dark);
       }
 
       @keyframes fadeDown {
@@ -376,8 +408,19 @@
           transform: translateY(0);
         }
       }
-
-      /* FOOTER */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @keyframes popIn {
+        to {
+          transform: scale(1);
+        }
+      }
       footer {
         background: linear-gradient(
           to bottom,
@@ -395,7 +438,6 @@
         border-top: 1px solid rgba(255, 255, 255, 0.1);
         padding-top: 20px;
       }
-
       .menu-toggle {
         display: none;
         font-size: 1.5rem;
@@ -403,7 +445,6 @@
         cursor: pointer;
         margin-right: 20px;
       }
-
       @media (max-width: 900px) {
         .cart-section {
           grid-template-columns: 1fr;
@@ -473,19 +514,19 @@
   </head>
   <body>
     <nav id="navbar">
-      <a href="index.html" class="logo">
-        <img src="img/logo.png" alt="Logo" class="logo-img" />
-      </a>
+      <a href="index.html" class="logo"
+        ><img src="img/logo.png" alt="Logo" class="logo-img"
+      /></a>
       <div class="nav-right">
         <ul class="nav-links">
           <li><a href="index.html">Inicio</a></li>
           <li><a href="catalogo.html">Catálogo</a></li>
           <li><a href="contacto.html">Contacto</a></li>
         </ul>
-        <a href="carrito.html" class="cart-wrapper">
-          <i class="fas fa-shopping-cart"></i>
-          <span class="cart-count" id="cart-count">0</span>
-        </a>
+        <a href="carrito.html" class="cart-wrapper"
+          ><i class="fas fa-shopping-cart"></i
+          ><span class="cart-count" id="cart-count">0</span></a
+        >
         <div class="menu-toggle"><i class="fas fa-bars"></i></div>
       </div>
     </nav>
@@ -499,7 +540,6 @@
 
     <section class="cart-section">
       <div class="cart-items" id="cartItemsContainer"></div>
-
       <div class="empty-cart" id="emptyCartMessage">
         <i
           class="fas fa-shopping-basket"
@@ -515,10 +555,8 @@
         </p>
         <a href="catalogo.html" class="btn-shop">Ver Catálogo</a>
       </div>
-
       <aside class="cart-summary" id="cartSummary">
         <h2 class="summary-title">Resumen del Pedido</h2>
-
         <div class="coupon-box">
           <input
             type="text"
@@ -528,28 +566,23 @@
           />
           <button class="btn-apply" onclick="applyCoupon()">Aplicar</button>
         </div>
-
         <div class="summary-row">
-          <span>Subtotal</span>
-          <span id="subtotalPrice">$0</span>
+          <span>Subtotal</span><span id="subtotalPrice">$0</span>
         </div>
         <div class="summary-row discount" id="discountRow">
-          <span>Descuento <small id="discountName"></small></span>
-          <span id="discountAmount">-$0</span>
+          <span>Descuento <small id="discountName"></small></span
+          ><span id="discountAmount">-$0</span>
         </div>
-
         <div class="summary-row total">
-          <span>Total</span>
-          <span id="totalPrice" style="color: var(--primary-blue)">$0</span>
+          <span>Total</span
+          ><span id="totalPrice" style="color: var(--primary-blue)">$0</span>
         </div>
-
         <a
           href="#"
           class="btn-checkout"
           onclick="proceedToCheckout(); return false;"
-        >
-          Pagar con Mercado Pago <i class="fas fa-lock"></i>
-        </a>
+          >Pagar con Mercado Pago <i class="fas fa-lock"></i
+        ></a>
         <div
           style="
             text-align: center;
@@ -569,24 +602,32 @@
     </section>
 
     <footer>
+      <img src="img/logo.png" alt="Logo" style="height: 80px; margin-bottom: 20px;">
       <div class="copyright">
         &copy; 2025 CvArg. Todos los derechos reservados.
       </div>
     </footer>
 
-    <script>
-      // --- CONFIGURACIÓN ---
-      // Pega aquí la URL de tu Google Apps Script desplegado como Web App
-      const SCRIPT_URL = "PEGAR_TU_URL_DE_APPS_SCRIPT_AQUI";
+    <div class="custom-modal-overlay" id="modalOverlay">
+      <div class="custom-modal">
+        <i class="fas fa-info-circle modal-icon" id="modalIcon"></i>
+        <h3 class="modal-title" id="modalTitle">Título</h3>
+        <p class="modal-msg" id="modalMsg">Mensaje</p>
+        <button class="modal-btn" onclick="closeModal()">Entendido</button>
+      </div>
+    </div>
 
-      // Navbar Scroll
-      window.addEventListener("scroll", function () {
-        var navbar = document.getElementById("navbar");
+    <script>
+      // --- CONFIGURACIÓN CRÍTICA ---
+      // ¡PEGA AQUÍ LA URL DE TU NUEVO DESPLIEGUE! (La que verificaste en el paso 2)
+      const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwdYf4KWaLgTxqO9aDykYoxh1XP0sxkGoU0s1-6DsJmVjBByftZgjXxs1zw7ZU68R1o/exec";
+
+      // Navbar & Menu
+      window.addEventListener("scroll", () => {
+        const navbar = document.getElementById("navbar");
         if (window.scrollY > 50) navbar.classList.add("scrolled");
         else navbar.classList.remove("scrolled");
       });
-
-      // Menu Mobile
       const menuToggle = document.querySelector(".menu-toggle");
       const navLinks = document.querySelector(".nav-links");
       menuToggle.addEventListener("click", () => {
@@ -596,13 +637,56 @@
         icon.classList.toggle("fa-times");
       });
 
-      // --- LÓGICA DEL CARRITO ---
+      // Modal
+      function showModal(title, msg, type = "info") {
+        document.getElementById("modalTitle").innerText = title;
+        document.getElementById("modalMsg").innerText = msg;
+        const icon = document.getElementById("modalIcon");
+        icon.className = "fas modal-icon";
+        if (type === "error") {
+          icon.classList.add("fa-exclamation-circle", "error");
+        } else if (type === "success") {
+          icon.classList.add("fa-check-circle", "success");
+        } else {
+          icon.classList.add("fa-info-circle");
+          icon.style.color = "var(--primary-blue)";
+        }
+        document.getElementById("modalOverlay").style.display = "flex";
+      }
+      function closeModal() {
+        document.getElementById("modalOverlay").style.display = "none";
+      }
+
+      // Carrito Logic
       let currentDiscount = 0;
       const VALID_COUPONS = { DESPEGAR10: 0.1, CVPRO: 0.2, STUDENT: 0.15 };
 
       document.addEventListener("DOMContentLoaded", () => {
         renderCart();
+        handlePaymentStatus();
       });
+
+      function handlePaymentStatus() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const status = urlParams.get('mp_status');
+
+        if (status) {
+            // Limpia los parámetros de la URL para que el mensaje no vuelva a aparecer si se recarga la página
+            history.replaceState(null, '', window.location.pathname);
+        }
+
+        if (status === 'success') {
+            localStorage.removeItem('impulsopro_cart');
+            showModal('¡Pago Exitoso!', 'Tu pago fue aprobado. Serás redirigido para completar tus datos.', 'success');
+            setTimeout(() => {
+                window.location.href = 'formulario.html';
+            }, 3000); // Redirige después de 3 segundos
+        } else if (status === 'failure') {
+            showModal('Pago Rechazado', 'No se pudo procesar tu pago. Por favor, intenta de nuevo o usa otro medio de pago.', 'error');
+        } else if (status === 'pending') {
+            showModal('Pago Pendiente', 'Tu pago está siendo procesado. Te avisaremos cuando se acredite.', 'info');
+        }
+      }
 
       function renderCart() {
         const cart = JSON.parse(localStorage.getItem("impulsopro_cart")) || [];
@@ -611,14 +695,12 @@
         const emptyMsg = document.getElementById("emptyCartMessage");
         const badge = document.getElementById("cart-count");
 
-        // Actualizar Badge
         let totalQty = cart.reduce((acc, item) => acc + item.quantity, 0);
         if (badge) {
           badge.innerText = totalQty;
           badge.style.display = totalQty === 0 ? "none" : "flex";
         }
 
-        // Estado Vacío vs Lleno
         if (cart.length === 0) {
           container.style.display = "none";
           summary.style.display = "none";
@@ -636,7 +718,6 @@
         cart.forEach((item, index) => {
           const itemTotal = item.price * item.quantity;
           subtotal += itemTotal;
-
           let iconClass = "fas fa-star";
           const nameLower = item.name.toLowerCase();
           if (nameLower.includes("cv")) iconClass = "fas fa-file-contract";
@@ -650,36 +731,24 @@
           else if (nameLower.includes("traduccion"))
             iconClass = "fas fa-language";
 
-          const html = `
-                    <div class="cart-item" style="animation: fadeUp 0.5s ease backwards ${
-                      index * 0.1
-                    }s;">
+          container.innerHTML += `
+                    <div class="cart-item">
                         <div class="item-icon"><i class="${iconClass}"></i></div>
-                        <div class="item-info">
-                            <h3>${item.name}</h3>
-                            <p>Servicio Profesional Digital</p>
-                        </div>
+                        <div class="item-info"><h3>${item.name}</h3><p>Servicio Profesional Digital</p></div>
                         <div class="item-price">$${itemTotal}</div>
-                        <button class="btn-remove" onclick="removeItem(${index})">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </div>
-                `;
-          container.innerHTML += html;
+                        <button class="btn-remove" onclick="removeItem(${index})"><i class="fas fa-trash-alt"></i></button>
+                    </div>`;
         });
-
         updateTotals(subtotal);
       }
 
       function updateTotals(subtotal) {
         const discountAmount = subtotal * currentDiscount;
         const total = subtotal - discountAmount;
-
         document.getElementById("subtotalPrice").innerText = `$${subtotal}`;
         document.getElementById("totalPrice").innerText = `$${total.toFixed(
           0
         )}`;
-
         const discountRow = document.getElementById("discountRow");
         if (currentDiscount > 0) {
           discountRow.style.display = "flex";
@@ -699,22 +768,21 @@
       }
 
       function applyCoupon() {
-        const input = document.getElementById("couponInput");
-        const code = input.value.trim().toUpperCase();
-
+        const code = document
+          .getElementById("couponInput")
+          .value.trim()
+          .toUpperCase();
         if (VALID_COUPONS[code]) {
           currentDiscount = VALID_COUPONS[code];
           document.getElementById("discountName").innerText = `(${code})`;
-          alert(`¡Cupón ${code} aplicado correctamente!`);
+          showModal("¡Cupón Aplicado!", "Descuento activado.", "success");
           renderCart();
         } else {
-          alert("Cupón inválido o expirado.");
-          currentDiscount = 0;
-          renderCart();
+          showModal("Error", "Cupón inválido.", "error");
         }
       }
 
-      // --- INTEGRACIÓN MERCADO PAGO ---
+      // --- CONEXIÓN MP MEJORADA ---
       async function proceedToCheckout() {
         const btn = document.querySelector(".btn-checkout");
         const originalText = btn.innerHTML;
@@ -722,48 +790,50 @@
 
         if (cart.length === 0) return;
 
-        // UI Loading
         btn.innerHTML =
-          '<i class="fas fa-spinner fa-spin"></i> Generando pago...';
+          '<i class="fas fa-spinner fa-spin"></i> Generando Link...';
         btn.style.opacity = "0.7";
         btn.style.pointerEvents = "none";
 
-        // Formatear items para MP
         const items = cart.map((item) => ({
           title: item.name,
           quantity: item.quantity,
-          currency_id: "ARS", // O "USD" según corresponda
+          currency_id: "ARS",
           unit_price: item.price,
         }));
 
-        // Payload
-        const payload = {
-          action: "create_preference",
-          items: items,
-        };
+        const payload = { action: "create_preference", items: items };
 
         try {
-          // LLAMADA AL BACKEND (Google Apps Script)
+          // FETCH CON TEXT/PLAIN PARA EVITAR CORS
           const response = await fetch(SCRIPT_URL, {
             method: "POST",
-            mode: "cors", // Importante para Apps Script
-            headers: { "Content-Type": "text/plain;charset=utf-8" }, // Truco para evitar preflight
             body: JSON.stringify(payload),
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
           });
+
+          if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
 
           const data = await response.json();
 
           if (data.init_point) {
-            // REDIRECCIÓN A MERCADO PAGO
             window.location.href = data.init_point;
+          } else if (data.status === "error") {
+            throw new Error(data.message || "Error interno del script");
+          } else if (data.error) {
+            throw new Error(data.error);
           } else {
-            throw new Error("No se recibió link de pago");
+            throw new Error("Respuesta inesperada del servidor");
           }
         } catch (error) {
-          console.error("Error:", error);
-          alert(
-            "Hubo un error al conectar con Mercado Pago. Por favor, intenta de nuevo."
-          );
+          console.error(error);
+          let msg = "No pudimos conectar con Mercado Pago. ";
+          if (error.message.includes("Failed to fetch"))
+            msg +=
+              "Verifica la URL del script. ¿Hiciste un NUEVO despliegue con acceso 'Cualquiera'?";
+          else msg += error.message;
+
+          showModal("Error de Conexión", msg, "error");
           btn.innerHTML = originalText;
           btn.style.opacity = "1";
           btn.style.pointerEvents = "auto";

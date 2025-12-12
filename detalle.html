@@ -66,6 +66,51 @@
         .floating-cart-btn { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: var(--accent-yellow); border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 5px 20px rgba(0,0,0,0.2); z-index: 99; cursor: pointer; transition: transform 0.3s; }
         .floating-cart-btn:hover { transform: scale(1.1); }
         @media (max-width: 768px) { .product-container { grid-template-columns: 1fr; gap: 2rem; } .gallery-container { position: static; } .main-image-frame { height: 350px; } .product-info h1 { font-size: 2rem; } .add-to-cart-btn { width: 100%; justify-content: center; } }
+      
+      /* FOOTER */
+      footer {
+        background: linear-gradient(
+          to bottom,
+          var(--primary-blue),
+          var(--primary-dark)
+        );
+        color: var(--white);
+        padding: 4rem 5% 2rem;
+        text-align: center;
+        margin-top: auto; /* Footer al fondo */
+      }
+      .copyright {
+        opacity: 0.6;
+        font-size: 0.9rem;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      /* --- Animación Logo Footer --- */
+      .footer-logo {
+        height: 80px;
+        object-fit: contain;
+        filter: brightness(0) invert(1) opacity(0.8);
+        transition: all 0.4s ease;
+        animation: float-logo 6s ease-in-out infinite;
+      }
+      .footer-logo:hover {
+        transform: scale(1.05);
+        filter: brightness(0) invert(1) opacity(1) drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+      }
+
+      @keyframes float-logo {
+        0% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-8px);
+        }
+        100% {
+          transform: translateY(0px);
+        }
+      }
     </style>
 </head>
 <body>
@@ -138,6 +183,22 @@
     </main>
 
     <a href="carrito.html" class="floating-cart-btn" style="text-decoration:none;"><i class="fas fa-shopping-cart" style="color: var(--text-dark); font-size: 1.2rem;"></i></a>
+
+    <footer>
+      <div style="margin-bottom: 20px">
+        <img
+          src="img/logo.png"
+          alt="CV Arg Logo"
+          class="footer-logo"
+        />
+      </div>
+      <p style="opacity: 0.7; font-size: 0.9rem">
+        Impulsando carreras desde 2025.
+      </p>
+      <div class="copyright">
+        &copy; 2025 CvArg. Todos los derechos reservados.
+      </div>
+    </footer>
 
     <script>
         function toggleAccordion(id) {

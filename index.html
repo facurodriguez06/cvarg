@@ -509,7 +509,7 @@
 
       /* --- ESTILOS TESTIMONIOS (AGREGADO) --- */
       .testimonials-section {
-        padding: 4rem 5% 6rem;
+        padding: 8rem 5% 6rem;
         background: linear-gradient(
           135deg,
           var(--primary-blue),
@@ -517,18 +517,9 @@
         );
         color: var(--white);
         text-align: center;
-        margin-top: 4rem;
+        margin-top: 0;
         position: relative;
-      }
-      .testimonials-section::before {
-        content: "";
-        position: absolute;
-        top: -50px;
-        left: 0;
-        width: 100%;
-        height: 50px;
-        background: inherit;
-        clip-path: polygon(0 50px, 100% 0, 100% 50px, 0 50px);
+        clip-path: polygon(0 50px, 100% 0, 100% 100%, 0% 100%);
       }
       .review-grid {
         display: grid;
@@ -607,6 +598,39 @@
       .footer-col a:hover {
         color: var(--white);
         margin-left: 5px;
+      }
+
+      /* --- Animación Logo Footer --- */
+      .footer-logo {
+        height: 80px;
+        object-fit: contain;
+        filter: brightness(0) invert(1) opacity(0.8);
+        transition: all 0.4s ease;
+        animation: float-logo 6s ease-in-out infinite;
+      }
+      .footer-logo:hover {
+        transform: scale(1.05);
+        filter: brightness(0) invert(1) opacity(1) drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+      }
+
+      @keyframes float-logo {
+        0% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-8px);
+        }
+        100% {
+          transform: translateY(0px);
+        }
+      }
+
+      .copyright {
+        opacity: 0.6;
+        font-size: 0.9rem;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
       }
 
       .menu-toggle {
@@ -1012,13 +1036,8 @@
     <footer>
       <div class="footer-content">
         <div class="footer-col">
-          <div
-            class="logo"
-            style="margin-bottom: 1rem; font-size: 1.5rem; font-weight: 700"
-          >
-            Cv Arg
-          </div>
-          <p style="font-size: 0.95rem; opacity: 0.7; line-height: 1.6">
+          <img src="img/logo.png" alt="Logo" class="footer-logo" />
+          <p style="font-size: 0.95rem; opacity: 0.7; line-height: 1.6; margin-top: 1rem;">
             Tu socio estratégico para el crecimiento profesional.
           </p>
         </div>

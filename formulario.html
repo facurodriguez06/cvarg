@@ -447,6 +447,11 @@
           padding: 25px;
         }
       }
+
+      .footer-logo {
+        height: 60px;
+        opacity: 0.7;
+      }
     </style>
   </head>
   <body>
@@ -986,7 +991,10 @@
       </div>
     </section>
 
-    <footer>&copy; 2025 CV Arg. Todos los derechos reservados.</footer>
+    <footer>
+      <img src="img/logo.png" alt="Logo" class="footer-logo">
+      <div style="margin-top: 15px;">&copy; 2025 CV Arg. Todos los derechos reservados.</div>
+    </footer>
 
     <script>
       let currentStep = 1;
@@ -1104,17 +1112,43 @@
 
       function submitForm() {
         const btn = document.getElementById("btnNext");
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+        btn.disabled = true;
         btn.style.opacity = "0.7";
 
+        // 1. Generate unique ID
+        const uniqueId = Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+
+        // 2. Gather form data
+        const form = document.getElementById('cvForm');
+        const formData = new FormData(form);
+        const data = {};
+        formData.forEach((value, key) => {
+            if(data[key]){
+                if(!Array.isArray(data[key])){
+                    data[key] = [data[key]];
+                }
+                data[key].push(value);
+            } else {
+                data[key] = value;
+            }
+        });
+
+        // 3. Save to localStorage
+        try {
+            localStorage.setItem('formData-' + uniqueId, JSON.stringify(data));
+        } catch (e) {
+            console.error("Error saving to localStorage", e);
+            alert("Hubo un error al guardar tus datos. Por favor, intenta de nuevo.");
+            btn.innerHTML = 'Finalizar <i class="fas fa-check"></i>';
+            btn.disabled = false;
+            btn.style.opacity = "1";
+            return;
+        }
+
+        // 4. Redirect to success page
         setTimeout(() => {
-          document.querySelector(".wizard-header").style.display = "none";
-          document.getElementById("wizardFooter").style.display = "none";
-          document
-            .querySelectorAll(".step")
-            .forEach((s) => (s.style.display = "none"));
-          document.getElementById("successView").style.display = "block";
-          window.scrollTo(0, 0);
+            window.location.href = `exito.html?id=${uniqueId}`;
         }, 1500);
       }
     </script>
