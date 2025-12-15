@@ -583,6 +583,33 @@
           height: 60px;
         }
       }
+      @media (max-width: 480px) {
+        .hero-section {
+            padding: 120px 5% 80px;
+        }
+        .hero-title {
+            font-size: 2.2rem;
+        }
+        .hero-subtitle {
+            font-size: 1rem;
+        }
+        .comparison-wrapper {
+            margin: 30px auto 60px;
+            padding: 15px;
+        }
+        .comparison-container {
+            height: 250px;
+        }
+        .mockup-content {
+            padding: 20px;
+        }
+        .info-title {
+            font-size: 2rem;
+        }
+        .form-panel {
+            padding: 2rem;
+        }
+      }
     </style>
   </head>
   <body>
@@ -711,19 +738,22 @@
         >
           Envíanos un mensaje
         </h3>
-        <form>
+        <form action="https://formsubmit.co/facundorodriguezsp@gmail.com" method="POST">
+          <input type="hidden" name="_subject" value="Nuevo mensaje desde tu web!">
+          <input type="hidden" name="_next" value="exito.html">
           <div class="input-group">
-            <input type="text" class="input-field" placeholder=" " required />
+            <input type="text" name="name" class="input-field" placeholder=" " required />
             <label class="input-label">Nombre Completo</label>
           </div>
 
           <div class="input-group">
-            <input type="email" class="input-field" placeholder=" " required />
+            <input type="email" name="email" class="input-field" placeholder=" " required />
             <label class="input-label">Correo Electrónico</label>
           </div>
 
           <div class="input-group">
             <select
+              name="service"
               class="input-field"
               style="color: var(--text-dark); appearance: none"
             >
@@ -747,6 +777,7 @@
 
           <div class="input-group">
             <textarea
+              name="message"
               class="input-field"
               rows="4"
               placeholder=" "
@@ -755,7 +786,7 @@
             <label class="input-label">¿Cómo podemos ayudarte?</label>
           </div>
 
-          <button type="button" class="btn-submit">
+          <button type="submit" class="btn-submit">
             Enviar Solicitud <i class="fas fa-paper-plane"></i>
           </button>
         </form>
