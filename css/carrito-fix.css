@@ -1,0 +1,19 @@
+/* HEADER DEL CARRITO - SIEMPRE AZUL */
+body {
+  overflow-x: hidden;
+}
+
+nav {
+  background: rgba(4, 75, 171, 0.95) !important;
+  backdrop-filter: blur(20px);
+  padding-bottom: 1rem !important;
+}
+
+nav.scrolled {
+  background: rgba(4, 75, 171, 0.95) !important;
+}
+
+/* Deshabilitar cambio de scroll */
+.page-header + * nav {
+  background: rgba(4, 75, 171, 0.95) !important;
+}

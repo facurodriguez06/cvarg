@@ -10,907 +10,47 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/title-effects.css">
+  <link rel="stylesheet" href="css/auth-nav.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/carrito.css">
 
-  <style>
-    /* Estilos CSS Base */
-    :root {
-      --primary-blue: #044bab;
-      --primary-dark: #022a61;
-      --accent-yellow: #f3d136;
-      --text-dark: #1f2937;
-      --text-light: #6b7280;
-      --white: #ffffff;
-      --bg-light: #f8fafc;
-      --success: #10b981;
-      --danger: #ef4444;
-    }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: "Poppins", sans-serif;
-      scroll-behavior: smooth;
-    }
-
-    body {
-      background-color: var(--bg-light);
-      color: var(--text-dark);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-
-    nav {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      padding: 1.5rem 5% 0 5%;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      z-index: 1000;
-      transition: all 0.4s ease;
-      background: transparent;
-    }
-
-    nav.scrolled {
-      background: var(--primary-blue);
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-      padding-bottom: 1rem;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      text-decoration: none;
-      margin-top: -10px;
-    }
-
-    .logo-img {
-      height: 100px;
-      width: auto;
-      object-fit: contain;
-    }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 30px;
-      margin-top: 25px;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 30px;
-      list-style: none;
-      margin: 0;
-    }
-
-    .nav-links a {
-      text-decoration: none;
-      color: var(--white);
-      font-weight: 500;
-      font-size: 1.1rem;
-      transition: 0.3s;
-      opacity: 0.9;
-    }
-
-    .nav-links a:hover,
-    .nav-links a.active {
-      opacity: 1;
-      text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-    }
-
-    .nav-links a.active {
-      border-bottom: 3px solid var(--accent-yellow);
-    }
-
-    .cart-wrapper {
-      position: relative;
-      cursor: pointer;
-      color: var(--white);
-      font-size: 1.4rem;
-      text-decoration: none;
-    }
-
-    .cart-count {
-      position: absolute;
-      top: -8px;
-      right: -10px;
-      background: var(--accent-yellow);
-      color: var(--primary-dark);
-      font-size: 0.75rem;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-weight: 800;
-    }
-
-    .page-header {
-      padding: 160px 5% 80px;
-      background: var(--primary-blue);
-      color: var(--white);
-      text-align: center;
-      clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
-      margin-bottom: 0;
-    }
-
-    .page-title {
-      font-size: 3rem;
-      font-weight: 800;
-      margin-bottom: 10px;
-      animation: fadeDown 0.8s ease;
-    }
-
-    .page-subtitle {
-      opacity: 0.9;
-      font-size: 1.1rem;
-      animation: fadeDown 0.8s ease 0.2s backwards;
-    }
-
-    .cart-section {
-      max-width: 1200px;
-      margin: 40px auto 80px;
-      padding: 0 5%;
-      display: grid;
-      grid-template-columns: 1.5fr 1fr;
-      gap: 40px;
-      animation: fadeUp 0.8s ease backwards 0.4s;
-    }
-
-    .cart-items {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .cart-item {
-      background: var(--white);
-      padding: 25px;
-      border-radius: 20px;
-      display: grid;
-      grid-template-columns: auto 1fr auto auto;
-      align-items: center;
-      gap: 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-      transition: all 0.3s;
-      border: 1px solid rgba(0, 0, 0, 0.05);
-    }
-
-    .cart-item:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 20px 40px rgba(4, 75, 171, 0.15);
-    }
-
-    .item-icon {
-      width: 70px;
-      height: 70px;
-      background: #eff6ff;
-      border-radius: 16px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 1.8rem;
-      color: var(--primary-blue);
-    }
-
-    .item-info h3 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--text-dark);
-      margin-bottom: 5px;
-    }
-
-    .item-info p {
-      font-size: 0.9rem;
-      color: var(--text-light);
-    }
-
-    .item-price {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--text-dark);
-    }
-
-    .btn-remove {
-      color: #cbd5e1;
-      cursor: pointer;
-      transition: 0.3s;
-      font-size: 1.1rem;
-      background: none;
-      border: none;
-      padding: 10px;
-    }
-
-    .btn-remove:hover {
-      color: var(--danger);
-      transform: scale(1.2) rotate(10deg);
-    }
-
-    .cart-summary {
-      background: var(--white);
-      padding: 30px;
-      border-radius: 24px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-      border: 1px solid rgba(0, 0, 0, 0.05);
-      position: sticky;
-      top: 120px;
-      height: fit-content;
-    }
-
-    .summary-title {
-      font-size: 1.3rem;
-      font-weight: 700;
-      margin-bottom: 25px;
-      border-bottom: 2px solid #f1f5f9;
-      padding-bottom: 15px;
-    }
-
-    .summary-row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 15px;
-      color: var(--text-light);
-      font-size: 0.95rem;
-    }
-
-    .summary-row.total {
-      margin-top: 20px;
-      padding-top: 20px;
-      border-top: 2px dashed #e2e8f0;
-      color: var(--text-dark);
-      font-weight: 800;
-      font-size: 1.4rem;
-    }
-
-    .summary-row.discount {
-      color: var(--success);
-      display: none;
-      font-weight: 600;
-    }
-
-    .coupon-box {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 25px;
-    }
-
-    .coupon-input {
-      width: 100%;
-      padding: 12px 15px;
-      border: 2px solid #f1f5f9;
-      border-radius: 12px;
-      outline: none;
-      transition: 0.3s;
-    }
-
-    .coupon-input:focus {
-      border-color: var(--primary-blue);
-      background: #f8fbff;
-    }
-
-    .btn-apply {
-      background: var(--text-dark);
-      color: var(--white);
-      border: none;
-      padding: 0 20px;
-      border-radius: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .btn-apply:hover {
-      background: var(--primary-blue);
-      transform: translateY(-2px);
-    }
-
-    .btn-checkout {
-      width: 100%;
-      padding: 16px;
-      background: linear-gradient(135deg, #009ee3 0%, #0073a5 100%);
-      color: var(--white);
-      border: none;
-      border-radius: 14px;
-      font-size: 1.1rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: 0.3s;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      margin-top: 20px;
-      box-shadow: 0 10px 25px rgba(0, 158, 227, 0.3);
-      text-decoration: none;
-    }
-
-    .btn-checkout:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 15px 35px rgba(0, 158, 227, 0.4);
-    }
-
-    .empty-cart {
-      grid-column: 1 / -1;
-      text-align: center;
-      padding: 80px 20px;
-      background: var(--white);
-      border-radius: 24px;
-      display: none;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
-    }
-
-    .btn-shop {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 12px 35px;
-      background: var(--primary-blue);
-      color: var(--white);
-      text-decoration: none;
-      border-radius: 50px;
-      font-weight: 700;
-      transition: 0.3s;
-      box-shadow: 0 10px 20px rgba(4, 75, 171, 0.3);
-    }
-
-    .btn-shop:hover {
-      background: var(--primary-dark);
-      transform: translateY(-3px);
-    }
-
-    /* Modal Personalizado */
-    .custom-modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(5px);
-      z-index: 2000;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      animation: fadeIn 0.3s ease;
-    }
-
-    .custom-modal {
-      background: var(--white);
-      padding: 40px;
-      border-radius: 24px;
-      max-width: 400px;
-      width: 90%;
-      text-align: center;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-      transform: scale(0.8);
-      animation: popIn 0.3s forwards;
-    }
-
-    .modal-icon {
-      font-size: 3rem;
-      margin-bottom: 20px;
-      color: var(--primary-blue);
-    }
-
-    .modal-icon.error {
-      color: var(--danger);
-    }
-
-    .modal-icon.success {
-      color: var(--success);
-    }
-
-    .modal-title {
-      font-size: 1.5rem;
-      font-weight: 800;
-      margin-bottom: 10px;
-      color: var(--text-dark);
-    }
-
-    .modal-msg {
-      color: var(--text-light);
-      margin-bottom: 25px;
-      font-size: 0.95rem;
-    }
-
-    .modal-btn {
-      background: var(--primary-blue);
-      color: var(--white);
-      padding: 12px 30px;
-      border-radius: 50px;
-      border: none;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.3s;
-      font-size: 1rem;
-    }
-
-    .modal-btn:hover {
-      background: var(--primary-dark);
-    }
-
-    @keyframes fadeDown {
-      from {
-        opacity: 0;
-        transform: translateY(-20px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-
-      to {
-        opacity: 1;
-      }
-    }
-
-    @keyframes popIn {
-      to {
-        transform: scale(1);
-      }
-    }
-
-    footer {
-      background: linear-gradient(to bottom,
-          var(--primary-blue),
-          var(--primary-dark));
-      color: var(--white);
-      padding: 4rem 5% 2rem;
-      text-align: center;
-      margin-top: auto;
-    }
-
-    .copyright {
-      opacity: 0.7;
-      font-size: 0.95rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      padding-top: 20px;
-    }
-
-    .menu-toggle {
-      display: none;
-      font-size: 1.5rem;
-      color: var(--white);
-      cursor: pointer;
-      margin-right: 20px;
-    }
-
-    @media (max-width: 900px) {
-      .cart-section {
-        grid-template-columns: 1fr;
-      }
-
-      .cart-summary {
-        position: static;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .menu-toggle {
-        display: block;
-      }
-
-      .nav-links {
-        position: fixed;
-        top: 0;
-        right: -100%;
-        height: 100vh;
-        width: 100%;
-        background: rgba(4, 75, 171, 0.98);
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 2.5rem;
-        transition: 0.4s;
-        z-index: 999;
-      }
-
-      .nav-links.active {
-        right: 0;
-      }
-
-      nav {
-        background: var(--primary-blue);
-        align-items: center;
-      }
-
-      .logo-img {
-        height: 60px;
-      }
-
-      .cart-item {
-        display: flex;
-        flex-direction: column;
-        text-align: center;
-        justify-items: center;
-        padding: 20px;
-      }
-
-      .btn-remove {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        color: var(--danger);
-        background: #fee2e2;
-        border-radius: 50%;
-        padding: 8px;
-        width: 35px;
-        height: 35px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .page-header {
-        padding: 120px 5% 60px;
-      }
-
-      .page-title {
-        font-size: 2.2rem;
-      }
-
-      .cart-summary {
-        padding: 20px;
-      }
-
-      .item-info h3 {
-        font-size: 1rem;
-      }
-    }
-
-    /* --- ESTILOS WIZARD (FORMULARIO) --- */
-    .wizard-section {
-      padding: 50px 5% 80px;
-      max-width: 1000px;
-      margin: 0 auto;
-      width: 100%;
-      flex-grow: 1;
-      display: none;
-      /* Oculto por defecto */
-    }
-
-    .wizard-card {
-      background: var(--white);
-      border-radius: 24px;
-      box-shadow: 0 20px 60px -10px rgba(0, 0, 0, 0.08);
-      overflow: hidden;
-      position: relative;
-      border: 1px solid rgba(0, 0, 0, 0.05);
-    }
-
-    .wizard-header {
-      background: var(--primary-dark);
-      padding: 30px 40px;
-      color: var(--white);
-    }
-
-    .progress-info {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 15px;
-      font-weight: 600;
-      font-size: 0.9rem;
-    }
-
-    .progress-container {
-      background: rgba(255, 255, 255, 0.1);
-      height: 8px;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    .progress-bar {
-      height: 100%;
-      background: var(--accent-yellow);
-      width: 16%;
-      transition: width 0.5s ease;
-      border-radius: 10px;
-    }
-
-    .wizard-body {
-      padding: 40px;
-    }
-
-    .step {
-      display: none;
-      animation: fadeIn 0.5s ease;
-    }
-
-    .step.active {
-      display: block;
-    }
-
-    .step-title {
-      font-size: 1.8rem;
-      color: var(--primary-blue);
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-
-    .step-desc {
-      color: var(--text-light);
-      margin-bottom: 30px;
-      font-size: 0.95rem;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      color: var(--text-dark);
-    }
-
-    .label .required {
-      color: var(--danger);
-      margin-left: 3px;
-      font-weight: bold;
-    }
-
-    .input,
-    .select,
-    .textarea {
-      width: 100%;
-      padding: 12px 16px;
-      border: 2px solid #e2e8f0;
-      border-radius: 12px;
-      font-size: 0.95rem;
-      font-family: inherit;
-      transition: 0.3s;
-      outline: none;
-      background: #f8fafc;
-      color: var(--text-dark);
-    }
-
-    .input:focus,
-    .select:focus,
-    .textarea:focus {
-      border-color: var(--primary-blue);
-      background: var(--white);
-      box-shadow: 0 0 0 4px rgba(4, 75, 171, 0.1);
-    }
-
-    .input.error,
-    .select.error {
-      border-color: var(--danger);
-      background: #fff5f5;
-    }
-
-    .toggle-group {
-      display: flex;
-      gap: 10px;
-      margin-top: 5px;
-    }
-
-    .toggle-label {
-      cursor: pointer;
-      padding: 8px 20px;
-      border-radius: 50px;
-      background: #f1f5f9;
-      color: var(--text-light);
-      font-weight: 600;
-      transition: 0.3s;
-      border: 2px solid transparent;
-    }
-
-    .toggle-input {
-      display: none;
-    }
-
-    .toggle-input:checked+.toggle-label {
-      background: var(--primary-blue);
-      color: var(--white);
-      border-color: var(--primary-blue);
-    }
-
-    .conditional-field {
-      display: none;
-      margin-top: 15px;
-      padding: 15px;
-      background: #eff6ff;
-      border-radius: 10px;
-      animation: slideDown 0.3s;
-    }
-
-    .photo-preview {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      background: #e2e8f0;
-      margin: 0 auto 15px;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border: 4px solid var(--white);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    }
-
-    .photo-preview img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: none;
-    }
-
-    .upload-box {
-      border: 2px dashed #cbd5e1;
-      border-radius: 16px;
-      padding: 30px;
-      text-align: center;
-      cursor: pointer;
-      transition: 0.3s;
-      background: #f8fafc;
-    }
-
-    .upload-box:hover {
-      border-color: var(--primary-blue);
-      background: #eff6ff;
-    }
-
-    .skills-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 10px;
-      padding: 5px;
-    }
-
-    .skills-container.error {
-      border: 1px solid var(--danger);
-      border-radius: 12px;
-      background: #fff5f5;
-    }
-
-    .skill-option {
-      cursor: pointer;
-      position: relative;
-    }
-
-    .skill-option input {
-      position: absolute;
-      opacity: 0;
-      height: 0;
-      width: 0;
-    }
-
-    .skill-badge {
-      display: inline-block;
-      padding: 8px 18px;
-      border-radius: 50px;
-      background: var(--white);
-      border: 1px solid #e2e8f0;
-      color: var(--text-light);
-      font-size: 0.85rem;
-      transition: all 0.3s ease;
-      font-weight: 500;
-    }
-
-    .skill-option input:checked+.skill-badge {
-      background: var(--primary-blue);
-      color: var(--white);
-      border-color: var(--primary-blue);
-      box-shadow: 0 4px 10px rgba(4, 75, 171, 0.25);
-      transform: translateY(-2px);
-    }
-
-    .wizard-footer {
-      padding: 30px 40px;
-      background: #f8fafc;
-      border-top: 1px solid #e2e8f0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .btn {
-      padding: 12px 30px;
-      border-radius: 50px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.3s;
-      border: none;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn-prev {
-      background: transparent;
-      color: var(--text-light);
-    }
-
-    .btn-next {
-      background: var(--primary-blue);
-      color: var(--white);
-      box-shadow: 0 10px 20px rgba(4, 75, 171, 0.2);
-    }
-
-    .success-view {
-      text-align: center;
-      display: none;
-      padding: 40px 0;
-    }
-
-    .confetti-icon {
-      font-size: 4rem;
-      color: var(--success);
-      margin-bottom: 20px;
-      animation: popIn 0.5s;
-    }
-
-    @keyframes slideDown {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-  </style>
 </head>
 
 <body>
   <nav id="navbar">
-    <a href="index.html" class="logo"><img src="img/logo.png" alt="Logo" class="logo-img" /></a>
-    <div class="nav-right">
-      <ul class="nav-links">
-        <li><a href="index.html">Inicio</a></li>
-        <li><a href="catalogo.html">Catálogo</a></li>
-        <li><a href="contacto.html">Contacto</a></li>
-      </ul>
-      <a href="carrito.html" class="cart-wrapper"><i class="fas fa-shopping-cart"></i><span class="cart-count"
-          id="cart-count">0</span></a>
-      <div class="menu-toggle"><i class="fas fa-bars"></i></div>
+    <div class="logo">
+      <img src="img/logo.png" alt="Logo" class="logo-img" />
     </div>
+    <ul class="nav-links">
+      <li><a href="index.html" onclick="closeMenu()">Inicio</a></li>
+      <li><a href="index.html#analyzer" onclick="closeMenu()">Analizador</a></li>
+      <li><a href="catalogo.html" onclick="closeMenu()">Catálogo</a></li>
+      <li><a href="contacto.html" onclick="closeMenu()">Contacto</a></li>
+    </ul>
+    <div class="menu-toggle"><i class="fas fa-bars"></i></div>
+    <a href="carrito.html" class="cart-icon-link">
+      <div class="cart-icon">
+        <i class="fas fa-shopping-cart"></i><span class="cart-count" id="cart-count">0</span>
+      </div>
+    </a>
+    <a href="login.html" id="auth-link" onclick="closeMenu()"><i class="fas fa-sign-in-alt"></i> Ingresar</a>
   </nav>
 
-  <div id="cartView">
-    <header class="page-header">
-      <h1 class="page-title">Tu Carrito</h1>
-      <p class="page-subtitle">
+
+  <header class="hero" id="home">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="hero-content" id="heroContent">
+      <h1>Tu Carrito</h1>
+      <p>
         Estás a un paso de potenciar tu futuro profesional.
       </p>
-    </header>
+    </div>
+  </header>
+
 
     <section class="cart-section">
       <div class="cart-items" id="cartItemsContainer"></div>
@@ -939,8 +79,16 @@
         <div class="summary-row total">
           <span>Total</span><span id="totalPrice" style="color: var(--primary-blue)">$0</span>
         </div>
-        <a href="#" class="btn-checkout" onclick="proceedToCheckout(); return false;">Pagar con Mercado Pago <i
-            class="fas fa-lock"></i></a>
+        <a href="#" id="checkout-btn" class="btn-checkout" onclick="proceedToCheckout(); return false;">Pagar con
+          Mercado Pago <i class="fas fa-lock"></i></a>
+
+        <!-- Botón de confirmación manual (aparece después de pagar) -->
+        <button id="confirm-payment-btn" class="btn-checkout"
+          style="display: none; background: var(--success); margin-top: 10px;"
+          onclick="confirmPaymentManually(); return false;">
+          <i class="fas fa-check-circle"></i> Ya pagué - Confirmar pago
+        </button>
+
         <div style="
             text-align: center;
             margin-top: 15px;
@@ -1183,381 +331,292 @@
     </div>
   </div>
 
-  <script>
-    // --- CONFIGURACIÓN CRÍTICA ---
-    // ¡PEGA AQUÍ LA URL DE TU NUEVO DESPLIEGUE! (La que verificaste en el paso 2)
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwdYf4KWaLgTxqO9aDykYoxh1XP0sxkGoU0s1-6DsJmVjBByftZgjXxs1zw7ZU68R1o/exec";
+  <!-- SCRIPT INLINE ANTIGUO COMENTADO - Ahora se usa js/carrito.js -->
+  <!-- Este script usaba impulsopro_cart y tenía lógica conflictiva -->
 
-    // Navbar & Menu
-    window.addEventListener("scroll", () => {
-      const navbar = document.getElementById("navbar");
-      if (window.scrollY > 50) navbar.classList.add("scrolled");
-      else navbar.classList.remove("scrolled");
-    });
-    const menuToggle = document.querySelector(".menu-toggle");
-    const navLinks = document.querySelector(".nav-links");
-    menuToggle.addEventListener("click", () => {
-      navLinks.classList.toggle("active");
-      const icon = menuToggle.querySelector("i");
-      icon.classList.toggle("fa-bars");
-      icon.classList.toggle("fa-times");
-    });
 
-    // Modal
-    function showModal(title, msg, type = "info") {
-      document.getElementById("modalTitle").innerText = title;
-      document.getElementById("modalMsg").innerText = msg;
-      const icon = document.getElementById("modalIcon");
-      icon.className = "fas modal-icon";
-      if (type === "error") {
-        icon.classList.add("fa-exclamation-circle", "error");
-      } else if (type === "success") {
-        icon.classList.add("fa-check-circle", "success");
-      } else {
-        icon.classList.add("fa-info-circle");
-        icon.style.color = "var(--primary-blue)";
-      }
-      document.getElementById("modalOverlay").style.display = "flex";
+  <!-- Fin del script de utilidades básicas. 
+       El resto de la lógica del carrito está en js/carrito.js -->
+  <!--
+  NOTA: Se eliminó el código antiguo del carrito y wizard inline.
+  Las funciones ahora están en:
+  - js/carrito.js - Manejo del carrito y flujo de pago
+  - formulario.html - Wizard de formulario (página separada)
+  -->
+
+  <!-- INICIO: Código del wizard COMENTADO - ya no se usa aquí, se redirige a formulario.html
+  function changeStep(direction) {
+  if (!input.value.trim()) {
+  isValid = false;
+  input.classList.add('error');
+  input.addEventListener('input', function () { if (this.value.trim()) this.classList.remove('error'); });
+  } else {
+  input.classList.remove('error');
+  }
+  });
+
+  // VALIDACIÓN ESPECÍFICA PASO 6 (CHECKBOXES)
+  if (currentStep === 6) {
+  const hardChecked = document.querySelectorAll('input[name="hardSkills"]:checked').length > 0;
+  const softChecked = document.querySelectorAll('input[name="softSkills"]:checked').length > 0;
+  const hardCont = document.getElementById('hardSkillsContainer');
+  const softCont = document.getElementById('softSkillsContainer');
+
+  if (!hardChecked) { isValid = false; hardCont.classList.add('error'); } else { hardCont.classList.remove('error'); }
+  if (!softChecked) { isValid = false; softCont.classList.add('error'); } else { softCont.classList.remove('error'); }
+  }
+
+  if (!isValid) {
+  showModal('Campos Incompletos', 'Por favor completa los campos obligatorios (*) marcados en rojo.', 'error');
+  return;
+  }
+  }
+
+  if (nextStep > 0 && nextStep <= totalSteps) {
+    document.getElementById(`step${currentStep}`).classList.remove('active');
+    document.getElementById(`step${nextStep}`).classList.add('active'); currentStep=nextStep; updateUI();
+    document.getElementById('postPaymentForm').scrollIntoView({ behavior: 'smooth' }); } else if (nextStep> totalSteps)
+    {
+    submitForm();
     }
-    function closeModal() {
-      document.getElementById("modalOverlay").style.display = "none";
-    }
-
-    // Carrito Logic
-    let currentDiscount = 0;
-    const VALID_COUPONS = { DESPEGAR10: 0.1, CVPRO: 0.2, STUDENT: 0.15 };
-
-    document.addEventListener("DOMContentLoaded", () => {
-      renderCart();
-      handlePaymentStatus();
-
-      window.addEventListener('storage', function (e) {
-        if (e.key === 'payment_status' && e.newValue === 'success') {
-          localStorage.removeItem('payment_status'); // Limpiar para futuros pagos
-          localStorage.removeItem('impulsopro_cart');
-          showModal('¡Pago Exitoso!', 'Tu pago fue aprobado. Por favor completa tus datos para comenzar.', 'success');
-          activateWizard();
-        }
-      });
-    });
-
-    function activateWizard() {
-      document.getElementById('cartView').style.display = 'none';
-      document.getElementById('postPaymentForm').style.display = 'block';
-      document.getElementById('postPaymentForm').scrollIntoView();
-      document.getElementById('cart-count').style.display = 'none'; // ocultar contador
-    }
-
-    function handlePaymentStatus() {
-      const urlParams = new URLSearchParams(window.location.search);
-      // Mercado Pago standard params: 'collection_status' or 'status'
-      const status = urlParams.get('collection_status') || urlParams.get('status') || urlParams.get('mp_status');
-
-      console.log("Status detected:", status);
-
-      if (status === 'success' || status === 'approved') {
-        if (window.opener) {
-          localStorage.setItem('payment_status', 'success');
-          window.close();
-          return;
-        }
-        // Fallback si no es popup
-        localStorage.removeItem('impulsopro_cart');
-        activateWizard();
-      }
-
-      if (status) {
-        history.replaceState(null, '', window.location.pathname);
-      }
-
-      if (status === 'failure') {
-        showModal('Pago Rechazado', 'No se pudo procesar tu pago. Por favor, intenta de nuevo o usa otro medio de pago.', 'error');
-      } else if (status === 'pending') {
-        showModal('Pago Pendiente', 'Tu pago está siendo procesado. Te avisaremos cuando se acredite.', 'info');
-      }
-    }
-
-    // --- LOGICA WIZARD DEL FORMULARIO ---
-    let currentStep = 1;
-    const totalSteps = 6;
-
-    function changeStep(direction) {
-      const nextStep = currentStep + direction;
-
-      // VALIDAR AL AVANZAR
-      if (direction === 1) {
-        const currentPanel = document.getElementById(`step${currentStep}`);
-        // Validar inputs requeridos normales
-        const requiredInputs = currentPanel.querySelectorAll("input[required], select[required], textarea[required]");
-        let isValid = true;
-
-        requiredInputs.forEach(input => {
-          if (!input.value.trim()) {
-            isValid = false;
-            input.classList.add('error');
-            input.addEventListener('input', function () { if (this.value.trim()) this.classList.remove('error'); });
-          } else {
-            input.classList.remove('error');
-          }
-        });
-
-        // VALIDACIÓN ESPECÍFICA PASO 6 (CHECKBOXES)
-        if (currentStep === 6) {
-          const hardChecked = document.querySelectorAll('input[name="hardSkills"]:checked').length > 0;
-          const softChecked = document.querySelectorAll('input[name="softSkills"]:checked').length > 0;
-          const hardCont = document.getElementById('hardSkillsContainer');
-          const softCont = document.getElementById('softSkillsContainer');
-
-          if (!hardChecked) { isValid = false; hardCont.classList.add('error'); } else { hardCont.classList.remove('error'); }
-          if (!softChecked) { isValid = false; softCont.classList.add('error'); } else { softCont.classList.remove('error'); }
-        }
-
-        if (!isValid) {
-          showModal('Campos Incompletos', 'Por favor completa los campos obligatorios (*) marcados en rojo.', 'error');
-          return;
-        }
-      }
-
-      if (nextStep > 0 && nextStep <= totalSteps) {
-        document.getElementById(`step${currentStep}`).classList.remove('active');
-        document.getElementById(`step${nextStep}`).classList.add('active');
-        currentStep = nextStep;
-        updateUI();
-        document.getElementById('postPaymentForm').scrollIntoView({ behavior: 'smooth' });
-      } else if (nextStep > totalSteps) {
-        submitForm();
-      }
     }
 
     function updateUI() {
-      const progress = ((currentStep) / totalSteps) * 100;
-      document.getElementById('progressBar').style.width = `${progress}%`;
-      document.getElementById('stepCounter').innerText = `Paso ${currentStep} de ${totalSteps}`;
+    const progress = ((currentStep) / totalSteps) * 100;
+    document.getElementById('progressBar').style.width = `${progress}%`;
+    document.getElementById('stepCounter').innerText = `Paso ${currentStep} de ${totalSteps}`;
 
-      const btnPrev = document.getElementById('btnPrev');
-      const btnNext = document.getElementById('btnNext');
+    const btnPrev = document.getElementById('btnPrev');
+    const btnNext = document.getElementById('btnNext');
 
-      btnPrev.style.visibility = currentStep === 1 ? 'hidden' : 'visible';
+    btnPrev.style.visibility = currentStep === 1 ? 'hidden' : 'visible';
 
-      if (currentStep === totalSteps) {
-        btnNext.innerHTML = 'Finalizar <i class="fas fa-check"></i>';
-        btnNext.style.backgroundColor = 'var(--success)';
-      } else {
-        btnNext.innerHTML = 'Siguiente <i class="fas fa-arrow-right"></i>';
-        btnNext.style.backgroundColor = 'var(--primary-blue)';
-      }
+    if (currentStep === totalSteps) {
+    btnNext.innerHTML = 'Finalizar <i class="fas fa-check"></i>';
+    btnNext.style.backgroundColor = 'var(--success)';
+    } else {
+    btnNext.innerHTML = 'Siguiente <i class="fas fa-arrow-right"></i>';
+    btnNext.style.backgroundColor = 'var(--primary-blue)';
+    }
     }
 
     function toggleField(fieldId, show) {
-      document.getElementById(fieldId).style.display = show ? 'block' : 'none';
+    document.getElementById(fieldId).style.display = show ? 'block' : 'none';
     }
 
     function previewPhoto(input) {
-      if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          document.getElementById('previewImg').src = e.target.result;
-          document.getElementById('previewImg').style.display = 'block';
-          document.querySelector('.photo-preview i').style.display = 'none';
-        }
-        reader.readAsDataURL(input.files[0]);
-      }
+    if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+    document.getElementById('previewImg').src = e.target.result;
+    document.getElementById('previewImg').style.display = 'block';
+    document.querySelector('.photo-preview i').style.display = 'none';
+    }
+    reader.readAsDataURL(input.files[0]);
+    }
     }
 
     function submitForm() {
-      const btn = document.getElementById('btnNext');
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
-      btn.disabled = true;
-      btn.style.opacity = '0.7';
+    const btn = document.getElementById('btnNext');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+    btn.disabled = true;
+    btn.style.opacity = '0.7';
 
-      // 1. Generate unique ID
-      const uniqueId = Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+    // 1. Generate unique ID
+    const uniqueId = Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
 
-      // 2. Gather form data
-      const form = document.getElementById('cvForm');
-      const formData = new FormData(form);
-      const data = {};
-      formData.forEach((value, key) => {
-        if (data[key]) {
-          if (!Array.isArray(data[key])) {
-            data[key] = [data[key]];
-          }
-          data[key].push(value);
-        } else {
-          data[key] = value;
-        }
-      });
+    // 2. Gather form data
+    const form = document.getElementById('cvForm');
+    const formData = new FormData(form);
+    const data = {};
+    formData.forEach((value, key) => {
+    if (data[key]) {
+    if (!Array.isArray(data[key])) {
+    data[key] = [data[key]];
+    }
+    data[key].push(value);
+    } else {
+    data[key] = value;
+    }
+    });
 
-      // 3. Save to localStorage or Send to Backend
-      // Como es front-only por ahora, simulamos éxito y guardamos local
-      try {
-        localStorage.setItem('formData-' + uniqueId, JSON.stringify(data));
-        // Opcional: Aquí se podría llamar al Script de Google si quisieras guardar todo
-      } catch (e) {
-        console.error("Error saving to localStorage", e);
-      }
+    // 3. Save to localStorage or Send to Backend
+    // Como es front-only por ahora, simulamos éxito y guardamos local
+    try {
+    localStorage.setItem('formData-' + uniqueId, JSON.stringify(data));
+    // Opcional: Aquí se podría llamar al Script de Google si quisieras guardar todo
+    } catch (e) {
+    console.error("Error saving to localStorage", e);
+    }
 
-      setTimeout(() => {
-        // 4. Show success view INSIDE the wizard
-        document.getElementById('cvForm').innerHTML = document.getElementById('successView').outerHTML;
-        document.getElementById('successView').style.display = 'block'; // Ensure it's visible
-        document.getElementById('wizardFooter').style.display = 'none';
-        document.getElementById('progressBar').style.width = '100%';
-      }, 1500);
+    setTimeout(() => {
+    // 4. Show success view INSIDE the wizard
+    document.getElementById('cvForm').innerHTML = document.getElementById('successView').outerHTML;
+    document.getElementById('successView').style.display = 'block'; // Ensure it's visible
+    document.getElementById('wizardFooter').style.display = 'none';
+    document.getElementById('progressBar').style.width = '100%';
+    }, 1500);
     }
 
     function renderCart() {
-      const cart = JSON.parse(localStorage.getItem("impulsopro_cart")) || [];
-      const container = document.getElementById("cartItemsContainer");
-      const summary = document.getElementById("cartSummary");
-      const emptyMsg = document.getElementById("emptyCartMessage");
-      const badge = document.getElementById("cart-count");
+    const cart = JSON.parse(localStorage.getItem("impulsopro_cart")) || [];
+    const container = document.getElementById("cartItemsContainer");
+    const summary = document.getElementById("cartSummary");
+    const emptyMsg = document.getElementById("emptyCartMessage");
+    const badge = document.getElementById("cart-count");
 
-      let totalQty = cart.reduce((acc, item) => acc + item.quantity, 0);
-      if (badge) {
-        badge.innerText = totalQty;
-        badge.style.display = totalQty === 0 ? "none" : "flex";
-      }
+    let totalQty = cart.reduce((acc, item) => acc + item.quantity, 0);
+    if (badge) {
+    badge.innerText = totalQty;
+    badge.style.display = totalQty === 0 ? "none" : "flex";
+    }
 
-      if (cart.length === 0) {
-        container.style.display = "none";
-        summary.style.display = "none";
-        emptyMsg.style.display = "block";
-        return;
-      } else {
-        container.style.display = "flex";
-        summary.style.display = "block";
-        emptyMsg.style.display = "none";
-      }
+    if (cart.length === 0) {
+    container.style.display = "none";
+    summary.style.display = "none";
+    emptyMsg.style.display = "block";
+    return;
+    } else {
+    container.style.display = "flex";
+    summary.style.display = "block";
+    emptyMsg.style.display = "none";
+    }
 
-      container.innerHTML = "";
-      let subtotal = 0;
+    container.innerHTML = "";
+    let subtotal = 0;
 
-      cart.forEach((item, index) => {
-        const itemTotal = item.price * item.quantity;
-        subtotal += itemTotal;
-        let iconClass = "fas fa-star";
-        const nameLower = item.name.toLowerCase();
-        if (nameLower.includes("cv")) iconClass = "fas fa-file-contract";
-        else if (nameLower.includes("linkedin"))
-          iconClass = "fab fa-linkedin";
-        else if (
-          nameLower.includes("web") ||
-          nameLower.includes("portafolio")
-        )
-          iconClass = "fas fa-laptop-code";
-        else if (nameLower.includes("traduccion"))
-          iconClass = "fas fa-language";
+    cart.forEach((item, index) => {
+    const itemTotal = item.price * item.quantity;
+    subtotal += itemTotal;
+    let iconClass = "fas fa-star";
+    const nameLower = item.name.toLowerCase();
+    if (nameLower.includes("cv")) iconClass = "fas fa-file-contract";
+    else if (nameLower.includes("linkedin"))
+    iconClass = "fab fa-linkedin";
+    else if (
+    nameLower.includes("web") ||
+    nameLower.includes("portafolio")
+    )
+    iconClass = "fas fa-laptop-code";
+    else if (nameLower.includes("traduccion"))
+    iconClass = "fas fa-language";
 
-        container.innerHTML += `
-                    <div class="cart-item">
-                        <div class="item-icon"><i class="${iconClass}"></i></div>
-                        <div class="item-info"><h3>${item.name}</h3><p>Servicio Profesional Digital</p></div>
-                        <div class="item-price">$${itemTotal}</div>
-                        <button class="btn-remove" onclick="removeItem(${index})"><i class="fas fa-trash-alt"></i></button>
-                    </div>`;
-      });
-      updateTotals(subtotal);
+    container.innerHTML += `
+    <div class="cart-item">
+      <div class="item-icon"><i class="${iconClass}"></i></div>
+      <div class="item-info">
+        <h3>${item.name}</h3>
+        <p>Servicio Profesional Digital</p>
+      </div>
+      <div class="item-price">$${itemTotal}</div>
+      <button class="btn-remove" onclick="removeItem(${index})"><i class="fas fa-trash-alt"></i></button>
+    </div>`;
+    });
+    updateTotals(subtotal);
     }
 
     function updateTotals(subtotal) {
-      const discountAmount = subtotal * currentDiscount;
-      const total = subtotal - discountAmount;
-      document.getElementById("subtotalPrice").innerText = `$${subtotal}`;
-      document.getElementById("totalPrice").innerText = `$${total.toFixed(
-        0
-      )}`;
-      const discountRow = document.getElementById("discountRow");
-      if (currentDiscount > 0) {
-        discountRow.style.display = "flex";
-        document.getElementById(
-          "discountAmount"
-        ).innerText = `-$${discountAmount.toFixed(0)}`;
-      } else {
-        discountRow.style.display = "none";
-      }
+    const discountAmount = subtotal * currentDiscount;
+    const total = subtotal - discountAmount;
+    document.getElementById("subtotalPrice").innerText = `$${subtotal}`;
+    document.getElementById("totalPrice").innerText = `$${total.toFixed(
+    0
+    )}`;
+    const discountRow = document.getElementById("discountRow");
+    if (currentDiscount > 0) {
+    discountRow.style.display = "flex";
+    document.getElementById(
+    "discountAmount"
+    ).innerText = `-$${discountAmount.toFixed(0)}`;
+    } else {
+    discountRow.style.display = "none";
+    }
     }
 
     function removeItem(index) {
-      let cart = JSON.parse(localStorage.getItem("impulsopro_cart")) || [];
-      cart.splice(index, 1);
-      localStorage.setItem("impulsopro_cart", JSON.stringify(cart));
-      renderCart();
+    let cart = JSON.parse(localStorage.getItem("impulsopro_cart")) || [];
+    cart.splice(index, 1);
+    localStorage.setItem("impulsopro_cart", JSON.stringify(cart));
+    renderCart();
     }
 
     function applyCoupon() {
-      const code = document
-        .getElementById("couponInput")
-        .value.trim()
-        .toUpperCase();
-      if (VALID_COUPONS[code]) {
-        currentDiscount = VALID_COUPONS[code];
-        document.getElementById("discountName").innerText = `(${code})`;
-        showModal("¡Cupón Aplicado!", "Descuento activado.", "success");
-        renderCart();
-      } else {
-        showModal("Error", "Cupón inválido.", "error");
-      }
+    const code = document
+    .getElementById("couponInput")
+    .value.trim()
+    .toUpperCase();
+    if (VALID_COUPONS[code]) {
+    currentDiscount = VALID_COUPONS[code];
+    document.getElementById("discountName").innerText = `(${code})`;
+    showModal("¡Cupón Aplicado!", "Descuento activado.", "success");
+    renderCart();
+    } else {
+    showModal("Error", "Cupón inválido.", "error");
+    }
     }
 
     // --- CONEXIÓN MP MEJORADA ---
     async function proceedToCheckout() {
-      const btn = document.querySelector(".btn-checkout");
-      const originalText = btn.innerHTML;
-      const cart = JSON.parse(localStorage.getItem("impulsopro_cart")) || [];
+    const btn = document.querySelector(".btn-checkout");
+    const originalText = btn.innerHTML;
+    const cart = JSON.parse(localStorage.getItem("impulsopro_cart")) || [];
 
-      if (cart.length === 0) return;
+    if (cart.length === 0) return;
 
-      btn.innerHTML =
-        '<i class="fas fa-spinner fa-spin"></i> Generando Link...';
-      btn.style.opacity = "0.7";
-      btn.style.pointerEvents = "none";
+    btn.innerHTML =
+    '<i class="fas fa-spinner fa-spin"></i> Generando Link...';
+    btn.style.opacity = "0.7";
+    btn.style.pointerEvents = "none";
 
-      const items = cart.map((item) => ({
-        title: item.name,
-        quantity: item.quantity,
-        currency_id: "ARS",
-        unit_price: item.price,
-      }));
+    const items = cart.map((item) => ({
+    title: item.name,
+    quantity: item.quantity,
+    currency_id: "ARS",
+    unit_price: item.price,
+    }));
 
-      const payload = { action: "create_preference", items: items };
+    const payload = { action: "create_preference", items: items };
 
-      try {
-        // FETCH CON TEXT/PLAIN PARA EVITAR CORS
-        const response = await fetch(SCRIPT_URL, {
-          method: "POST",
-          body: JSON.stringify(payload),
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-        });
+    try {
+    // FETCH CON TEXT/PLAIN PARA EVITAR CORS
+    const response = await fetch(SCRIPT_URL, {
+    method: "POST",
+    body: JSON.stringify(payload),
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    });
 
-        if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+    if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
 
-        const data = await response.json();
+    const data = await response.json();
 
-        if (data.init_point) {
-          window.open(data.init_point, '_blank');
-        } else if (data.status === "error") {
-          throw new Error(data.message || "Error interno del script");
-        } else if (data.error) {
-          throw new Error(data.error);
-        } else {
-          throw new Error("Respuesta inesperada del servidor");
-        }
-      } catch (error) {
-        console.error(error);
-        let msg = "No pudimos conectar con Mercado Pago. ";
-        if (error.message.includes("Failed to fetch"))
-          msg +=
-            "Verifica la URL del script. ¿Hiciste un NUEVO despliegue con acceso 'Cualquiera'?";
-        else msg += error.message;
-
-        showModal("Error de Conexión", msg, "error");
-        btn.innerHTML = originalText;
-        btn.style.opacity = "1";
-        btn.style.pointerEvents = "auto";
-      }
+    if (data.init_point) {
+    window.open(data.init_point, '_blank');
+    } else if (data.status === "error") {
+    throw new Error(data.message || "Error interno del script");
+    } else if (data.error) {
+    throw new Error(data.error);
+    } else {
+    throw new Error("Respuesta inesperada del servidor");
     }
-  </script>
+    } catch (error) {
+    console.error(error);
+    let msg = "No pudimos conectar con Mercado Pago. ";
+    if (error.message.includes("Failed to fetch"))
+    msg +=
+    "Verifica la URL del script. ¿Hiciste un NUEVO despliegue con acceso 'Cualquiera'?";
+    else msg += error.message;
+
+    showModal("Error de Conexión", msg, "error");
+    btn.innerHTML = originalText;
+    btn.style.opacity = "1";
+    btn.style.pointerEvents = "auto";
+    }
+    }
+    FIN: Código del wizard COMENTADO -->
+  <script src="js/api.js"></script>
+  <script src="js/carrito.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/auth-nav.js"></script>
 </body>
 
 </html>

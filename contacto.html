@@ -1,872 +1,206 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Contacto | CV Arg</title>
-    <link rel="icon" href="img/logo.png" type="image/png" sizes="50x50" />
 
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contacto | CV Arg</title>
+  <link rel="icon" href="img/logo.png" type="image/png" sizes="50x50" />
 
-    <style>
-      /* --- VARIABLES --- */
-      :root {
-        --primary-blue: #044bab;
-        --primary-dark: #022a61;
-        --accent-yellow: #f3d136;
-        --text-dark: #1f2937;
-        --text-light: #6b7280;
-        --white: #ffffff;
-        --bg-light: #f8fafc;
-        --glass-border: rgba(255, 255, 255, 0.6);
-      }
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/auth-nav.css">
+  <link rel="stylesheet" href="css/title-effects.css">
 
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: "Poppins", sans-serif;
-        scroll-behavior: smooth;
-      }
-      body {
-        background-color: var(--bg-light);
-        color: var(--text-dark);
-        overflow-x: hidden;
-      }
+  <link rel="stylesheet" href="css/contacto.css">
+</head>
 
-      /* --- NAVBAR --- */
-      nav {
-        position: fixed;
-        top: 0;
-        width: 100%;
-        padding: 1.5rem 5% 0 5%;
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        z-index: 1000;
-        transition: all 0.4s ease;
-        background: transparent;
-      }
-      nav.scrolled {
-        background: var(--primary-blue);
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-        padding-bottom: 1rem;
-      }
-
-      .logo {
-        display: flex;
-        align-items: center;
-        text-decoration: none;
-        margin-top: -10px;
-      }
-      .logo-img {
-        height: 100px;
-        width: auto;
-        object-fit: contain;
-      }
-
-      .nav-right {
-        display: flex;
-        align-items: center;
-        gap: 30px;
-        margin-top: 25px;
-      }
-      .nav-links {
-        display: flex;
-        gap: 30px;
-        list-style: none;
-        margin: 0;
-      }
-      .nav-links a {
-        text-decoration: none;
-        color: var(--white);
-        font-weight: 500;
-        font-size: 1.1rem;
-        transition: 0.3s;
-        opacity: 0.9;
-      }
-      .nav-links a:hover,
-      .nav-links a.active {
-        opacity: 1;
-        text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-      }
-      .nav-links a.active {
-        border-bottom: 3px solid var(--accent-yellow);
-      }
-
-      .cart-wrapper {
-        position: relative;
-        cursor: pointer;
-        color: var(--white);
-        font-size: 1.4rem;
-        text-decoration: none;
-      }
-      .cart-count {
-        position: absolute;
-        top: -8px;
-        right: -10px;
-        background: var(--accent-yellow);
-        color: var(--primary-dark);
-        font-size: 0.75rem;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-weight: 800;
-      }
-
-      /* --- HERO SECTION (Ajustado para no tocar el slider) --- */
-      .hero-section {
-        padding: 180px 5% 100px; /* Menos padding abajo */
-        text-align: center;
-        background: var(--primary-blue);
-        color: var(--white);
-        clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
-        position: relative;
-        z-index: 1;
-        margin-bottom: 0;
-      }
-      .hero-title {
-        font-size: clamp(2.5rem, 6vw, 4rem);
-        font-weight: 800;
-        line-height: 1.1;
-        margin-bottom: 20px;
-        background: linear-gradient(
-          135deg,
-          #ffffff 30%,
-          var(--accent-yellow) 100%
-        );
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-      .hero-subtitle {
-        font-size: 1.25rem;
-        color: rgba(255, 255, 255, 0.9);
-        max-width: 600px;
-        margin: 0 auto;
-        line-height: 1.6;
-      }
-
-      /* --- SLIDER "SCANNER" (Separado totalmente) --- */
-      .comparison-wrapper {
-        position: relative;
-        max-width: 1000px;
-        margin: 50px auto 100px; /* Margen positivo arriba (50px) para separarlo */
-        padding: 20px;
-        background: var(--white);
-        border-radius: 30px;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-        z-index: 10;
-      }
-
-      .comparison-container {
-        position: relative;
-        width: 100%;
-        height: 550px;
-        background: #e2e8f0;
-        border-radius: 20px;
-        overflow: hidden;
-        cursor: col-resize;
-      }
-
-      .img-layer {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-      }
-
-      .layer-after {
-        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-        width: 50%;
-        z-index: 2;
-        border-right: 3px solid var(--accent-yellow);
-      }
-      .layer-before {
-        background: #cbd5e1;
-        width: 100%;
-        z-index: 1;
-      }
-
-      .mockup-content {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 80%;
-        height: 85%;
-        background: var(--white);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        display: flex;
-        flex-direction: column;
-        padding: 40px;
-        pointer-events: none;
-      }
-
-      /* Estilos Internos CV */
-      .cv-modern {
-        border-left: 6px solid var(--primary-blue);
-      }
-      .mod-header {
-        display: flex;
-        gap: 20px;
-        align-items: center;
-        margin-bottom: 30px;
-      }
-      .mod-avatar {
-        width: 70px;
-        height: 70px;
-        border-radius: 50%;
-        background: linear-gradient(45deg, #ccc, #999);
-      }
-      .mod-lines {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
-      .line {
-        height: 12px;
-        background: #f1f5f9;
-        border-radius: 4px;
-        width: 100%;
-      }
-      .line.blue {
-        background: var(--primary-blue);
-        width: 60%;
-        height: 16px;
-      }
-      .line.short {
-        width: 40%;
-      }
-      .mod-grid {
-        display: grid;
-        grid-template-columns: 1fr 2fr;
-        gap: 30px;
-        height: 100%;
-      }
-      .mod-col-l {
-        background: #f8fafc;
-        border-radius: 8px;
-        height: 100%;
-      }
-
-      .cv-old {
-        font-family: "Times New Roman", serif;
-        opacity: 0.7;
-        border: 1px solid #999;
-      }
-      .old-title {
-        text-align: center;
-        font-weight: bold;
-        font-size: 20px;
-        margin-bottom: 20px;
-        border-bottom: 2px solid #000;
-        padding-bottom: 10px;
-      }
-      .old-text {
-        height: 8px;
-        background: #bbb;
-        margin-bottom: 8px;
-        border-radius: 0;
-      }
-
-      .slider-handle {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 56px;
-        height: 56px;
-        background: var(--accent-yellow);
-        border: 4px solid var(--white);
-        border-radius: 50%;
-        z-index: 10;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        box-shadow: 0 0 0 4px rgba(243, 209, 54, 0.3),
-          0 10px 20px rgba(0, 0, 0, 0.2);
-        pointer-events: none;
-        color: var(--text-dark);
-        font-size: 1.2rem;
-      }
-
-      .badge-float {
-        position: absolute;
-        top: 30px;
-        padding: 8px 20px;
-        border-radius: 100px;
-        font-weight: 700;
-        font-size: 0.85rem;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        z-index: 5;
-      }
-      .badge-before {
-        left: 30px;
-        background: #fff;
-        color: var(--text-light);
-      }
-      .badge-after {
-        right: 30px;
-        background: var(--primary-blue);
-        color: var(--white);
-      }
-
-      /* --- CONTACT SECTION --- */
-      .contact-section {
-        max-width: 1200px;
-        margin: 0 auto 100px;
-        padding: 0 5%;
-        display: grid;
-        grid-template-columns: 1fr 1.2fr;
-        gap: 60px;
-        align-items: start;
-      }
-
-      .info-title {
-        font-size: 2.5rem;
-        font-weight: 800;
-        margin-bottom: 20px;
-        color: var(--primary-blue);
-      }
-      .info-desc {
-        color: var(--text-light);
-        margin-bottom: 40px;
-        font-size: 1.1rem;
-      }
-
-      .contact-card {
-        background: var(--white);
-        padding: 25px;
-        border-radius: 20px;
-        display: flex;
-        align-items: center;
-        gap: 20px;
-        margin-bottom: 20px;
-        box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
-        border: 1px solid rgba(0, 0, 0, 0.02);
-        transition: 0.3s;
-        text-decoration: none;
-        color: inherit;
-      }
-      .contact-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 35px -5px rgba(4, 75, 171, 0.1);
-      }
-
-      .icon-box {
-        width: 50px;
-        height: 50px;
-        background: #e6effa;
-        border-radius: 14px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: var(--primary-blue);
-        font-size: 1.2rem;
-      }
-      .card-text h4 {
-        font-size: 0.9rem;
-        color: var(--text-light);
-        margin-bottom: 2px;
-      }
-      .card-text p {
-        font-weight: 600;
-        font-size: 1.05rem;
-        color: var(--text-dark);
-      }
-
-      .form-panel {
-        background: var(--white);
-        padding: 3rem;
-        border-radius: 30px;
-        box-shadow: 0 20px 60px -10px rgba(0, 0, 0, 0.08);
-        border: 1px solid var(--white);
-        position: relative;
-        overflow: hidden;
-      }
-      .form-panel::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 6px;
-        background: linear-gradient(
-          90deg,
-          var(--primary-blue),
-          var(--accent-yellow)
-        );
-      }
-
-      .input-group {
-        position: relative;
-        margin-bottom: 25px;
-      }
-      .input-field {
-        width: 100%;
-        padding: 15px 20px;
-        background: #f8fafc;
-        border: 2px solid transparent;
-        border-radius: 12px;
-        font-size: 1rem;
-        color: var(--text-dark);
-        transition: 0.3s;
-        outline: none;
-      }
-      .input-field:focus {
-        background: var(--white);
-        border-color: var(--primary-blue);
-        box-shadow: 0 0 0 4px rgba(4, 75, 171, 0.1);
-      }
-      .input-label {
-        position: absolute;
-        left: 20px;
-        top: 15px;
-        color: #9ca3af;
-        pointer-events: none;
-        transition: 0.3s;
-      }
-      .input-field:focus ~ .input-label,
-      .input-field:not(:placeholder-shown) ~ .input-label {
-        top: -10px;
-        left: 15px;
-        font-size: 0.8rem;
-        color: var(--primary-blue);
-        background: var(--white);
-        padding: 0 5px;
-        font-weight: 600;
-      }
-
-      .btn-submit {
-        width: 100%;
-        padding: 16px;
-        background: var(--primary-blue);
-        color: var(--white);
-        border: none;
-        border-radius: 14px;
-        font-size: 1.1rem;
-        font-weight: 700;
-        cursor: pointer;
-        transition: 0.3s;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-      }
-      .btn-submit:hover {
-        transform: translateY(-3px);
-        background: var(--primary-dark);
-      }
-
-      /* --- FOOTER --- */
-      footer {
-        background: linear-gradient(
-          to bottom,
-          var(--primary-blue),
-          var(--primary-dark)
-        );
-        color: var(--white);
-        padding: 4rem 5% 2rem;
-        text-align: center;
-        margin-top: auto;
-      }
-      .copyright {
-        opacity: 0.6;
-        font-size: 0.9rem;
-        margin-top: 2rem;
-        padding-top: 2rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-      }
-
-      /* --- Animación Logo Footer --- */
-      .footer-logo {
-        height: 80px;
-        object-fit: contain;
-        filter: brightness(0) invert(1) opacity(0.8);
-        transition: all 0.4s ease;
-        animation: float-logo 6s ease-in-out infinite;
-      }
-      .footer-logo:hover {
-        transform: scale(1.05);
-        filter: brightness(0) invert(1) opacity(1) drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
-      }
-
-      @keyframes float-logo {
-        0% {
-          transform: translateY(0px);
-        }
-        50% {
-          transform: translateY(-8px);
-        }
-        100% {
-          transform: translateY(0px);
-        }
-      }
-
-      .menu-toggle {
-        display: none;
-        font-size: 1.5rem;
-        color: var(--white);
-        cursor: pointer;
-        margin-right: 20px;
-      }
-      .whatsapp-float {
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        width: 65px;
-        height: 65px;
-        background: #25d366;
-        color: white;
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 2rem;
-        z-index: 100;
-        box-shadow: 0 10px 30px rgba(37, 211, 102, 0.4);
-        text-decoration: none;
-        transition: 0.3s;
-      }
-      .whatsapp-float:hover {
-        transform: scale(1.1);
-      }
-
-      @media (max-width: 768px) {
-        .menu-toggle {
-          display: block;
-        }
-        .nav-links {
-          position: fixed;
-          top: 0;
-          right: -100%;
-          height: 100vh;
-          width: 100%;
-          background: rgba(4, 75, 171, 0.98);
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 2.5rem;
-          transition: 0.4s;
-          z-index: 999;
-        }
-        .nav-links.active {
-          right: 0;
-        }
-        .contact-section {
-          grid-template-columns: 1fr;
-          gap: 40px;
-        }
-        .comparison-container {
-          height: 350px;
-        }
-        nav {
-          background: var(--primary-blue);
-          align-items: center;
-        }
-        .logo-img {
-          height: 60px;
-        }
-      }
-      @media (max-width: 480px) {
-        .hero-section {
-            padding: 120px 5% 80px;
-        }
-        .hero-title {
-            font-size: 2.2rem;
-        }
-        .hero-subtitle {
-            font-size: 1rem;
-        }
-        .comparison-wrapper {
-            margin: 30px auto 60px;
-            padding: 15px;
-        }
-        .comparison-container {
-            height: 250px;
-        }
-        .mockup-content {
-            padding: 20px;
-        }
-        .info-title {
-            font-size: 2rem;
-        }
-        .form-panel {
-            padding: 2rem;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <nav id="navbar">
-      <a href="index.html" class="logo">
-        <img src="img/logo.png" alt="Logo" class="logo-img" />
-      </a>
-      <div class="nav-right">
-        <ul class="nav-links">
-          <li><a href="index.html">Inicio</a></li>
-          <li><a href="catalogo.html">Catálogo</a></li>
-          <li><a href="contacto.html" class="active">Contacto</a></li>
-        </ul>
-        <a href="carrito.html" class="cart-wrapper">
-          <i class="fas fa-shopping-cart"></i>
-          <span class="cart-count" id="cart-count">0</span>
-        </a>
-        <div class="menu-toggle"><i class="fas fa-bars"></i></div>
+<body>
+  <nav id="navbar">
+    <div class="logo">
+      <img src="img/logo.png" alt="Logo" class="logo-img" />
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html" onclick="closeMenu()">Inicio</a></li>
+      <li><a href="index.html#analyzer" onclick="closeMenu()">Analizador</a></li>
+      <li><a href="catalogo.html" onclick="closeMenu()">Catálogo</a></li>
+      <li><a href="contacto.html" class="active" onclick="closeMenu()">Contacto</a></li>
+    </ul>
+    <div class="menu-toggle"><i class="fas fa-bars"></i></div>
+    <a href="carrito.html" class="cart-icon-link">
+      <div class="cart-icon">
+        <i class="fas fa-shopping-cart"></i><span class="cart-count" id="cart-count">0</span>
       </div>
-    </nav>
+    </a>
+    <a href="login.html" id="auth-link" onclick="closeMenu()"><i class="fas fa-sign-in-alt"></i> Ingresar</a>
+  </nav>
 
-    <section class="hero-section">
-      <h1 class="hero-title">
-        El poder de un perfil <br />
-        bien diseñado.
-      </h1>
-      <p class="hero-subtitle">
+
+  <header class="hero" id="home">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="hero-content" id="heroContent">
+      <h1>El poder de un perfil <br/>
+      bien diseñado.</h1>
+      <p>
         Compara y descubre por qué el diseño profesional es la inversión que
         separa a los candidatos promedio de los contratados.
       </p>
-    </section>
+    </div>
+  </header>
 
-    <section class="comparison-wrapper">
-      <div class="badge-float badge-before">Antes</div>
-      <div class="badge-float badge-after">Después</div>
+  <section class="comparison-wrapper">
+    <div class="badge-float badge-before">Antes</div>
+    <div class="badge-float badge-after">Después</div>
 
-      <div class="comparison-container" id="compContainer">
-        <div class="img-layer layer-after" id="layerAfter">
-          <div class="mockup-content cv-modern">
-            <div class="mod-header">
-              <div class="mod-avatar"></div>
-              <div class="mod-lines">
-                <div class="line blue"></div>
-                <div class="line short"></div>
-              </div>
-            </div>
-            <div class="mod-grid">
-              <div class="mod-col-l"></div>
-              <div class="mod-lines">
-                <div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
-                <br />
-                <div class="line blue"></div>
-                <div class="line"></div>
-              </div>
+    <div class="comparison-container" id="compContainer">
+      <div class="img-layer layer-after" id="layerAfter">
+        <div class="mockup-content cv-modern">
+          <div class="mod-header">
+            <div class="mod-avatar"></div>
+            <div class="mod-lines">
+              <div class="line blue"></div>
+              <div class="line short"></div>
             </div>
           </div>
-        </div>
-
-        <div class="img-layer layer-before">
-          <div class="mockup-content cv-old">
-            <div class="old-title">CURRICULUM VITAE</div>
-            <div class="old-text" style="width: 30%"></div>
-            <br />
-            <div class="old-text"></div>
-            <div class="old-text"></div>
-            <div class="old-text"></div>
-            <br /><br />
-            <div class="old-text" style="width: 40%; background: #999"></div>
-            <div class="old-text"></div>
-            <div class="old-text"></div>
-          </div>
-        </div>
-
-        <div class="slider-handle" id="sliderHandle">
-          <i class="fas fa-arrows-left-right"></i>
-        </div>
-      </div>
-    </section>
-
-    <section class="contact-section">
-      <div class="info-panel">
-        <h2 class="info-title">¿Listo para el siguiente nivel?</h2>
-        <p class="info-desc">
-          No dejes que un CV mediocre te cierre puertas. Escríbenos y
-          transformemos tu carrera hoy mismo.
-        </p>
-
-        <a
-          href="mailto:curriculumvitaeargentina@gmail.com"
-          class="contact-card"
-        >
-          <div class="icon-box"><i class="far fa-envelope"></i></div>
-          <div class="card-text">
-            <h4>Email</h4>
-            <p>curriculumvitaeargentina@gmail.com</p>
-          </div>
-        </a>
-
-        <a href="https://wa.me/5492614994711" class="contact-card">
-          <div class="icon-box"><i class="fas fa-phone-alt"></i></div>
-          <div class="card-text">
-            <h4>WhatsApp</h4>
-            <p>+54 9 261 499-4711</p>
-          </div>
-        </a>
-
-        <div class="contact-card">
-          <div class="icon-box"><i class="fas fa-map-marker-alt"></i></div>
-          <div class="card-text">
-            <h4>Ubicación</h4>
-            <p>Mendoza, Argentina</p>
+          <div class="mod-grid">
+            <div class="mod-col-l"></div>
+            <div class="mod-lines">
+              <div class="line"></div>
+              <div class="line"></div>
+              <div class="line"></div>
+              <br />
+              <div class="line blue"></div>
+              <div class="line"></div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="form-panel">
-        <h3
-          style="
+      <div class="img-layer layer-before">
+        <div class="mockup-content cv-old">
+          <div class="old-title">CURRICULUM VITAE</div>
+          <div class="old-text" style="width: 30%"></div>
+          <br />
+          <div class="old-text"></div>
+          <div class="old-text"></div>
+          <div class="old-text"></div>
+          <br /><br />
+          <div class="old-text" style="width: 40%; background: #999"></div>
+          <div class="old-text"></div>
+          <div class="old-text"></div>
+        </div>
+      </div>
+
+      <div class="slider-handle" id="sliderHandle">
+        <i class="fas fa-arrows-left-right"></i>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact-section">
+    <div class="info-panel">
+      <h2 class="info-title">¿Listo para el siguiente nivel?</h2>
+      <p class="info-desc">
+        No dejes que un CV mediocre te cierre puertas. Escríbenos y
+        transformemos tu carrera hoy mismo.
+      </p>
+
+      <a href="mailto:curriculumvitaeargentina@gmail.com" class="contact-card">
+        <div class="icon-box"><i class="far fa-envelope"></i></div>
+        <div class="card-text">
+          <h4>Email</h4>
+          <p>curriculumvitaeargentina@gmail.com</p>
+        </div>
+      </a>
+
+      <a href="https://wa.me/5492614994711" class="contact-card">
+        <div class="icon-box"><i class="fas fa-phone-alt"></i></div>
+        <div class="card-text">
+          <h4>WhatsApp</h4>
+          <p>+54 9 261 499-4711</p>
+        </div>
+      </a>
+
+      <div class="contact-card">
+        <div class="icon-box"><i class="fas fa-map-marker-alt"></i></div>
+        <div class="card-text">
+          <h4>Ubicación</h4>
+          <p>Mendoza, Argentina</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-panel">
+      <h3 style="
             margin-bottom: 2rem;
             font-size: 1.5rem;
             color: var(--primary-blue);
             font-weight: 700;
-          "
-        >
-          Envíanos un mensaje
-        </h3>
-        <form action="https://formsubmit.co/facundorodriguezsp@gmail.com" method="POST">
-          <input type="hidden" name="_subject" value="Nuevo mensaje desde tu web!">
-          <input type="hidden" name="_next" value="exito.html">
-          <div class="input-group">
-            <input type="text" name="name" class="input-field" placeholder=" " required />
-            <label class="input-label">Nombre Completo</label>
-          </div>
+          ">
+        Envíanos un mensaje
+      </h3>
+      <form action="https://formsubmit.co/facundorodriguezsp@gmail.com" method="POST">
+        <input type="hidden" name="_subject" value="Nuevo mensaje desde tu web!">
+        <input type="hidden" name="_next" value="exito.html">
+        <div class="input-group">
+          <input type="text" name="name" class="input-field" placeholder=" " required />
+          <label class="input-label">Nombre Completo</label>
+        </div>
 
-          <div class="input-group">
-            <input type="email" name="email" class="input-field" placeholder=" " required />
-            <label class="input-label">Correo Electrónico</label>
-          </div>
+        <div class="input-group">
+          <input type="email" name="email" class="input-field" placeholder=" " required />
+          <label class="input-label">Correo Electrónico</label>
+        </div>
 
-          <div class="input-group">
-            <select
-              name="service"
-              class="input-field"
-              style="color: var(--text-dark); appearance: none"
-            >
-              <option>Mejora de CV</option>
-              <option>Perfil LinkedIn</option>
-              <option>Portafolio Web (Nuevo)</option>
-              <option>Pack Completo</option>
-              <option>Otro</option>
-            </select>
-            <i
-              class="fas fa-chevron-down"
-              style="
+        <div class="input-group">
+          <select name="service" class="input-field" style="color: var(--text-dark); appearance: none">
+            <option>Mejora de CV</option>
+            <option>Perfil LinkedIn</option>
+            <option>Portafolio Web (Nuevo)</option>
+            <option>Pack Completo</option>
+            <option>Otro</option>
+          </select>
+          <i class="fas fa-chevron-down" style="
                 position: absolute;
                 right: 20px;
                 top: 20px;
                 color: #9ca3af;
                 pointer-events: none;
-              "
-            ></i>
-          </div>
+              "></i>
+        </div>
 
-          <div class="input-group">
-            <textarea
-              name="message"
-              class="input-field"
-              rows="4"
-              placeholder=" "
-              required
-            ></textarea>
-            <label class="input-label">¿Cómo podemos ayudarte?</label>
-          </div>
+        <div class="input-group">
+          <textarea name="message" class="input-field" rows="4" placeholder=" " required></textarea>
+          <label class="input-label">¿Cómo podemos ayudarte?</label>
+        </div>
 
-          <button type="submit" class="btn-submit">
-            Enviar Solicitud <i class="fas fa-paper-plane"></i>
-          </button>
-        </form>
-      </div>
-    </section>
+        <button type="submit" class="btn-submit">
+          Enviar Solicitud <i class="fas fa-paper-plane"></i>
+        </button>
+      </form>
+    </div>
+  </section>
 
-    <footer>
-      <div style="margin-bottom: 20px">
-        <img
-          src="img/logo.png"
-          alt="CV Arg Logo"
-          class="footer-logo"
-        />
-      </div>
-      <p style="opacity: 0.7; font-size: 0.9rem">
-        Impulsando carreras desde 2025.
-      </p>
-      <div class="copyright">
-        &copy; 2025 CvArg. Todos los derechos reservados.
-      </div>
-    </footer>
+  <footer>
+    <div style="margin-bottom: 20px">
+      <img src="img/logo.png" alt="CV Arg Logo" class="footer-logo" />
+    </div>
+    <p style="opacity: 0.7; font-size: 0.9rem">
+      Impulsando carreras desde 2025.
+    </p>
+    <div class="copyright">
+      &copy; 2025 CvArg. Todos los derechos reservados.
+    </div>
+  </footer>
 
-    <a href="https://wa.me/5492614994711" class="whatsapp-float"
-      ><i class="fab fa-whatsapp"></i
-    ></a>
+  <a href="https://wa.me/5492614994711" class="whatsapp-float"><i class="fab fa-whatsapp"></i></a>
 
-    <script>
-      // Navbar Scroll
-      window.addEventListener("scroll", function () {
-        var navbar = document.getElementById("navbar");
-        if (window.scrollY > 50) navbar.classList.add("scrolled");
-        else navbar.classList.remove("scrolled");
-      });
+  <script src="js/auth-nav.js"></script>
+  <script src="js/contacto.js"></script>
 
-      // Menu Mobile
-      const menuToggle = document.querySelector(".menu-toggle");
-      const navLinks = document.querySelector(".nav-links");
-      menuToggle.addEventListener("click", () => {
-        navLinks.classList.toggle("active");
-        const icon = menuToggle.querySelector("i");
-        icon.classList.toggle("fa-bars");
-        icon.classList.toggle("fa-times");
-      });
+</body>
 
-      // Cart Logic
-      document.addEventListener("DOMContentLoaded", () => {
-        let cart = JSON.parse(localStorage.getItem("impulsopro_cart")) || [];
-        let totalQty = cart.reduce((acc, item) => acc + item.quantity, 0);
-        const badge = document.getElementById("cart-count");
-        if (badge) {
-          badge.innerText = totalQty;
-          badge.style.display = totalQty === 0 ? "none" : "flex";
-        }
-      });
-
-      // --- LÓGICA DEL SLIDER (ORIGINAL) ---
-      const container = document.getElementById("compContainer");
-      const layerAfter = document.getElementById("layerAfter");
-      const handle = document.getElementById("sliderHandle");
-
-      window.addEventListener("load", () => {
-        layerAfter.style.width = "50%";
-        handle.style.left = "50%";
-      });
-
-      const moveSlider = (e) => {
-        const rect = container.getBoundingClientRect();
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        let x = clientX - rect.left;
-
-        if (x < 0) x = 0;
-        if (x > rect.width) x = rect.width;
-
-        const percent = (x / rect.width) * 100;
-        layerAfter.style.width = `${percent}%`;
-        handle.style.left = `${percent}%`;
-      };
-
-      container.addEventListener("mousemove", moveSlider);
-      container.addEventListener("touchmove", moveSlider);
-    </script>
-  </body>
 </html>

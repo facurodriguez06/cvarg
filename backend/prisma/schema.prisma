@@ -1,0 +1,242 @@
+// Esquema de base de datos PostgreSQL con Prisma
+// Prisma es un ORM moderno que facilita el trabajo con SQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ===========================
+// MODELO DE USUARIO
+// ===========================
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  fullName  String
+  phone     String?
+  role      Role     @default(CLIENT)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relaciones
+  cart          Cart?
+  orders        Order[]
+  cvSubmissions CVSubmission[]
+  couponUsages  CouponUsage[]
+
+  @@map("users")
+}
+
+enum Role {
+  ADMIN
+  CLIENT
+}
+
+// ===========================
+// MODELO DE PRODUCTO
+// ===========================
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  price       Decimal  @db.Decimal(10, 2)
+  category    Category
+  imageUrl    String?
+  features    String[] // Array de características
+  isActive    Boolean  @default(true)
+  stock       Int      @default(999)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relaciones
+  cartItems  CartItem[]
+  orderItems OrderItem[]
+
+  @@map("products")
+}
+
+enum Category {
+  CV_BASICO
+  CV_PROFESIONAL
+  CV_PREMIUM
+  CONSULTORIA
+  OTRO
+}
+
+// ===========================
+// MODELO DE CARRITO
+// ===========================
+model Cart {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relaciones
+  items CartItem[]
+
+  @@map("carts")
+}
+
+model CartItem {
+  id        String   @id @default(uuid())
+  cartId    String
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  quantity  Int      @default(1)
+  createdAt DateTime @default(now())
+
+  @@unique([cartId, productId])
+  @@map("cart_items")
+}
+
+// ===========================
+// MODELO DE CUPONES
+// ===========================
+model Coupon {
+  id              String   @id @default(uuid())
+  code            String   @unique
+  discountPercent Decimal  @db.Decimal(5, 2) // 0.00 a 1.00 (0% a 100%)
+  description     String?
+  isActive        Boolean  @default(true)
+  maxUsage        Int      @default(100) // Usos máximos totales
+  usageCount      Int      @default(0) // Usos actuales
+  usesPerUser     Int      @default(1) // Usos por usuario
+  expiresAt       DateTime?
+  createdAt       DateTime @default(now())
+
+  // Relaciones
+  usages CouponUsage[]
+  orders Order[]
+
+  @@map("coupons")
+}
+
+model CouponUsage {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  couponId  String
+  coupon    Coupon   @relation(fields: [couponId], references: [id])
+  usedAt    DateTime @default(now())
+
+  @@unique([userId, couponId])
+  @@map("coupon_usages")
+}
+
+// ===========================
+// MODELO DE ORDEN
+// ===========================
+model Order {
+  id              String      @id @default(uuid())
+  userId          String
+  user            User        @relation(fields: [userId], references: [id])
+  orderNumber     String      @unique // Número de orden legible
+  status          OrderStatus @default(PENDING)
+  subtotal        Decimal     @db.Decimal(10, 2)
+  discount        Decimal     @db.Decimal(10, 2) @default(0)
+  total           Decimal     @db.Decimal(10, 2)
+  couponId        String?
+  coupon          Coupon?     @relation(fields: [couponId], references: [id])
+  paymentId       String?     @unique // ID de Mercado Pago
+  paymentStatus   String?
+  paymentMethod   String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  // Relaciones
+  items OrderItem[]
+
+  @@map("orders")
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+model OrderItem {
+  id        String  @id @default(uuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
+  price     Decimal @db.Decimal(10, 2) // Precio al momento de la compra
+
+  @@map("order_items")
+}
+
+// ===========================
+// MODELO DE FORMULARIOS CV
+// ===========================
+model CVSubmission {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  orderId     String?  @unique
+  
+  // Datos personales
+  fullName    String
+  email       String
+  phone       String
+  address     String?
+  city        String?
+  birthDate   DateTime?
+  photoUrl    String?
+  
+  // Educación
+  education   Json     // Array de objetos con educación
+  
+  // Experiencia
+  experience  Json     // Array de objetos con experiencia
+  
+  // Habilidades
+  hardSkills  String[]
+  softSkills  String[]
+  
+  // Otros
+  languages   Json?
+  references  Json?
+  portfolio   String?
+  linkedin    String?
+  
+  status      SubmissionStatus @default(PENDING)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("cv_submissions")
+}
+
+enum SubmissionStatus {
+  PENDING
+  IN_REVIEW
+  COMPLETED
+  DELIVERED
+}
+
+// ===========================
+// MODELO DE CONTACTO
+// ===========================
+model ContactMessage {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  subject   String?
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("contact_messages")
+}

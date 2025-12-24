@@ -1,769 +1,103 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CV Arg | Catálogo de Servicios</title>
-    <link rel="icon" href="img/logo.png" type="image/png" sizes="50x50"">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CV Arg | Catálogo de Servicios</title>
+  <link rel="icon" href="img/logo.png" type="image/png" sizes="50x50"">
 
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
+      href=" https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-    <style>
-      /* --- VARIABLES & RESET --- */
-      :root {
-        --primary-blue: #044bab;
-        --primary-dark: #022a61;
-        --accent-yellow: #f3d136;
-        --text-dark: #333333;
-        --text-light: #666666;
-        --white: #ffffff;
-        --bg-light: #f8f9fa;
-        --success: #10b981;
-      }
+  <link rel="stylesheet" href="css/catalogo.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/auth-nav.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/title-effects.css">
 
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: "Poppins", sans-serif;
-        scroll-behavior: smooth;
-      }
-      body {
-        background-color: var(--bg-light);
-        overflow-x: hidden;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-      }
 
-      /* NAVBAR (Idéntico al Index) */
-      nav {
-        position: fixed;
-        top: 0;
-        width: 100%;
-        padding: 1.5rem 5% 0 5%;
-        display: flex;
-        align-items: flex-start;
-        z-index: 1000;
-        transition: all 0.4s ease;
-        background: transparent;
-      }
-      nav.scrolled {
-        background: var(--primary-blue);
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-        padding-bottom: 1rem;
-      }
-      .logo {
-        display: flex;
-        align-items: flex-start;
-        cursor: pointer;
-        margin-right: auto;
-        margin-top: -10px;
-        z-index: 1001;
-      }
-      .logo-img {
-        height: 100px;
-        width: auto;
-        object-fit: contain;
-      }
-      .nav-links {
-        display: flex;
-        gap: 3rem;
-        list-style: none;
-        margin-right: 3rem;
-        margin-top: 25px;
-      }
-      .nav-links a {
-        text-decoration: none;
-        color: var(--white);
-        font-weight: 500;
-        transition: all 0.3s;
-        font-size: 1.1rem;
-        opacity: 0.9;
-        position: relative;
-      }
-      .nav-links a:hover {
-        opacity: 1;
-        text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-      }
-      .nav-links a.active::after {
-        content: "";
-        position: absolute;
-        width: 100%;
-        height: 3px;
-        bottom: -5px;
-        left: 0;
-        background: var(--accent-yellow);
-      }
-      .cart-icon-link {
-        text-decoration: none;
-        display: block;
-        margin-top: 23px;
-        z-index: 1001;
-      }
-      .cart-icon {
-        position: relative;
-        color: var(--white);
-        font-size: 1.4rem;
-        cursor: pointer;
-        transition: color 0.3s;
-      }
-      .cart-count {
-        position: absolute;
-        top: -8px;
-        right: -10px;
-        background: var(--accent-yellow);
-        color: var(--primary-dark);
-        font-size: 0.75rem;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-weight: 800;
-      }
+</head>
 
-      /* HEADER DEL CATÁLOGO */
-      .catalog-header {
-        background: var(--primary-blue);
-        padding: 160px 5% 60px;
-        text-align: center;
-        color: white;
-        clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
-        margin-bottom: 40px;
-      }
-      .catalog-title {
-        font-size: clamp(2.5rem, 5vw, 3.5rem);
-        font-weight: 800;
-        margin-bottom: 15px;
-        animation: fadeDown 0.8s ease;
-      }
-      .catalog-subtitle {
-        font-size: 1.1rem;
-        opacity: 0.9;
-        max-width: 600px;
-        margin: 0 auto;
-        font-weight: 300;
-        animation: fadeDown 0.8s ease 0.2s backwards;
-      }
+<body>
+  <div class="notification-container" id="notificationContainer"></div>
 
-      /* FILTROS */
-      .filters-wrapper {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        flex-wrap: wrap;
-        padding: 0 5%;
-        margin-bottom: 50px;
-      }
-      .filter-btn {
-        padding: 10px 25px;
-        border: 2px solid #e2e8f0;
-        border-radius: 50px;
-        background: white;
-        color: var(--text-light);
-        font-weight: 600;
-        cursor: pointer;
-        transition: 0.3s;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-      .filter-btn:hover {
-        border-color: var(--primary-blue);
-        color: var(--primary-blue);
-      }
-      .filter-btn.active {
-        background: var(--primary-blue);
-        color: white;
-        border-color: var(--primary-blue);
-        box-shadow: 0 10px 20px rgba(4, 75, 171, 0.2);
-      }
-      .filter-btn i {
-        font-size: 0.9rem;
-      }
-
-      /* GRID DE PRODUCTOS */
-      .products-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 2.5rem;
-        padding: 0 5% 6rem;
-        max-width: 1300px;
-        margin: 0 auto;
-        flex-grow: 1; /* Empuja el footer */
-      }
-
-      /* TARJETA DE PRODUCTO (Estilo Index) */
-      .product-card {
-        background: var(--white);
-        border-radius: 24px;
-        padding: 2.5rem 2rem;
-        border: 1px solid rgba(0, 0, 0, 0.05);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        overflow: hidden;
-        animation: fadeUp 0.6s ease backwards;
-      }
-      .product-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 20px 40px rgba(4, 75, 171, 0.15);
-        border-color: transparent;
-      }
-      /* Barra superior de color */
-      .product-card::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 6px;
-        background: linear-gradient(
-          90deg,
-          var(--primary-blue),
-          var(--accent-yellow)
-        );
-        transform: scaleX(0);
-        transform-origin: left;
-        transition: 0.4s;
-      }
-      .product-card:hover::before {
-        transform: scaleX(1);
-      }
-
-      .card-icon {
-        width: 70px;
-        height: 70px;
-        background: rgba(4, 75, 171, 0.08);
-        border-radius: 18px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 20px;
-        transition: 0.4s;
-      }
-      .card-icon i {
-        font-size: 2rem;
-        color: var(--primary-blue);
-      }
-      .product-card:hover .card-icon {
-        background: var(--primary-blue);
-        transform: rotate(10deg);
-      }
-      .product-card:hover .card-icon i {
-        color: white;
-      }
-
-      .card-title {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: var(--text-dark);
-        margin-bottom: 10px;
-      }
-      .card-desc {
-        color: var(--text-light);
-        font-size: 0.9rem;
-        line-height: 1.6;
-        margin-bottom: 20px;
-        flex-grow: 1;
-      }
-
-      .card-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-top: 1px solid #f1f5f9;
-        padding-top: 20px;
-        margin-top: auto;
-      }
-      .price {
-        font-size: 1.5rem;
-        font-weight: 800;
-        color: var(--text-dark);
-      }
-      .price small {
-        font-size: 0.9rem;
-        font-weight: 500;
-        color: var(--text-light);
-      }
-
-      .btn-add {
-        width: 45px;
-        height: 45px;
-        border-radius: 50%;
-        border: none;
-        background: var(--bg-light);
-        color: var(--primary-blue);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        transition: 0.3s;
-        font-size: 1.1rem;
-      }
-      .btn-add:hover {
-        background: var(--primary-blue);
-        color: white;
-        transform: scale(1.1);
-        box-shadow: 0 5px 15px rgba(4, 75, 171, 0.3);
-      }
-
-      /* Badge */
-      .badge {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        background: var(--accent-yellow);
-        color: var(--primary-dark);
-        padding: 5px 12px;
-        border-radius: 50px;
-        font-size: 0.75rem;
-        font-weight: 700;
-      }
-      .badge.new {
-        background: var(--success);
-        color: white;
-      }
-
-      /* Loader */
-      .loader-container {
-        grid-column: 1 / -1;
-        text-align: center;
-        padding: 50px;
-      }
-      .spinner {
-        width: 40px;
-        height: 40px;
-        border: 4px solid #e2e8f0;
-        border-top: 4px solid var(--primary-blue);
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-        margin: 0 auto 15px;
-      }
-
-      /* FOOTER */
-      footer {
-        background: linear-gradient(
-          to bottom,
-          var(--primary-blue),
-          var(--primary-dark)
-        );
-        color: var(--white);
-        padding: 4rem 5% 2rem;
-        text-align: center;
-        margin-top: auto; /* Footer al fondo */
-      }
-      .copyright {
-        opacity: 0.6;
-        font-size: 0.9rem;
-        margin-top: 2rem;
-        padding-top: 2rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-      }
-
-      /* --- Animación Logo Footer --- */
-      .footer-logo {
-        height: 80px;
-        object-fit: contain;
-        filter: brightness(0) invert(1) opacity(0.8);
-        transition: all 0.4s ease;
-        animation: float-logo 6s ease-in-out infinite;
-      }
-      .footer-logo:hover {
-        transform: scale(1.05);
-        filter: brightness(0) invert(1) opacity(1) drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
-      }
-
-      @keyframes float-logo {
-        0% {
-          transform: translateY(0px);
-        }
-        50% {
-          transform: translateY(-8px);
-        }
-        100% {
-          transform: translateY(0px);
-        }
-      }
-
-      /* NOTIFICACIONES */
-      .notification-container {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        z-index: 2000;
-      }
-      .toast {
-        background: rgba(4, 75, 171, 0.95);
-        color: white;
-        padding: 1rem 1.5rem;
-        border-radius: 12px;
-        margin-top: 10px;
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        transform: translateX(150%);
-        transition: 0.4s;
-        border-left: 5px solid var(--accent-yellow);
-      }
-      .toast.show {
-        transform: translateX(0);
-      }
-
-      @keyframes fadeDown {
-        from {
-          opacity: 0;
-          transform: translateY(-20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      @keyframes fadeUp {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-
-      /* Responsive */
-      .menu-toggle {
-        display: none;
-        font-size: 1.8rem;
-        color: var(--white);
-        cursor: pointer;
-      }
-      @media (max-width: 768px) {
-        .menu-toggle {
-          display: block;
-        }
-        nav {
-          background: var(--primary-blue);
-          align-items: center;
-          padding: 0.8rem 5%;
-        }
-        .logo-img {
-          height: 60px;
-        }
-        .cart-icon-link {
-          margin-top: 0;
-        }
-        .nav-links {
-          position: fixed;
-          top: 0;
-          right: -100%;
-          height: 100vh;
-          width: 80%;
-          background: rgba(4, 75, 171, 0.98);
-          flex-direction: column;
-          justify-content: center;
-          gap: 2rem;
-          transition: 0.4s;
-          z-index: 1000;
-        }
-        .nav-links.active {
-          right: 0;
-        }
-        .catalog-header {
-          padding-top: 120px;
-          padding-bottom: 40px;
-        }
-        .catalog-title {
-          font-size: 2rem;
-        }
-      }
-      @media (max-width: 480px) {
-        .catalog-title {
-            font-size: 1.8rem;
-        }
-        .products-grid {
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-        .filter-btn {
-            padding: 8px 15px;
-            font-size: 0.9rem;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="notification-container" id="notificationContainer"></div>
-
-    <nav id="navbar">
-      <div class="logo">
-        <img src="img/logo.png" alt="Logo" class="logo-img" />
+  <nav id="navbar">
+    <div class="logo">
+      <img src="img/logo.png" alt="Logo" class="logo-img" />
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html" onclick="closeMenu()">Inicio</a></li>
+      <li><a href="index.html#analyzer" onclick="closeMenu()">Analizador</a></li>
+      <li><a href="catalogo.html" class="active" onclick="closeMenu()">Catálogo</a></li>
+      <li><a href="contacto.html" onclick="closeMenu()">Contacto</a></li>
+    </ul>
+    <div class="menu-toggle"><i class="fas fa-bars"></i></div>
+    <a href="carrito.html" class="cart-icon-link">
+      <div class="cart-icon">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count" id="cart-count">0</span>
       </div>
-      <ul class="nav-links">
-        <li><a href="index.html" onclick="closeMenu()">Inicio</a></li>
-        <li>
-          <a href="catalogo.html" class="active" onclick="closeMenu()"
-            >Catálogo</a
-          >
-        </li>
-        <li><a href="contacto.html" onclick="closeMenu()">Contacto</a></li>
-      </ul>
-      <div class="menu-toggle"><i class="fas fa-bars"></i></div>
-      <a href="carrito.html" class="cart-icon-link">
-        <div class="cart-icon">
-          <i class="fas fa-shopping-cart"></i>
-          <span class="cart-count" id="cart-count">0</span>
-        </div>
-      </a>
-    </nav>
+    </a>
+    <a href="login.html" id="auth-link" onclick="closeMenu()"><i class="fas fa-sign-in-alt"></i> Ingresar</a>
+  </nav>
 
-    <header class="catalog-header">
-      <h1 class="catalog-title">Explora tus Opciones</h1>
-      <p class="catalog-subtitle">
+
+
+  <header class="hero" id="home">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="hero-content" id="heroContent">
+      <h1>Explora tus Opciones</h1>
+      <p>
         Herramientas profesionales diseñadas para cada etapa de tu crecimiento
         laboral.
       </p>
-    </header>
-
-    <div class="filters-wrapper">
-      <button class="filter-btn active" onclick="filterProducts('all', this)">
-        <i class="fas fa-th-large"></i> Todos
-      </button>
-      <button class="filter-btn" onclick="filterProducts('cv', this)">
-        <i class="fas fa-file-contract"></i> CV
-      </button>
-      <button class="filter-btn" onclick="filterProducts('linkedin', this)">
-        <i class="fab fa-linkedin"></i> LinkedIn
-      </button>
-      <button class="filter-btn" onclick="filterProducts('web', this)">
-        <i class="fas fa-laptop-code"></i> Web & Portafolio
-      </button>
-      <button class="filter-btn" onclick="filterProducts('traduccion', this)">
-        <i class="fas fa-language"></i> Traducción
-      </button>
     </div>
+  </header>
 
-    <main class="products-grid" id="productsContainer">
-      <div class="loader-container">
-        <div class="spinner"></div>
-        <p style="color: var(--text-light)">Cargando servicios...</p>
-      </div>
-    </main>
+  <div class="filters-wrapper">
+    <button class="filter-btn active" onclick="filterProducts('all', this)">
+      <i class="fas fa-th-large"></i> Todos
+    </button>
+    <button class="filter-btn" onclick="filterProducts('cv', this)">
+      <i class="fas fa-file-contract"></i> CV
+    </button>
+    <button class="filter-btn" onclick="filterProducts('linkedin', this)">
+      <i class="fab fa-linkedin"></i> LinkedIn
+    </button>
+    <button class="filter-btn" onclick="filterProducts('web', this)">
+      <i class="fas fa-laptop-code"></i> Web & Portafolio
+    </button>
+    <button class="filter-btn" onclick="filterProducts('traduccion', this)">
+      <i class="fas fa-language"></i> Traducción
+    </button>
+  </div>
 
-    <footer>
-      <div style="margin-bottom: 20px">
-        <img
-          src="img/logo.png"
-          alt="CV Arg Logo"
-          class="footer-logo"
-        />
-      </div>
-      <p style="opacity: 0.7; font-size: 0.9rem">
-        Impulsando carreras desde 2025.
-      </p>
-      <div class="copyright">
-        &copy; 2025 CvArg. Todos los derechos reservados.
-      </div>
-    </footer>
+  <main class="products-grid" id="productsContainer">
+    <div class="loader-container">
+      <div class="spinner"></div>
+      <p style="color: var(--text-light)">Cargando servicios...</p>
+    </div>
+  </main>
 
-    <script>
-      // ============================================
-      // URL DE TU GOOGLE SHEET (CSV)
-      // Asegúrate de agregar una fila con categoría "web" para que aparezca en el filtro nuevo.
-      const SHEET_CSV_URL =
-        "https://docs.google.com/spreadsheets/d/e/2PACX-1vRrad4uftdn-cobZ85RujIO9bmVAmQOVWESA0qx_Lh2HGmMzUtArlXT9S3r80ieMHCUh3V8lC8EtfWM/pub?gid=0&single=true&output=csv";
-      // ============================================
+  <footer>
+    <div style="margin-bottom: 20px">
+      <img src="img/logo.png" alt="CV Arg Logo" class="footer-logo" />
+    </div>
+    <p style="opacity: 0.7; font-size: 0.9rem">
+      Impulsando carreras desde 2025.
+    </p>
+    <div class="copyright">
+      &copy; 2025 CvArg. Todos los derechos reservados.
+    </div>
+  </footer>
 
-      // CARGA DE PRODUCTOS
-      async function loadServices() {
-        const container = document.getElementById("productsContainer");
-        try {
-          const response = await fetch(SHEET_CSV_URL);
-          if (!response.ok) throw new Error("Error de conexión");
+  <script src="js/catalogo.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/auth-nav.js"></script>
+</body>
 
-          const data = await response.text();
-          const products = parseCSV(data);
-
-          if (products.length === 0) {
-            container.innerHTML =
-              '<p style="text-align:center; width:100%;">No hay servicios disponibles.</p>';
-          } else {
-            renderProducts(products);
-          }
-        } catch (error) {
-          console.error(error);
-          container.innerHTML = `
-            <div style="text-align:center; width:100%; grid-column:1/-1;">
-                <i class="fas fa-wifi" style="font-size: 2rem; color: #cbd5e1; margin-bottom:10px;"></i>
-                <p>No se pudo cargar el catálogo.</p>
-            </div>`;
-        }
-      }
-
-      function parseCSV(csvText) {
-        const lines = csvText.trim().split("\n");
-        const headers = lines[0].split(",").map((h) => h.trim());
-        const result = [];
-
-        for (let i = 1; i < lines.length; i++) {
-          // Regex para manejar comas dentro de comillas
-          const row = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-          if (row.length === headers.length) {
-            const obj = {};
-            headers.forEach((h, idx) => {
-              let val = row[idx].trim();
-              if (val.startsWith('"') && val.endsWith('"'))
-                val = val.slice(1, -1);
-              obj[h] = val;
-            });
-            result.push(obj);
-          }
-        }
-        return result;
-      }
-
-      function renderProducts(products) {
-        const container = document.getElementById("productsContainer");
-        container.innerHTML = "";
-
-        products.forEach((prod, index) => {
-          // Lógica de iconos automática si no viene en el CSV
-          let iconClass = prod.icono || "fas fa-star";
-          if (!prod.icono) {
-            if (prod.categoria.includes("cv"))
-              iconClass = "fas fa-file-contract";
-            else if (prod.categoria.includes("linkedin"))
-              iconClass = "fab fa-linkedin";
-            else if (prod.categoria.includes("web"))
-              iconClass = "fas fa-laptop-code";
-            else if (prod.categoria.includes("traduccion"))
-              iconClass = "fas fa-language";
-          }
-
-          // Badge logic
-          let badgeHTML = "";
-          if (prod.badge) {
-            let bClass = prod.badge.toLowerCase().includes("nuevo")
-              ? "badge new"
-              : "badge";
-            badgeHTML = `<div class="${bClass}">${prod.badge}</div>`;
-          }
-
-          const html = `
-                <article class="product-card" data-category="${
-                  prod.categoria
-                }" style="animation-delay: ${index * 0.1}s">
-                    ${badgeHTML}
-                    <div class="card-icon"><i class="${iconClass}"></i></div>
-                    <h3 class="card-title">${prod.titulo}</h3>
-                    <p class="card-desc">${prod.descripcion}</p>
-                    <div class="card-footer">
-                        <div class="price">${prod.precio} <small>ARS</small></div>
-                        <button class="btn-add" onclick="addToCart('${
-                          prod.id
-                        }', '${prod.titulo}', ${prod.precio}, '${iconClass}')">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                    </div>
-                </article>
-            `;
-          container.insertAdjacentHTML("beforeend", html);
-        });
-      }
-
-      function filterProducts(cat, btn) {
-        document
-          .querySelectorAll(".filter-btn")
-          .forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
-
-        const cards = document.querySelectorAll(".product-card");
-        cards.forEach((card) => {
-          if (cat === "all" || card.dataset.category.includes(cat)) {
-            card.style.display = "flex";
-            card.style.animation = "none";
-            card.offsetHeight; /* trigger reflow */
-            card.style.animation = "fadeUp 0.5s ease forwards";
-          } else {
-            card.style.display = "none";
-          }
-        });
-      }
-
-      // --- FUNCIONES COMUNES (NAVBAR, CART) ---
-      const menuToggle = document.querySelector(".menu-toggle");
-      const navLinks = document.querySelector(".nav-links");
-      menuToggle.addEventListener("click", () => {
-        navLinks.classList.toggle("active");
-        const i = menuToggle.querySelector("i");
-        i.classList.toggle("fa-bars");
-        i.classList.toggle("fa-times");
-      });
-      function closeMenu() {
-        navLinks.classList.remove("active");
-        menuToggle.querySelector("i").classList.remove("fa-times");
-        menuToggle.querySelector("i").classList.add("fa-bars");
-      }
-
-      window.addEventListener("scroll", function () {
-        const nav = document.getElementById("navbar");
-        if (window.scrollY > 20) nav.classList.add("scrolled");
-        else nav.classList.remove("scrolled");
-      });
-
-      document.addEventListener("DOMContentLoaded", () => {
-        loadServices();
-        updateCartCounter();
-      });
-
-      function addToCart(id, name, price, icon) {
-        let cart = JSON.parse(localStorage.getItem("impulsopro_cart")) || [];
-        let item = cart.find((i) => i.id === id);
-        if (item) item.quantity++;
-        else cart.push({ id, name, price, icon, quantity: 1 });
-
-        localStorage.setItem("impulsopro_cart", JSON.stringify(cart));
-        updateCartCounter();
-        showToast(`${name} agregado`);
-      }
-
-      function updateCartCounter() {
-        let cart = JSON.parse(localStorage.getItem("impulsopro_cart")) || [];
-        let total = cart.reduce((acc, i) => acc + i.quantity, 0);
-        const badge = document.getElementById("cart-count");
-        if (badge) {
-          badge.innerText = total;
-          badge.style.display = total === 0 ? "none" : "flex";
-        }
-      }
-
-      function showToast(msg) {
-        const container = document.getElementById("notificationContainer");
-        const toast = document.createElement("div");
-        toast.className = "toast show";
-        toast.innerHTML = `<i class="fas fa-check-circle"></i> ${msg}`;
-        container.appendChild(toast);
-        setTimeout(() => toast.remove(), 3000);
-      }
-    </script>
-  </body>
 </html>

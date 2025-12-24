@@ -1,0 +1,251 @@
+/* =========================================
+   DROPDOWN DE USUARIO
+   Solo estilos para dropdown sin botón separado
+   ========================================= */
+
+/* Auth-link ahora fuera de nav-links, al lado del carrito */
+#auth-link {
+  position: relative;
+  text-decoration: none;
+  display: block;
+  margin-top: 23px; /* Mismo que cart-icon-link */
+  margin-left: 3rem; /* Más separación del carrito */
+  color: var(--white);
+  font-weight: 500;
+  font-size: 1.1rem;
+  opacity: 0.9;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#auth-link::before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -5px;
+  left: 50%;
+  background: var(--accent-yellow);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(-50%);
+  box-shadow: 0 0 10px var(--accent-yellow);
+}
+
+#auth-link:hover {
+  opacity: 1;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+  transform: translateY(-2px);
+}
+
+#auth-link:hover::before {
+  width: 100%;
+}
+
+/* Dropdown de usuario dentro de #auth-link */
+#auth-link .user-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+#auth-link .user-button {
+  background: transparent;
+  color: white;
+  border: none;
+  padding: 0 0 5px 0; /* Solo padding-bottom como los nav-links a */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 1.1rem;
+  opacity: 0.9;
+  position: relative;
+  line-height: normal; /* Mismo line-height que nav-links a */
+}
+
+#auth-link .user-button:hover {
+  opacity: 1;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+  transform: translateY(-2px);
+}
+
+#auth-link .user-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent-yellow, #f3d136);
+  color: var(--primary-dark, #022a61);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+#auth-link .user-button i {
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+}
+
+#auth-link .user-dropdown:has(.dropdown-menu.active) .user-button i {
+  transform: rotate(180deg);
+}
+
+#auth-link .dropdown-menu {
+  position: absolute;
+  top: calc(100% + 0.75rem);
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
+  min-width: 200px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1100;
+  overflow: hidden;
+}
+
+#auth-link .dropdown-menu.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+#auth-link .dropdown-menu a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.25rem;
+  color: var(--text-dark, #333333);
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+#auth-link .dropdown-menu a:hover {
+  background: #f8fafc;
+  color: var(--primary-blue, #044bab);
+}
+
+#auth-link .dropdown-menu a i {
+  width: 20px;
+  text-align: center;
+  opacity: 0.7;
+}
+
+#auth-link .dropdown-menu a:hover i {
+  opacity: 1;
+}
+
+#auth-link .dropdown-menu hr {
+  border: none;
+  border-top: 1px solid #e2e8f0;
+  margin: 0.5rem 0;
+}
+
+/* Link de Admin Panel */
+#auth-link .dropdown-menu a.admin-link {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  color: #0369a1;
+  font-weight: 600;
+}
+
+#auth-link .dropdown-menu a.admin-link:hover {
+  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+  color: white;
+}
+
+#auth-link .dropdown-menu a.admin-link i {
+  color: #0369a1;
+}
+
+#auth-link .dropdown-menu a.admin-link:hover i {
+  color: white;
+}
+
+/* Estilos globales de botones reutilizables */
+.btn-primary {
+  background: linear-gradient(
+    135deg,
+    var(--primary-blue, #3b82f6) 0%,
+    var(--primary-dark, #1e40af) 100%
+  );
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.btn-secondary {
+  background: white;
+  color: var(--primary-blue, #3b82f6);
+  border: 2px solid var(--primary-blue, #3b82f6);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s;
+}
+
+.btn-secondary:hover {
+  background: var(--primary-blue, #3b82f6);
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Mensajes de error */
+.error-message {
+  text-align: center;
+  padding: 2rem;
+  color: #dc2626;
+}
+
+.error-message i {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.error-message p {
+  margin: 0.5rem 0 1.5rem;
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media (max-width: 768px) {
+  #auth-link .dropdown-menu {
+    right: -10px;
+  }
+
+  #auth-link .user-button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  #auth-link .user-button span {
+    display: none;
+  }
+
+  #auth-link .user-avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 0.9rem;
+  }
+}

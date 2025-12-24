@@ -1,0 +1,317 @@
+﻿:root {
+  --primary-blue: #044bab;
+  --primary-dark: #022a61;
+  --accent-yellow: #f3d136;
+  --text-dark: #1f2937;
+  --white: #ffffff;
+  --success: #10b981;
+  --bg-light: #f8fafc;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background-color: var(--primary-dark);
+  color: var(--text-dark);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  overflow: hidden;
+  position: relative;
+}
+
+.background-shapes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.shape {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  animation: float 20s infinite linear;
+}
+
+.shape1 {
+  width: 150px;
+  height: 150px;
+  top: 10%;
+  left: 5%;
+  animation-duration: 25s;
+}
+.shape2 {
+  width: 80px;
+  height: 80px;
+  top: 20%;
+  left: 80%;
+  animation-duration: 18s;
+}
+.shape3 {
+  width: 120px;
+  height: 120px;
+  top: 70%;
+  left: 15%;
+  animation-duration: 22s;
+}
+.shape4 {
+  width: 50px;
+  height: 50px;
+  top: 85%;
+  left: 75%;
+  animation-duration: 15s;
+}
+.shape5 {
+  width: 200px;
+  height: 200px;
+  top: 40%;
+  left: 45%;
+  animation-duration: 30s;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  100% {
+    transform: translateY(-120vh) rotate(360deg);
+  }
+}
+
+.success-card {
+  background: var(--white);
+  border-radius: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  text-align: center;
+  padding: 50px 40px;
+  max-width: 500px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+  animation: popIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  transform: scale(0.9);
+  opacity: 0;
+}
+
+@keyframes popIn {
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.icon-container {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 25px;
+  border-radius: 50%;
+  background: var(--success);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--white);
+  font-size: 3.5rem;
+  animation: icon-pop 0.5s 0.5s ease-out backwards;
+}
+
+@keyframes icon-pop {
+  0% {
+    transform: scale(0);
+  }
+  80% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+h1 {
+  color: var(--primary-dark);
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.message {
+  color: #4b5563;
+  margin-bottom: 25px;
+  font-size: 1rem;
+}
+
+.order-id-container {
+  background: var(--bg-light);
+  border: 1px dashed #d1d5db;
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+}
+
+.order-id-label {
+  font-weight: 600;
+  color: var(--primary-blue);
+  font-size: 0.9rem;
+  margin-bottom: 5px;
+}
+
+#orderId {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--text-dark);
+  letter-spacing: 2px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.btn {
+  padding: 14px 25px;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  font-size: 1rem;
+  text-decoration: none;
+  color: var(--white);
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.btn i {
+  font-size: 1.1rem;
+}
+
+.btn-primary {
+  background-color: var(--primary-blue);
+  box-shadow: 0 4px 6px -1px rgba(4, 75, 171, 0.2),
+    0 2px 4px -2px rgba(4, 75, 171, 0.1);
+}
+.btn-primary:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(4, 75, 171, 0.2),
+    0 4px 6px -4px rgba(4, 75, 171, 0.1);
+}
+
+.btn-secondary {
+  background-color: #4b5563;
+}
+.btn-secondary:hover {
+  background-color: var(--text-dark);
+  transform: translateY(-2px);
+}
+
+.btn-whatsapp {
+  background-color: #25d366;
+}
+.btn-whatsapp:hover {
+  background-color: #1daa51;
+  transform: translateY(-2px);
+}
+
+@media (min-width: 500px) {
+  .actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 15px;
+  }
+  .success-card {
+    padding: 30px 25px;
+  }
+  .icon-container {
+    width: 80px;
+    height: 80px;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+  }
+  h1 {
+    font-size: 1.6rem;
+  }
+  .message {
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+  }
+  #orderId {
+    font-size: 1.2rem;
+  }
+  .btn {
+    font-size: 0.95rem;
+    padding: 14px 22px;
+  }
+  .order-id-container {
+    padding: 12px;
+  }
+}
+
+#receipt {
+  display: none;
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  padding: 30px;
+  border: 1px solid #eee;
+  border-radius: 15px;
+  width: 600px;
+  background: white;
+  text-align: left;
+}
+.receipt-header {
+  text-align: center;
+  margin-bottom: 25px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 15px;
+}
+.receipt-header img {
+  max-width: 100px;
+  margin-bottom: 10px;
+}
+.receipt-header h2 {
+  font-size: 1.5rem;
+  color: var(--primary-dark);
+}
+.receipt-section {
+  margin-bottom: 20px;
+}
+.receipt-section h3 {
+  font-size: 1rem;
+  color: var(--primary-blue);
+  border-bottom: 1px solid #eee;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+}
+.receipt-section p {
+  margin-bottom: 5px;
+  color: var(--text-dark);
+}
+.receipt-section p strong {
+  display: inline-block;
+  width: 120px;
+}
+.receipt-footer {
+  margin-top: 30px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #999;
+}
