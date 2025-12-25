@@ -39,7 +39,19 @@ function hideMessages() {
 
 function getRedirectUrl() {
   const params = new URLSearchParams(window.location.search);
-  return params.get("redirect") || "index.html";
+  const redirect = params.get("redirect") || "index.html";
+
+  // Fix: Si el redirect es "admin", agregar la extensión .html
+  if (redirect === "admin") {
+    return "admin.html";
+  }
+
+  // Si no tiene extensión, agregar .html
+  if (!redirect.includes(".")) {
+    return redirect + ".html";
+  }
+
+  return redirect;
 }
 
 loginForm.addEventListener("submit", async (e) => {
@@ -98,6 +110,10 @@ registerForm.addEventListener("submit", async (e) => {
   }
 });
 
+// REMOVED: Auto-redirect causaba bucle infinito cuando el token era inválido
+// La redirección solo debe ocurrir DESPUÉS de un login exitoso (líneas 60-63)
+/*
 if (api && api.isAuthenticated && api.isAuthenticated()) {
   window.location.href = getRedirectUrl();
 }
+*/

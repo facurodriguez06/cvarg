@@ -350,43 +350,53 @@ function goToForm(orderId) {
 // =========================================
 
 async function checkPendingForm() {
-  const pendingOrder = localStorage.getItem("pending_form_order");
+  // No mostrar en la página de formulario
+  if (window.location.pathname.includes("formulario.html")) return;
 
-  if (pendingOrder && !window.location.pathname.includes("formulario.html")) {
-    try {
-      // Si no hay token, no podemos validar, así que por seguridad no mostramos nada
-      // o verificamos si es lógica de guest (que por ahora no parece ser el caso principal)
-      if (!api.isAuthenticated()) {
-        return;
-      }
+  // Si no hay token, no podemos verificar
+  if (!api.isAuthenticated()) return;
 
+  try {
+    // Primero verificar si hay un orderId guardado en localStorage
+    const pendingOrder = localStorage.getItem("pending_form_order");
+
+    if (pendingOrder) {
       const order = await api.getOrder(pendingOrder);
 
-      // Validar si realmente está pendiente de formulario
-      // Debe estar PAGADO y NO tener formulario completado
-      const hasPendingForm =
-        order && order.status === "PAID" && !order.formCompleted;
-
-      if (hasPendingForm) {
+      // Verificar si está PAGADO y sin formulario completado
+      if (order && order.status === "PAID" && !order.formCompleted) {
         showFormBanner(pendingOrder);
+        return;
       } else {
-        // Si ya no es válido (completado, cancelado, etc), limpiamos el storage
-        console.log(
-          "Limpiando orden pendiente inválida del storage:",
-          pendingOrder
-        );
+        // Ya no es válido, limpiar
         localStorage.removeItem("pending_form_order");
       }
-    } catch (error) {
-      console.warn("No se pudo validar la orden pendiente:", error);
-      // Si da error 404 (no existe) o 403 (no es suya), borramos
-      if (
-        error.message.includes("404") ||
-        error.message.includes("403") ||
-        error.message.includes("Error 404")
-      ) {
-        localStorage.removeItem("pending_form_order");
+    }
+
+    // Si no hay en localStorage, buscar en las órdenes del usuario
+    const response = await fetch(`${api.baseURL}/orders/user`, {
+      headers: { Authorization: `Bearer ${api.getToken()}` },
+    });
+
+    if (response.ok) {
+      const orders = await response.json();
+
+      // Buscar órdenes pagadas sin formulario completado
+      const pendingFormOrder = orders.find(
+        (o) => o.status === "PAID" && !o.formCompleted
+      );
+
+      if (pendingFormOrder) {
+        // Guardar en localStorage para futuras visitas
+        localStorage.setItem("pending_form_order", pendingFormOrder.id);
+        showFormBanner(pendingFormOrder.id);
       }
+    }
+  } catch (error) {
+    console.warn("Error verificando formularios pendientes:", error);
+    // Si da error 404 o 403, limpiar localStorage
+    if (error.message?.includes("404") || error.message?.includes("403")) {
+      localStorage.removeItem("pending_form_order");
     }
   }
 }

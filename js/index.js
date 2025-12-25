@@ -1,8 +1,8 @@
-﻿// CONFIGURACIÃ“N DE PDF.JS (Trabajador Web)
+﻿// CONFIGURACIÓN DE PDF.JS (Trabajador Web)
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
-// --- LÃ“GICA DEL ANALIZADOR REAL ---
+// --- LÓGICA DEL ANALIZADOR REAL ---
 const dropZone = document.getElementById("dropZone");
 const cvInput = document.getElementById("cvInput");
 
@@ -25,7 +25,7 @@ cvInput.addEventListener("change", (e) => {
 
 async function handleFile(file) {
   if (file.type !== "application/pdf") {
-    showToast("Por favor sube un archivo PDF vÃ¡lido");
+    showToast("Por favor sube un archivo PDF válido");
     return;
   }
 
@@ -40,7 +40,7 @@ async function handleFile(file) {
     const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
 
     let fullText = "";
-    // Leemos solo la primera pÃ¡gina para el anÃ¡lisis rÃ¡pido
+    // Leemos solo la primera página para el análisis rápido
     const page = await pdf.getPage(1);
     const textContent = await page.getTextContent();
     fullText = textContent.items.map((item) => item.str).join(" ");
@@ -59,14 +59,14 @@ function analyzeText(text) {
     "Analizando palabras clave con IA...";
 
   setTimeout(() => {
-    // ALGORITMO HEURÃSTICO (SIMULA IA BASADA EN REGLAS)
+    // ALGORITMO HEURÍSTICO (SIMULA IA BASADA EN REGLAS)
     const lowerText = text.toLowerCase();
     let score = 0;
     let findings = [];
 
-    // 1. DetecciÃ³n de contacto
+    // 1. Detección de contacto
     const hasEmail = /@/.test(lowerText);
-    const hasPhone = /\d{8,}/.test(lowerText.replace(/\s/g, "")); // Busca secuencia de nÃºmeros
+    const hasPhone = /\d{8,}/.test(lowerText.replace(/\s/g, "")); // Busca secuencia de números
     const hasLinkedIn = lowerText.includes("linkedin.com");
 
     if (hasEmail) {
@@ -93,7 +93,7 @@ function analyzeText(text) {
     const sections = [
       "experiencia",
       "experience",
-      "educaciÃ³n",
+      "educación",
       "education",
       "habilidades",
       "skills",
@@ -117,17 +117,17 @@ function analyzeText(text) {
       });
     }
 
-    // 3. Palabras de AcciÃ³n/Liderazgo (Keywords)
+    // 3. Palabras de Acción/Liderazgo (Keywords)
     const powerWords = [
-      "liderÃ©",
-      "gestionÃ©",
-      "desarrollÃ©",
-      "aumentÃ©",
-      "logrÃ©",
-      "creÃ©",
+      "lideré",
+      "gestioné",
+      "desarrollé",
+      "aumenté",
+      "logré",
+      "creé",
       "equipo",
       "responsable",
-      "analicÃ©",
+      "analicé",
     ];
     let powerCount = 0;
     powerWords.forEach((pw) => {
@@ -136,12 +136,12 @@ function analyzeText(text) {
 
     if (powerCount > 3) {
       score += 20;
-      findings.push({ type: "good", text: "Uso de verbos de acciÃ³n" });
+      findings.push({ type: "good", text: "Uso de verbos de acción" });
     } else {
       score += 5;
       findings.push({
         type: "warn",
-        text: "Faltan verbos de impacto/acciÃ³n",
+        text: "Faltan verbos de impacto/acción",
       });
     }
 
@@ -162,20 +162,20 @@ function analyzeText(text) {
       });
     }
 
-    // Factor aleatorio pequeÃ±o para que no sea estÃ¡tico siempre (VariaciÃ³n humana)
+    // Factor aleatorio pequeño para que no sea estático siempre (Variación humana)
     score += Math.floor(Math.random() * 10);
     if (score > 100) score = 98; // Nadie es perfecto para vender el servicio
 
     // Renderizar resultados
     showResults(score, findings);
-  }, 1500); // PequeÃ±a espera para dar sensaciÃ³n de proceso
+  }, 1500); // Pequeña espera para dar sensación de proceso
 }
 
 function showResults(score, findings) {
   document.getElementById("scanOverlay").style.display = "none";
   document.getElementById("scanResult").style.display = "block";
 
-  // AnimaciÃ³n de puntaje
+  // Animación de puntaje
   const scoreVal = document.getElementById("scoreValue");
   const scoreCircle = document.getElementById("scoreCircle");
   let current = 0;
@@ -185,7 +185,7 @@ function showResults(score, findings) {
     if (current >= score) clearInterval(interval);
   }, 20);
 
-  // Color del cÃ­rculo
+  // Color del círculo
   if (score < 50) scoreCircle.style.borderColor = "var(--danger)";
   else if (score < 75) scoreCircle.style.borderColor = "var(--accent-yellow)";
   else scoreCircle.style.borderColor = "var(--success)";
@@ -203,10 +203,10 @@ function showResults(score, findings) {
     list.innerHTML += `<div class="check-item ${f.type}"><i class="fas ${icon}"></i> ${f.text}</div>`;
   });
 
-  // TÃ­tulo dinÃ¡mico
+  // Título dinámico
   const titles =
     score > 80
-      ? "Â¡Tienes un CV SÃ³lido!"
+      ? "¡Tienes un CV Sólido!"
       : score > 50
       ? "Buen inicio, pero mejorable"
       : "Tu CV necesita ayuda urgente";

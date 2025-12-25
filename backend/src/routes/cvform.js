@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
-const path = require("path");
 const { PrismaClient } = require("@prisma/client");
 const { authMiddleware } = require("../middleware/auth");
 const { body } = require("express-validator");
@@ -9,28 +8,17 @@ const { validate } = require("../middleware/validation");
 
 const prisma = new PrismaClient();
 
-// Configurar Multer para uploads de fotos
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/photos");
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, "photo-" + uniqueSuffix + path.extname(file.originalname));
-  },
-});
+// Configurar Multer para almacenar en MEMORIA (para convertir a Base64)
+const storage = multer.memoryStorage();
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: parseInt(process.env.MAX_FILE_SIZE) || 5 * 1024 * 1024 }, // 5MB default
+  limits: { fileSize: parseInt(process.env.MAX_FILE_SIZE) || 10 * 1024 * 1024 }, // 10MB para Base64
   fileFilter: (req, file, cb) => {
     const allowedTypes = /jpeg|jpg|png|webp/;
-    const extname = allowedTypes.test(
-      path.extname(file.originalname).toLowerCase()
-    );
     const mimetype = allowedTypes.test(file.mimetype);
 
-    if (mimetype && extname) {
+    if (mimetype) {
       return cb(null, true);
     } else {
       cb(new Error("Solo se permiten imágenes (JPEG, PNG, WebP)"));
@@ -42,10 +30,31 @@ const upload = multer({
  * POST /api/cvform/submit
  * Enviar formulario de CV
  */
+
+// Middleware wrapper para manejar errores de multer
+const handleUpload = (req, res, next) => {
+  upload.single("photo")(req, res, (err) => {
+    if (err) {
+      console.error("Error de Multer:", err.message);
+      if (err.code === "LIMIT_FILE_SIZE") {
+        return res.status(400).json({
+          success: false,
+          error: "El archivo es demasiado grande. Máximo 10MB.",
+        });
+      }
+      return res.status(400).json({
+        success: false,
+        error: err.message || "Error al subir el archivo",
+      });
+    }
+    next();
+  });
+};
+
 router.post(
   "/submit",
   authMiddleware,
-  upload.single("photo"),
+  handleUpload,
   [
     body("fullName")
       .trim()
@@ -53,11 +62,24 @@ router.post(
       .withMessage("El nombre debe tener al menos 3 caracteres"),
     body("email").isEmail().normalizeEmail().withMessage("Email inválido"),
     body("phone").trim().notEmpty().withMessage("El teléfono es requerido"),
+    // Skills validation - flexible to allow both array notation and single values
     body("hardSkills")
-      .isArray({ min: 1 })
+      .optional()
+      .custom((value) => {
+        // Accept if it's already an array with at least 1 element
+        if (Array.isArray(value) && value.length > 0) return true;
+        // Accept if it's a non-empty string (single value)
+        if (typeof value === "string" && value.trim().length > 0) return true;
+        return false;
+      })
       .withMessage("Debes seleccionar al menos una habilidad técnica"),
     body("softSkills")
-      .isArray({ min: 1 })
+      .optional()
+      .custom((value) => {
+        if (Array.isArray(value) && value.length > 0) return true;
+        if (typeof value === "string" && value.trim().length > 0) return true;
+        return false;
+      })
       .withMessage("Debes seleccionar al menos una habilidad blanda"),
   ],
   validate,
@@ -65,76 +87,134 @@ router.post(
     try {
       const {
         fullName,
+        nombres,
+        apellidos,
+        edad,
+        nacionalidad,
+        estadoCivil,
         email,
         phone,
+        dni,
+        cuil,
         address,
         city,
         birthDate,
+        linkedin,
+        disponibilidad,
+        objetivo,
+        experiencia,
+        comentarios,
+        educacion,
+        cursos,
+        idiomas,
         education,
         experience,
-        hardSkills,
-        softSkills,
         languages,
         references,
         portfolio,
-        linkedin,
         orderId,
+        otherHardSkills,
+        otherSoftSkills,
       } = req.body;
 
-      // Obtener URL de la foto
-      const photoUrl = req.file ? `/uploads/photos/${req.file.filename}` : null;
+      // Obtener skills - pueden venir como 'hardSkills', 'hardSkills[]', o ambos
+      const hardSkills = req.body.hardSkills || req.body["hardSkills[]"] || [];
+      const softSkills = req.body.softSkills || req.body["softSkills[]"] || [];
 
-      // Parsear datos JSON
-      const parsedEducation =
-        typeof education === "string" ? JSON.parse(education) : education;
-      const parsedExperience =
-        typeof experience === "string" ? JSON.parse(experience) : experience;
-      const parsedLanguages = languages
-        ? typeof languages === "string"
-          ? JSON.parse(languages)
-          : languages
-        : null;
-      const parsedReferences = references
-        ? typeof references === "string"
-          ? JSON.parse(references)
-          : references
-        : null;
+      // Convertir foto a Base64 si existe
+      let photoBase64 = null;
+      if (req.file && req.file.buffer) {
+        const base64Data = req.file.buffer.toString("base64");
+        const mimeType = req.file.mimetype;
+        photoBase64 = `data:${mimeType};base64,${base64Data}`;
+        console.log(
+          "📸 Foto procesada:",
+          req.file.originalname,
+          "- Base64 length:",
+          photoBase64.length
+        );
+      }
+
+      // Helper para parsear JSON de forma segura
+      const safeJsonParse = (data) => {
+        if (!data) return null;
+        if (typeof data !== "string") return data;
+        try {
+          return JSON.parse(data);
+        } catch (e) {
+          return [{ content: data }];
+        }
+      };
+
+      // Parsear datos JSON de forma segura
+      const parsedEducation = safeJsonParse(education);
+      const parsedExperience = safeJsonParse(experience);
+      const parsedLanguages = safeJsonParse(languages);
+      const parsedReferences = safeJsonParse(references);
       const parsedHardSkills = Array.isArray(hardSkills)
         ? hardSkills
-        : [hardSkills];
+        : hardSkills
+        ? [hardSkills]
+        : [];
       const parsedSoftSkills = Array.isArray(softSkills)
         ? softSkills
-        : [softSkills];
+        : softSkills
+        ? [softSkills]
+        : [];
 
-      // Crear submission
+      // Crear submission con todos los campos
       const submission = await prisma.cVSubmission.create({
         data: {
           userId: req.user.id,
           orderId: orderId || null,
+          // Datos personales
           fullName,
+          nombres: nombres || null,
+          apellidos: apellidos || null,
+          edad: edad || null,
+          nacionalidad: nacionalidad || null,
+          estadoCivil: estadoCivil || null,
           email,
           phone,
-          address,
-          city,
+          dni: dni || null,
+          cuil: cuil || null,
+          address: address || null,
+          city: city || null,
           birthDate: birthDate ? new Date(birthDate) : null,
-          photoUrl,
-          education: parsedEducation,
+          photoBase64,
+          linkedin: linkedin || null,
+          // Experiencia
+          disponibilidad: disponibilidad || null,
+          objetivo: objetivo || null,
+          experiencia: experiencia || null,
+          comentarios: comentarios || null,
           experience: parsedExperience,
-          hardSkills: parsedHardSkills,
-          softSkills: parsedSoftSkills,
+          // Educación
+          educacion: educacion || null,
+          cursos: cursos || null,
+          education: parsedEducation,
+          // Idiomas
+          idiomas: idiomas || null,
           languages: parsedLanguages,
           references: parsedReferences,
-          portfolio,
-          linkedin,
+          portfolio: portfolio || null,
+          // Habilidades
+          hardSkills: parsedHardSkills,
+          softSkills: parsedSoftSkills,
+          otherHardSkills: otherHardSkills || null,
+          otherSoftSkills: otherSoftSkills || null,
           status: "PENDING",
         },
       });
 
-      // Si hay orderId, actualizar orden para vincularla
+      // Si hay orderId, actualizar orden para vincularla y marcar formulario como completado
       if (orderId) {
         await prisma.order.update({
           where: { id: orderId },
-          data: { status: "IN_PROGRESS" },
+          data: {
+            status: "IN_PROGRESS",
+            formCompleted: true,
+          },
         });
       }
 

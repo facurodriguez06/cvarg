@@ -1,31 +1,75 @@
 ﻿let currentStep = 1;
 const totalSteps = 6;
 
+// DEBUG: Detectar recargas de página
+console.log("🔄 formulario.js CARGANDO - Paso inicial:", currentStep);
+window.addEventListener("beforeunload", function (e) {
+  console.warn("⚠️ PÁGINA INTENTANDO RECARGAR!");
+  // Descomentar la siguiente línea para ver confirmación antes de recargar:
+  // e.preventDefault(); e.returnValue = '';
+});
+
+// =========================================
+// SISTEMA DE NOTIFICACIONES
+// =========================================
+function showFormToast(message, type = "error") {
+  const existing = document.querySelector(".form-toast");
+  if (existing) existing.remove();
+
+  const toast = document.createElement("div");
+  toast.className = `form-toast ${type}`;
+  toast.innerHTML = `
+    <i class="fas ${
+      type === "error"
+        ? "fa-exclamation-circle"
+        : type === "success"
+        ? "fa-check-circle"
+        : "fa-info-circle"
+    }"></i>
+    <span>${message}</span>
+    <button type="button" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>
+  `;
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    if (toast.parentElement) toast.remove();
+  }, 5000);
+}
+
+// =========================================
+// NAVEGACIÓN Y VALIDACIÓN
+// =========================================
 function changeStep(direction) {
+  // DETENER CUALQUIER INTENTO DE SUBMIT NATIVO
+  if (window.event) {
+    window.event.preventDefault();
+    window.event.stopPropagation();
+  }
+
   const nextStep = currentStep + direction;
 
-  // VALIDAR AL AVANZAR
+  // -- VALIDACIÓN AL AVANZAR --
   if (direction === 1) {
     const currentPanel = document.getElementById(`step${currentStep}`);
-    // Validar inputs requeridos normales
     const requiredInputs = currentPanel.querySelectorAll(
       "input[required], select[required], textarea[required]"
     );
     let isValid = true;
 
     requiredInputs.forEach((input) => {
-      if (!input.value.trim()) {
+      // Validar solo si es visible (evita validar pasos ocultos)
+      if (input.offsetParent !== null && !input.value.trim()) {
         isValid = false;
         input.classList.add("error");
         input.addEventListener("input", function () {
           if (this.value.trim()) this.classList.remove("error");
         });
-      } else {
+      } else if (input.offsetParent !== null) {
         input.classList.remove("error");
       }
     });
 
-    // VALIDACIÓN ESPECÍFICA PASO 6 (CHECKBOXES)
+    // Validación específica Paso 6 (Checkboxes)
     if (currentStep === 6) {
       const hardChecked =
         document.querySelectorAll('input[name="hardSkills"]:checked').length >
@@ -52,18 +96,24 @@ function changeStep(direction) {
     }
 
     if (!isValid) {
-      alert("Por favor completa los campos obligatorios (*) marcados en rojo.");
-      return;
+      showFormToast(
+        "Por favor completa los campos obligatorios (*) marcados en rojo.",
+        "error"
+      );
+      return; // Detiene la ejecución aquí si no es válido
     }
   }
 
+  // -- LOGICA DE CAMBIO DE PASO --
   if (nextStep > 0 && nextStep <= totalSteps) {
+    // Cambio visual de paso
     document.getElementById(`step${currentStep}`).classList.remove("active");
     document.getElementById(`step${nextStep}`).classList.add("active");
     currentStep = nextStep;
     updateUI();
     window.scrollTo(0, 0);
   } else if (nextStep > totalSteps) {
+    // SI ES EL ÚLTIMO PASO, EJECUTAMOS EL ENVÍO
     submitForm();
   }
 }
@@ -94,22 +144,44 @@ function toggleField(fieldId, show) {
 }
 
 function previewPhoto(input) {
+  console.log("📸 previewPhoto llamada, archivos:", input.files?.length);
   if (input.files && input.files[0]) {
+    const file = input.files[0];
+    console.log(
+      "📸 Archivo seleccionado:",
+      file.name,
+      file.size,
+      "bytes",
+      file.type
+    );
     const reader = new FileReader();
     reader.onload = function (e) {
+      console.log("📸 FileReader completado, mostrando preview");
       document.getElementById("previewImg").src = e.target.result;
       document.getElementById("previewImg").style.display = "block";
       document.querySelector(".photo-preview i").style.display = "none";
     };
-    reader.readAsDataURL(input.files[0]);
+    reader.onerror = function (e) {
+      console.error("❌ FileReader error:", e);
+    };
+    reader.readAsDataURL(file);
   }
 }
 
+// =========================================
+// LÓGICA DE ENVÍO (BLINDADA)
+// =========================================
 async function submitForm() {
+  // Doble seguridad para evitar recargas
+  if (window.event) {
+    window.event.preventDefault();
+    window.event.stopPropagation();
+  }
+
   const btn = document.getElementById("btnNext");
-  // Guardamos el contenido original del botón (normalmente es "Finalizar" en el último paso)
   const originalBtnContent = btn.innerHTML;
 
+  // Estado de carga visual
   btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
   btn.disabled = true;
   btn.style.opacity = "0.7";
@@ -124,131 +196,232 @@ async function submitForm() {
     }
 
     const form = document.getElementById("cvForm");
-
-    // 2. Construir FormData mapeado al Backend
     const apiData = new FormData();
 
-    // -- Datos Básicos --
-    const fullName = `${form.nombres.value} ${form.apellidos.value}`.trim();
+    // -- Recolección de Datos Personales (campos individuales) --
+    const nombres = form.nombres.value.trim();
+    const apellidos = form.apellidos.value.trim();
+    const fullName = `${nombres} ${apellidos}`.trim();
+
     apiData.append("fullName", fullName);
+    apiData.append("nombres", nombres);
+    apiData.append("apellidos", apellidos);
+    apiData.append("edad", form.edad?.value || "");
+    apiData.append("nacionalidad", form.nacionalidad?.value || "");
+    apiData.append("estadoCivil", form.estadoCivil?.value || "");
     apiData.append("email", form.email.value);
     apiData.append("phone", form.telefono.value);
-
-    // El backend espera 'city' y 'address'. Usamos provincia para city y DNI/CUIL para address/otros
+    apiData.append("dni", form.dni.value);
     apiData.append("city", form.provincia.value);
-
-    let addressInfo = `DNI: ${form.dni.value}`;
-    const hasCuil =
-      form.querySelector('input[name="hasCuil"]:checked').value === "si";
-    if (hasCuil && form.cuil.value) {
-      addressInfo += ` - CUIL: ${form.cuil.value}`;
-    }
-    apiData.append("address", addressInfo);
-
     apiData.append("birthDate", form.fechaNacimiento.value);
 
-    // -- Links --
-    const hasLinkedin =
-      form.querySelector('input[name="hasLinkedin"]:checked').value === "si";
-    if (hasLinkedin && form.linkLinkedin.value) {
+    // CUIL
+    const hasCuilRadio = form.querySelector('input[name="hasCuil"]:checked');
+    const hasCuil = hasCuilRadio && hasCuilRadio.value === "si";
+    if (hasCuil && form.cuil?.value) {
+      apiData.append("cuil", form.cuil.value);
+    }
+
+    // LinkedIn
+    const hasLinkedinRadio = form.querySelector(
+      'input[name="hasLinkedin"]:checked'
+    );
+    const hasLinkedin = hasLinkedinRadio && hasLinkedinRadio.value === "si";
+    if (hasLinkedin && form.linkLinkedin?.value) {
       apiData.append("linkedin", form.linkLinkedin.value);
     }
 
-    // -- Experiencia --
-    // Concatenamos Objetivo y Comentarios en Experiencia para que no se pierdan
-    let fullExperience = `[OBJETIVO PROFESIONAL]\n${form.objetivo.value}\n\n`;
-    fullExperience += `[EXPERIENCIA LABORAL]\n${form.experiencia.value}`;
+    // -- Experiencia (campos individuales) --
+    apiData.append("disponibilidad", form.disponibilidad?.value || "");
+    apiData.append("objetivo", form.objetivo?.value || "");
+    apiData.append("experiencia", form.experiencia?.value || "");
+    apiData.append("comentarios", form.comentarios?.value || "");
 
-    if (form.comentarios.value.trim()) {
-      fullExperience += `\n\n[COMENTARIOS ADICIONALES]\n${form.comentarios.value}`;
-    }
-    // Backend expects JSON for 'education' and 'experience' (Prisma Json type)
-    // We wrap the text in a simple structure
-    apiData.append("experience", JSON.stringify([{ content: fullExperience }]));
-
-    // -- Educación --
-    // Concatenamos Cursos en Educación
-    let fullEducation = `[FORMACIÓN ACADÉMICA]\n${form.educacion.value}`;
-    if (form.cursos.value.trim()) {
-      fullEducation += `\n\n[CURSOS Y CAPACITACIONES]\n${form.cursos.value}`;
-    }
-    apiData.append("education", JSON.stringify([{ content: fullEducation }]));
+    // -- Educación (campos individuales) --
+    apiData.append("educacion", form.educacion?.value || "");
+    apiData.append("cursos", form.cursos?.value || "");
 
     // -- Idiomas --
-    if (form.idiomas.value.trim()) {
-      apiData.append("languages", form.idiomas.value);
+    apiData.append("idiomas", form.idiomas?.value || "");
+
+    // -- Arrays de Skills --
+    form
+      .querySelectorAll('input[name="hardSkills"]:checked')
+      .forEach((cb) => apiData.append("hardSkills[]", cb.value));
+
+    // Otras habilidades técnicas
+    const otherHard = form.otherHardSkills?.value?.trim() || "";
+    if (otherHard) {
+      apiData.append("otherHardSkills", otherHard);
     }
 
-    // -- Skills (Arrays) --
-    // Hard Skills
-    const hardCbs = form.querySelectorAll('input[name="hardSkills"]:checked');
-    hardCbs.forEach((cb) => apiData.append("hardSkills", cb.value));
-    if (form.otherHardSkills.value.trim()) {
-      const others = form.otherHardSkills.value
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean);
-      others.forEach((s) => apiData.append("hardSkills", s));
+    form
+      .querySelectorAll('input[name="softSkills"]:checked')
+      .forEach((cb) => apiData.append("softSkills[]", cb.value));
+
+    // Otras habilidades blandas
+    const otherSoft = form.otherSoftSkills?.value?.trim() || "";
+    if (otherSoft) {
+      apiData.append("otherSoftSkills", otherSoft);
     }
 
-    // Soft Skills
-    const softCbs = form.querySelectorAll('input[name="softSkills"]:checked');
-    softCbs.forEach((cb) => apiData.append("softSkills", cb.value));
-    if (form.otherSoftSkills.value.trim()) {
-      const others = form.otherSoftSkills.value
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean);
-      others.forEach((s) => apiData.append("softSkills", s));
-    }
-
-    // -- Foto --
+    // -- VALIDACIÓN FOTO --
     const photoInput = document.getElementById("photoFile");
-    if (photoInput.files.length > 0) {
-      apiData.append("photo", photoInput.files[0]);
+    if (photoInput && photoInput.files && photoInput.files.length > 0) {
+      const file = photoInput.files[0];
+      const maxSize = 10 * 1024 * 1024; // 10MB
+
+      if (file.size > maxSize) {
+        throw new Error(
+          "La imagen es muy pesada (máximo 10MB). Por favor elige una más liviana."
+        );
+      }
+
+      // Verificar que sea una imagen válida
+      if (!file.type.startsWith("image/")) {
+        throw new Error("El archivo seleccionado no es una imagen válida.");
+      }
+
+      apiData.append("photo", file);
+      console.log("Foto adjuntada:", file.name, file.size, "bytes");
     }
 
-    // 3. Enviar al Backend
-    // Ajustar URL si es necesario (asumimos localhost:3000 por defecto)
+    // 2. Envío al Servidor con AbortController para timeout
     const BACKEND_URL = "http://localhost:3000/api/cvform/submit";
 
-    const response = await fetch(BACKEND_URL, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        // NO poner Content-Type manual con FormData
-      },
-      body: apiData,
-    });
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 segundos timeout
 
-    const result = await response.json();
-
-    if (!response.ok) {
+    let response;
+    try {
+      response = await fetch(BACKEND_URL, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: apiData,
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+    } catch (fetchError) {
+      clearTimeout(timeoutId);
+      if (fetchError.name === "AbortError") {
+        throw new Error(
+          "La solicitud tardó demasiado. Intenta con una imagen más pequeña."
+        );
+      }
       throw new Error(
-        result.error || result.message || "Error desconocido en el servidor"
+        "Error de conexión. Verifica que el servidor esté corriendo."
       );
     }
 
-    // 4. Éxito
-    window.location.href = `exito.html?id=${result.submissionId}`;
-  } catch (error) {
-    console.error("Error submitting form:", error);
+    // 3. Manejo de Respuesta
+    let result;
+    const contentType = response.headers.get("content-type");
 
-    let msg = error.message;
-    if (msg.includes("Failed to fetch")) {
-      msg =
-        "No se pudo conectar con el servidor. Verifica que el backend esté corriendo.";
+    if (contentType && contentType.includes("application/json")) {
+      result = await response.json();
+    } else {
+      const textResponse = await response.text();
+      console.error(
+        "Respuesta no JSON del servidor:",
+        textResponse.substring(0, 200)
+      );
+      throw new Error(
+        "El servidor no pudo procesar la solicitud. Intenta con una imagen más pequeña."
+      );
     }
 
-    alert("❌ Error al guardar perfil:\n" + msg);
+    if (!response.ok) {
+      throw new Error(
+        result.error || result.message || "Error al procesar la solicitud."
+      );
+    }
 
-    // Restaurar estado
+    // 4. Éxito - Limpiar y redirigir
+    console.log("Formulario enviado con éxito:", result.submissionId);
+
+    // Limpiar localStorage de formularios pendientes
+    localStorage.removeItem("pending_form_order");
+    sessionStorage.removeItem("cvFormCurrentStep");
+
+    window.location.href = `exito.html?id=${result.submissionId}`;
+  } catch (error) {
+    console.error("Error en submitForm:", error);
+    showFormToast(error.message, "error");
+
+    // Restaurar botón SIN cambiar de paso
     btn.innerHTML = originalBtnContent;
     btn.disabled = false;
     btn.style.opacity = "1";
 
-    if (error.message.includes("inicia sesión")) {
-      window.location.href = "login.html";
+    if (
+      error.message.includes("inicia sesión") ||
+      error.message.includes("iniciado sesión")
+    ) {
+      setTimeout(() => (window.location.href = "login.html"), 2000);
     }
   }
 }
+
+// Parche de seguridad final al cargar el DOM
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("cvForm");
+  if (form) {
+    // Prevenir ENTER en inputs (excepto textareas)
+    form.addEventListener("keydown", function (event) {
+      if (event.key === "Enter" && event.target.nodeName !== "TEXTAREA") {
+        event.preventDefault();
+        return false;
+      }
+    });
+
+    // Bloquear submit nativo del formulario
+    form.onsubmit = function (e) {
+      if (e) e.preventDefault();
+      return false;
+    };
+
+    // También con addEventListener por si acaso
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    });
+  }
+
+  // Verificar si viene de pago (orderId en URL) - siempre empezar en paso 1
+  const urlParams = new URLSearchParams(window.location.search);
+  const orderIdFromUrl = urlParams.get("order");
+
+  if (orderIdFromUrl) {
+    // Viene de pago, limpiar sessionStorage y empezar en paso 1
+    sessionStorage.removeItem("cvFormCurrentStep");
+    console.log("Formulario iniciado desde pago, paso 1");
+  } else {
+    // Solo restaurar si no viene de pago y si hay un paso guardado válido
+    const savedStep = sessionStorage.getItem("cvFormCurrentStep");
+    if (savedStep && parseInt(savedStep) > 1) {
+      const stepNum = parseInt(savedStep);
+      if (stepNum >= 1 && stepNum <= totalSteps) {
+        document.getElementById(`step1`).classList.remove("active");
+        document.getElementById(`step${stepNum}`).classList.add("active");
+        currentStep = stepNum;
+        updateUI();
+        console.log("Paso restaurado desde sessionStorage:", stepNum);
+      }
+    }
+  }
+});
+
+// Guardar paso actual cuando cambia
+const originalChangeStep = changeStep;
+changeStep = function (direction) {
+  originalChangeStep(direction);
+  sessionStorage.setItem("cvFormCurrentStep", currentStep.toString());
+};
+
+// Limpiar cuando se va a exito.html
+window.addEventListener("beforeunload", function () {
+  if (window.location.href.includes("exito.html")) {
+    sessionStorage.removeItem("cvFormCurrentStep");
+  }
+});

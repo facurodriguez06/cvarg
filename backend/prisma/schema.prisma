@@ -149,6 +149,7 @@ model Order {
   paymentId       String?     @unique // ID de Mercado Pago
   paymentStatus   String?
   paymentMethod   String?
+  formCompleted   Boolean     @default(false) // Si el formulario CV fue completado
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
 
@@ -187,30 +188,46 @@ model CVSubmission {
   user        User     @relation(fields: [userId], references: [id])
   orderId     String?  @unique
   
-  // Datos personales
+  // Datos personales - campos individuales
   fullName    String
+  nombres     String?
+  apellidos   String?
+  edad        String?
+  nacionalidad String?
+  estadoCivil  String?
   email       String
   phone       String
+  dni         String?
+  cuil        String?
   address     String?
   city        String?
   birthDate   DateTime?
-  photoUrl    String?
-  
-  // Educación
-  education   Json     // Array de objetos con educación
+  photoBase64 String?  @db.Text
+  linkedin    String?
   
   // Experiencia
-  experience  Json     // Array de objetos con experiencia
+  disponibilidad String?
+  objetivo    String?  @db.Text
+  experiencia String?  @db.Text
+  comentarios String?  @db.Text
+  experience  Json?
   
-  // Habilidades
-  hardSkills  String[]
-  softSkills  String[]
+  // Educación
+  educacion   String?  @db.Text
+  cursos      String?  @db.Text
+  education   Json?
   
-  // Otros
+  // Idiomas y otros
+  idiomas     String?  @db.Text
   languages   Json?
   references  Json?
   portfolio   String?
-  linkedin    String?
+  
+  // Habilidades
+  hardSkills       String[]
+  softSkills       String[]
+  otherHardSkills  String?
+  otherSoftSkills  String?
   
   status      SubmissionStatus @default(PENDING)
   createdAt   DateTime @default(now())
