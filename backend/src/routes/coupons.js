@@ -78,6 +78,7 @@ router.post("/validate", authMiddleware, async (req, res) => {
         id: coupon.id,
         code: coupon.code,
         discountPercent: parseFloat(coupon.discountPercent),
+        maxDiscount: coupon.maxDiscount ? parseFloat(coupon.maxDiscount) : null,
         description: coupon.description,
       },
     });
@@ -160,6 +161,7 @@ router.post("/", authMiddleware, isAdmin, async (req, res) => {
     const {
       code,
       discountPercent,
+      maxDiscount,
       description,
       maxUsage,
       usesPerUser,
@@ -170,6 +172,7 @@ router.post("/", authMiddleware, isAdmin, async (req, res) => {
       data: {
         code: code.toUpperCase(),
         discountPercent: parseFloat(discountPercent),
+        maxDiscount: maxDiscount ? parseFloat(maxDiscount) : null,
         description,
         maxUsage: maxUsage || 100,
         usesPerUser: usesPerUser || 1,
@@ -197,7 +200,7 @@ router.post("/", authMiddleware, isAdmin, async (req, res) => {
  */
 router.put("/:id", authMiddleware, isAdmin, async (req, res) => {
   try {
-    const { isActive, expiresAt, maxUsage } = req.body;
+    const { isActive, expiresAt, maxUsage, maxDiscount } = req.body;
 
     const coupon = await prisma.coupon.update({
       where: { id: req.params.id },
@@ -205,6 +208,9 @@ router.put("/:id", authMiddleware, isAdmin, async (req, res) => {
         ...(isActive !== undefined && { isActive }),
         ...(expiresAt && { expiresAt: new Date(expiresAt) }),
         ...(maxUsage !== undefined && { maxUsage }),
+        ...(maxDiscount !== undefined && {
+          maxDiscount: maxDiscount ? parseFloat(maxDiscount) : null,
+        }),
       },
     });
 

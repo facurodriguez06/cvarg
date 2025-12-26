@@ -130,6 +130,7 @@ model Coupon {
   id              String   @id @default(uuid())
   code            String   @unique
   discountPercent Decimal  @db.Decimal(5, 2) // 0.00 a 1.00 (0% a 100%)
+  maxDiscount     Decimal? @db.Decimal(10, 2) // Tope máximo de descuento (opcional)
   description     String?
   isActive        Boolean  @default(true)
   maxUsage        Int      @default(100) // Usos máximos totales

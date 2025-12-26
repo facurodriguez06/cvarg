@@ -190,6 +190,13 @@ class APIService {
     });
   }
 
+  async validateCoupon(code) {
+    return await this.request("/coupons/validate", {
+      method: "POST",
+      body: { code },
+    });
+  }
+
   // ===========================
   // MÉTODOS DE AUTENTICACIÓN LOCAL (FALLBACK)
   // ===========================

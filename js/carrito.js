@@ -289,10 +289,37 @@ function removeItem(index) {
 function updateTotals(subtotal) {
   const subtotalEl = document.getElementById("subtotalPrice");
   const totalEl = document.getElementById("totalPrice");
+  const discountRow = document.querySelector(".summary-row.discount");
+  const discountEl = document.querySelector(
+    ".summary-row.discount span:last-child"
+  );
+
+  // Verificar si hay cupón aplicado
+  const appliedCoupon = JSON.parse(localStorage.getItem("applied_coupon"));
+  let finalTotal = subtotal;
+
+  if (appliedCoupon && subtotal > 0) {
+    const discountAmount = subtotal * appliedCoupon.discountPercent;
+    finalTotal = subtotal - discountAmount;
+
+    // Mostrar fila de descuento
+    if (discountRow) {
+      discountRow.style.display = "flex";
+      discountEl.innerText = `-$${discountAmount.toLocaleString()} (${
+        appliedCoupon.code
+      })`;
+    }
+  } else {
+    // Ocultar descuento
+    if (discountRow) discountRow.style.display = "none";
+  }
 
   if (subtotalEl) subtotalEl.innerText = `$${subtotal.toLocaleString()}`;
-  if (totalEl) totalEl.innerText = `$${subtotal.toLocaleString()}`;
+  if (totalEl) totalEl.innerText = `$${finalTotal.toLocaleString()}`;
 }
+
+// Alias para consistencia
+const updateCartSummary = loadAndDisplayCart;
 
 async function clearCart() {
   const cart = JSON.parse(localStorage.getItem("temp_cart") || "[]");
@@ -714,8 +741,9 @@ function handlePaymentComplete(
 }
 
 // Aplicar cupón
-function applyCoupon() {
+async function applyCoupon() {
   const input = document.getElementById("couponInput");
+  const btn = document.querySelector(".btn-apply"); // Obtener botón
   const code = input?.value.trim().toUpperCase();
 
   if (!code) {
@@ -723,24 +751,59 @@ function applyCoupon() {
     return;
   }
 
-  // Simulación de cupones (TODO: integrar con backend)
-  const validCoupons = {
-    DESPEGAR10: 10,
-    CVPRO: 20,
-    STUDENT: 15,
-  };
+  // Estado de carga
+  if (btn) {
+    const originalText = btn.innerText;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Aplicando...';
+    btn.classList.add("btn-loading");
+  }
 
-  if (validCoupons[code]) {
-    showNotification(
-      `¡Cupón "${code}" aplicado! ${validCoupons[code]}% de descuento`,
-      "success"
-    );
-    // TODO: Aplicar descuento real
-  } else {
-    showNotification("Código de cupón inválido", "error");
+  try {
+    const response = await api.validateCoupon(code);
+
+    if (response && response.success && response.coupon) {
+      // Guardar cupón en localStorage
+      const couponData = {
+        code: response.coupon.code,
+        discountPercent: response.coupon.discountPercent,
+        maxDiscount: response.coupon.maxDiscount, // Guardar tope si existe
+        id: response.coupon.id,
+      };
+
+      localStorage.setItem("applied_coupon", JSON.stringify(couponData));
+
+      showNotification(
+        `¡Cupón "${code}" aplicado! ${
+          response.coupon.discountPercent * 100
+        }% de descuento`,
+        "success"
+      );
+
+      // Actualizar visualmente el subtotal y total
+      updateCartSummary();
+    } else {
+      throw new Error(response.error || "Cupón inválido");
+    }
+  } catch (error) {
+    console.error("Error al aplicar cupón:", error);
+    showNotification(error.message || "Cupón no válido o expirado", "error");
+    localStorage.removeItem("applied_coupon"); // Limpiar si falla
+    updateCartSummary();
+  } finally {
+    // Restaurar botón
+    if (btn) {
+      btn.innerText = "Aplicar";
+      btn.classList.remove("btn-loading");
+    }
   }
 
   if (input) input.value = "";
+}
+
+function removeCoupon() {
+  localStorage.removeItem("applied_coupon");
+  updateCartSummary();
+  showNotification("Cupón eliminado", "info");
 }
 
 // Navegación
@@ -754,6 +817,65 @@ function closeMenu() {
       icon.classList.remove("fa-times");
       icon.classList.add("fa-bars");
     }
+  }
+}
+
+function updateTotals(subtotal) {
+  const subtotalEl = document.getElementById("subtotalPrice");
+  const totalEl = document.getElementById("totalPrice");
+  const discountRow = document.querySelector(".summary-row.discount");
+  const discountEl = document.querySelector(
+    ".summary-row.discount span:last-child"
+  );
+
+  // Verificar si hay cupón aplicado
+  const appliedCoupon = JSON.parse(localStorage.getItem("applied_coupon"));
+  let finalTotal = subtotal;
+
+  if (appliedCoupon && subtotal > 0) {
+    let discountAmount = subtotal * appliedCoupon.discountPercent;
+
+    // Aplicar tope si existe
+    if (
+      appliedCoupon.maxDiscount &&
+      discountAmount > appliedCoupon.maxDiscount
+    ) {
+      discountAmount = appliedCoupon.maxDiscount;
+    }
+
+    finalTotal = subtotal - discountAmount;
+
+    // Mostrar fila de descuento
+    if (discountRow) {
+      discountRow.style.display = "flex";
+      discountEl.innerHTML = `
+        -$${discountAmount.toLocaleString()} (${appliedCoupon.code})
+        <button class="remove-coupon" onclick="removeCoupon()" title="Quitar cupón">
+            <i class="fas fa-times"></i>
+        </button>
+      `;
+    }
+  } else {
+    // Ocultar descuento
+    if (discountRow) discountRow.style.display = "none";
+  }
+
+  if (subtotalEl) subtotalEl.innerText = `$${subtotal.toLocaleString()}`;
+  if (totalEl) totalEl.innerText = `$${finalTotal.toLocaleString()}`;
+}
+
+async function clearCart() {
+  const cart = JSON.parse(localStorage.getItem("temp_cart") || "[]");
+  if (cart.length === 0) {
+    showNotification("El carrito ya está vacío", "info");
+    return;
+  }
+
+  if (confirm("¿Estás seguro de vaciar el carrito?")) {
+    localStorage.removeItem("temp_cart");
+    localStorage.removeItem("applied_coupon"); // Auto-remove coupon
+    loadAndDisplayCart();
+    showNotification("Carrito vaciado", "success");
   }
 }
 

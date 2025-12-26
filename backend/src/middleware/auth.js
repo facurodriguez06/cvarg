@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
  * Middleware de autenticación JWT
  * Verifica que el usuario tenga un token válido
  */
-const authMiddleware = (req, res, next) => {
+const authMiddleware = async (req, res, next) => {
   try {
     // Obtener token del header Authorization
     const authHeader = req.header("Authorization");
@@ -21,11 +21,27 @@ const authMiddleware = (req, res, next) => {
     // Verificar token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
+    // Verificar que el usuario exista en la BD (para evitar errores de FK si se borró)
+    // Usamos require aquí para evitar dependencia circular en top-level si fuera necesario
+    const { PrismaClient } = require("@prisma/client");
+    const prisma = new PrismaClient();
+
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.id },
+    });
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        error: "Usuario no encontrado. Inicia sesión nuevamente.",
+      });
+    }
+
     // Agregar información del usuario al request
     req.user = {
-      id: decoded.id,
-      email: decoded.email,
-      role: decoded.role,
+      id: user.id,
+      email: user.email,
+      role: user.role,
     };
 
     next();

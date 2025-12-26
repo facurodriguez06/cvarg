@@ -545,20 +545,7 @@
     renderCart();
     }
 
-    function applyCoupon() {
-    const code = document
-    .getElementById("couponInput")
-    .value.trim()
-    .toUpperCase();
-    if (VALID_COUPONS[code]) {
-    currentDiscount = VALID_COUPONS[code];
-    document.getElementById("discountName").innerText = `(${code})`;
-    showModal("¡Cupón Aplicado!", "Descuento activado.", "success");
-    renderCart();
-    } else {
-    showModal("Error", "Cupón inválido.", "error");
-    }
-    }
+
 
     // --- CONEXIÓN MP MEJORADA ---
     async function proceedToCheckout() {
