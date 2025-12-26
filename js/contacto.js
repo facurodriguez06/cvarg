@@ -15,16 +15,22 @@ menuToggle.addEventListener("click", () => {
   icon.classList.toggle("fa-times");
 });
 
-// Cart Logic
-document.addEventListener("DOMContentLoaded", () => {
-  let cart = JSON.parse(localStorage.getItem("impulsopro_cart")) || [];
-  let totalQty = cart.reduce((acc, item) => acc + item.quantity, 0);
-  const badge = document.getElementById("cart-count");
-  if (badge) {
-    badge.innerText = totalQty;
-    badge.style.display = totalQty === 0 ? "none" : "flex";
+// Cart Logic - Sincronizado con temp_cart
+function updateCartCounter() {
+  try {
+    let cart = JSON.parse(localStorage.getItem("temp_cart") || "[]");
+    let total = cart.reduce((acc, item) => acc + (item.quantity || 1), 0);
+    const badge = document.getElementById("cart-count");
+    if (badge) {
+      badge.innerText = total;
+      badge.style.display = total === 0 ? "none" : "flex";
+    }
+  } catch (error) {
+    console.error("Error updating counter:", error);
   }
-});
+}
+
+document.addEventListener("DOMContentLoaded", updateCartCounter);
 
 // --- LÓGICA DEL SLIDER (ORIGINAL) ---
 const container = document.getElementById("compContainer");

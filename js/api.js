@@ -169,6 +169,27 @@ class APIService {
     this.removeUser();
   }
 
+  async verifyEmail(email, code) {
+    const data = await this.request("/auth/verify-email", {
+      method: "POST",
+      body: { email, code },
+    });
+
+    if (data.success) {
+      this.setToken(data.token);
+      this.setUser(data.user);
+    }
+
+    return data;
+  }
+
+  async resendVerificationCode(email) {
+    return await this.request("/auth/resend-verification", {
+      method: "POST",
+      body: { email },
+    });
+  }
+
   // ===========================
   // MÉTODOS DE AUTENTICACIÓN LOCAL (FALLBACK)
   // ===========================

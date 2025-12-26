@@ -117,6 +117,13 @@ router.post(
         otherSoftSkills,
       } = req.body;
 
+      console.log(
+        "📋 Datos recibidos - orderId:",
+        orderId,
+        "| fullName:",
+        fullName
+      );
+
       // Obtener skills - pueden venir como 'hardSkills', 'hardSkills[]', o ambos
       const hardSkills = req.body.hardSkills || req.body["hardSkills[]"] || [];
       const softSkills = req.body.softSkills || req.body["softSkills[]"] || [];
@@ -162,53 +169,74 @@ router.post(
         ? [softSkills]
         : [];
 
-      // Crear submission con todos los campos
-      const submission = await prisma.cVSubmission.create({
-        data: {
-          userId: req.user.id,
-          orderId: orderId || null,
-          // Datos personales
-          fullName,
-          nombres: nombres || null,
-          apellidos: apellidos || null,
-          edad: edad || null,
-          nacionalidad: nacionalidad || null,
-          estadoCivil: estadoCivil || null,
-          email,
-          phone,
-          dni: dni || null,
-          cuil: cuil || null,
-          address: address || null,
-          city: city || null,
-          birthDate: birthDate ? new Date(birthDate) : null,
-          photoBase64,
-          linkedin: linkedin || null,
-          // Experiencia
-          disponibilidad: disponibilidad || null,
-          objetivo: objetivo || null,
-          experiencia: experiencia || null,
-          comentarios: comentarios || null,
-          experience: parsedExperience,
-          // Educación
-          educacion: educacion || null,
-          cursos: cursos || null,
-          education: parsedEducation,
-          // Idiomas
-          idiomas: idiomas || null,
-          languages: parsedLanguages,
-          references: parsedReferences,
-          portfolio: portfolio || null,
-          // Habilidades
-          hardSkills: parsedHardSkills,
-          softSkills: parsedSoftSkills,
-          otherHardSkills: otherHardSkills || null,
-          otherSoftSkills: otherSoftSkills || null,
-          status: "PENDING",
-        },
-      });
+      // Datos del formulario a guardar
+      const submissionData = {
+        userId: req.user.id,
+        // Datos personales
+        fullName,
+        nombres: nombres || null,
+        apellidos: apellidos || null,
+        edad: edad || null,
+        nacionalidad: nacionalidad || null,
+        estadoCivil: estadoCivil || null,
+        email,
+        phone,
+        dni: dni || null,
+        cuil: cuil || null,
+        address: address || null,
+        city: city || null,
+        birthDate: birthDate ? new Date(birthDate) : null,
+        photoBase64,
+        linkedin: linkedin || null,
+        // Experiencia
+        disponibilidad: disponibilidad || null,
+        objetivo: objetivo || null,
+        experiencia: experiencia || null,
+        comentarios: comentarios || null,
+        experience: parsedExperience,
+        // Educación
+        educacion: educacion || null,
+        cursos: cursos || null,
+        education: parsedEducation,
+        // Idiomas
+        idiomas: idiomas || null,
+        languages: parsedLanguages,
+        references: parsedReferences,
+        portfolio: portfolio || null,
+        // Habilidades
+        hardSkills: parsedHardSkills,
+        softSkills: parsedSoftSkills,
+        otherHardSkills: otherHardSkills || null,
+        otherSoftSkills: otherSoftSkills || null,
+        status: "SENT", // Cambiar a SENT cuando se completa
+      };
 
-      // Si hay orderId, actualizar orden para vincularla y marcar formulario como completado
+      let submission;
+
+      // Si hay orderId, buscar CVSubmission existente y actualizarlo
       if (orderId) {
+        const existingSubmission = await prisma.cVSubmission.findFirst({
+          where: { orderId: orderId },
+        });
+
+        if (existingSubmission) {
+          // Actualizar el existente
+          submission = await prisma.cVSubmission.update({
+            where: { id: existingSubmission.id },
+            data: submissionData,
+          });
+          console.log(
+            `📝 CVSubmission actualizado a SENT para orden ${orderId}`
+          );
+        } else {
+          // Crear nuevo con orderId
+          submission = await prisma.cVSubmission.create({
+            data: { ...submissionData, orderId: orderId },
+          });
+          console.log(`📝 CVSubmission creado (nuevo) para orden ${orderId}`);
+        }
+
+        // Actualizar orden para vincularla y marcar formulario como completado
         await prisma.order.update({
           where: { id: orderId },
           data: {
@@ -216,6 +244,43 @@ router.post(
             formCompleted: true,
           },
         });
+      } else {
+        // Sin orderId - buscar si hay un CVSubmission PENDING del mismo usuario para actualizar
+        const pendingSubmission = await prisma.cVSubmission.findFirst({
+          where: {
+            userId: req.user.id,
+            status: "PENDING",
+          },
+          orderBy: { createdAt: "desc" }, // El más reciente
+        });
+
+        if (pendingSubmission) {
+          // Actualizar el PENDING encontrado
+          submission = await prisma.cVSubmission.update({
+            where: { id: pendingSubmission.id },
+            data: submissionData,
+          });
+          console.log(
+            `📝 CVSubmission PENDING actualizado a SENT (id: ${pendingSubmission.id})`
+          );
+
+          // Si tiene orderId, actualizar la orden también
+          if (pendingSubmission.orderId) {
+            await prisma.order.update({
+              where: { id: pendingSubmission.orderId },
+              data: {
+                status: "IN_PROGRESS",
+                formCompleted: true,
+              },
+            });
+          }
+        } else {
+          // No hay ninguno pendiente, crear nuevo
+          submission = await prisma.cVSubmission.create({
+            data: submissionData,
+          });
+          console.log(`📝 CVSubmission creado (sin orden, ninguno pendiente)`);
+        }
       }
 
       // TODO: Enviar a Google Sheets como backup (opcional)
@@ -257,6 +322,40 @@ router.get("/submissions", authMiddleware, async (req, res) => {
     res.status(500).json({
       success: false,
       error: "Error al obtener formularios",
+    });
+  }
+});
+
+/**
+ * GET /api/cvform/pending
+ * Verificar si hay un CVSubmission PENDING del usuario
+ */
+router.get("/pending", authMiddleware, async (req, res) => {
+  try {
+    const pendingSubmission = await prisma.cVSubmission.findFirst({
+      where: {
+        userId: req.user.id,
+        status: "PENDING",
+      },
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        orderId: true,
+        status: true,
+        createdAt: true,
+      },
+    });
+
+    res.json({
+      success: true,
+      hasPending: !!pendingSubmission,
+      submission: pendingSubmission,
+    });
+  } catch (error) {
+    console.error("Error al verificar pending:", error);
+    res.status(500).json({
+      success: false,
+      error: "Error al verificar formularios pendientes",
     });
   }
 });

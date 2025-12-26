@@ -10,6 +10,27 @@ window.addEventListener("beforeunload", function (e) {
 });
 
 // =========================================
+// FORMATEO DE FECHA DD/MM/AAAA
+// =========================================
+function formatDateInput(input) {
+  // Remover todo lo que no sea número
+  let value = input.value.replace(/\D/g, "");
+
+  // Aplicar formato DD/MM/AAAA
+  if (value.length >= 2) {
+    value = value.substring(0, 2) + "/" + value.substring(2);
+  }
+  if (value.length >= 5) {
+    value = value.substring(0, 5) + "/" + value.substring(5);
+  }
+  if (value.length > 10) {
+    value = value.substring(0, 10);
+  }
+
+  input.value = value;
+}
+
+// =========================================
 // SISTEMA DE NOTIFICACIONES
 // =========================================
 function showFormToast(message, type = "error") {
@@ -198,6 +219,15 @@ async function submitForm() {
     const form = document.getElementById("cvForm");
     const apiData = new FormData();
 
+    // -- Obtener orderId de la URL o localStorage --
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderId =
+      urlParams.get("order") || localStorage.getItem("currentOrderId");
+    if (orderId) {
+      apiData.append("orderId", orderId);
+      console.log("📦 orderId enviado:", orderId);
+    }
+
     // -- Recolección de Datos Personales (campos individuales) --
     const nombres = form.nombres.value.trim();
     const apellidos = form.apellidos.value.trim();
@@ -213,7 +243,17 @@ async function submitForm() {
     apiData.append("phone", form.telefono.value);
     apiData.append("dni", form.dni.value);
     apiData.append("city", form.provincia.value);
-    apiData.append("birthDate", form.fechaNacimiento.value);
+
+    // Convertir fecha de DD/MM/AAAA a ISO (AAAA-MM-DD) para el backend
+    const fechaRaw = form.fechaNacimiento.value;
+    let fechaISO = "";
+    if (fechaRaw && fechaRaw.includes("/")) {
+      const [dia, mes, anio] = fechaRaw.split("/");
+      if (dia && mes && anio && anio.length === 4) {
+        fechaISO = `${anio}-${mes.padStart(2, "0")}-${dia.padStart(2, "0")}`;
+      }
+    }
+    apiData.append("birthDate", fechaISO);
 
     // CUIL
     const hasCuilRadio = form.querySelector('input[name="hasCuil"]:checked');
@@ -393,9 +433,40 @@ document.addEventListener("DOMContentLoaded", () => {
   const orderIdFromUrl = urlParams.get("order");
 
   if (orderIdFromUrl) {
-    // Viene de pago, limpiar sessionStorage y empezar en paso 1
+    // Viene de pago, verificar si el formulario ya fue completado
+    const authToken = localStorage.getItem("authToken");
+    if (authToken) {
+      fetch(`http://localhost:3000/api/orders/${orderIdFromUrl}`, {
+        headers: { Authorization: `Bearer ${authToken}` },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          const order = data.order || data;
+          if (order && order.formCompleted) {
+            // El formulario ya fue enviado, redirigir a éxito
+            showFormToast(
+              "Este formulario ya fue enviado anteriormente.",
+              "info"
+            );
+            setTimeout(() => {
+              window.location.href = `exito.html?id=${orderIdFromUrl}`;
+            }, 2000);
+          }
+        })
+        .catch((err) =>
+          console.warn("Error verificando estado del pedido:", err)
+        );
+    }
+
+    // Guardar orderId en localStorage para que persista durante el formulario
+    localStorage.setItem("currentOrderId", orderIdFromUrl);
+
+    // Limpiar sessionStorage y empezar en paso 1
     sessionStorage.removeItem("cvFormCurrentStep");
-    console.log("Formulario iniciado desde pago, paso 1");
+    console.log(
+      "Formulario iniciado desde pago, orderId guardado:",
+      orderIdFromUrl
+    );
   } else {
     // Solo restaurar si no viene de pago y si hay un paso guardado válido
     const savedStep = sessionStorage.getItem("cvFormCurrentStep");

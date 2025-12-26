@@ -591,7 +591,24 @@ async function viewCVSubmission(id) {
 function buildCVDetailHTML(form) {
   // Obtener valores con fallback vacío para mostrar siempre el campo
   const val = (v) => v || "-";
-  const formatDate = (d) => (d ? new Date(d).toLocaleDateString("es-AR") : "-");
+
+  // Formatear fecha evitando problemas de timezone
+  const formatDate = (d) => {
+    if (!d) return "-";
+    // Si la fecha viene como string ISO (AAAA-MM-DD), parsearla manualmente
+    if (typeof d === "string" && d.includes("-")) {
+      const parts = d.split("T")[0].split("-"); // Tomar solo la parte de fecha
+      if (parts.length === 3) {
+        const [year, month, day] = parts;
+        return `${day}/${month}/${year}`;
+      }
+    }
+    // Fallback: usar toLocaleDateString pero ajustando timezone
+    const date = new Date(d);
+    return date.toLocaleDateString("es-AR", {
+      timeZone: "America/Argentina/Buenos_Aires",
+    });
+  };
 
   // Manejar arrays que pueden venir como string
   const getArray = (v) => {

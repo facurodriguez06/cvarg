@@ -14,21 +14,23 @@ datasource db {
 // MODELO DE USUARIO
 // ===========================
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
+  id        String     @id @default(uuid())
+  email     String     @unique
   password  String
   fullName  String
   phone     String?
-  role      Role     @default(CLIENT)
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  role      Role       @default(CLIENT)
+  status    UserStatus @default(PENDING_VERIFICATION)
+  isActive  Boolean    @default(true) // Mantenido para compatibilidad
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 
   // Relaciones
-  cart          Cart?
-  orders        Order[]
-  cvSubmissions CVSubmission[]
-  couponUsages  CouponUsage[]
+  cart              Cart?
+  orders            Order[]
+  cvSubmissions     CVSubmission[]
+  couponUsages      CouponUsage[]
+  verificationCodes VerificationCode[]
 
   @@map("users")
 }
@@ -36,6 +38,29 @@ model User {
 enum Role {
   ADMIN
   CLIENT
+}
+
+enum UserStatus {
+  PENDING_VERIFICATION
+  ACTIVE
+  SUSPENDED
+}
+
+// ===========================
+// MODELO DE CÓDIGO DE VERIFICACIÓN
+// ===========================
+model VerificationCode {
+  id        String   @id @default(uuid())
+  code      String   // Código de 6 dígitos
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([code, userId])
+  @@map("verification_codes")
 }
 
 // ===========================
@@ -188,15 +213,15 @@ model CVSubmission {
   user        User     @relation(fields: [userId], references: [id])
   orderId     String?  @unique
   
-  // Datos personales - campos individuales
-  fullName    String
+  // Datos personales - campos individuales (opcionales para permitir creación vacía)
+  fullName    String?
   nombres     String?
   apellidos   String?
   edad        String?
   nacionalidad String?
   estadoCivil  String?
-  email       String
-  phone       String
+  email       String?
+  phone       String?
   dni         String?
   cuil        String?
   address     String?
@@ -237,10 +262,11 @@ model CVSubmission {
 }
 
 enum SubmissionStatus {
-  PENDING
-  IN_REVIEW
-  COMPLETED
-  DELIVERED
+  PENDING     // Formulario creado pero no completado
+  SENT        // Formulario completado y enviado
+  IN_REVIEW   // En revisión por el admin
+  COMPLETED   // CV generado
+  DELIVERED   // CV entregado al cliente
 }
 
 // ===========================

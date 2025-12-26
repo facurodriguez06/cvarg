@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="css/index.css" />
     <link rel="stylesheet" href="css/title-effects.css" />
     <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/components.css">
 </head>
 
 <body>
@@ -70,6 +71,30 @@
                 </button>
             </form>
 
+            <form id="verifyForm" style="display: none;">
+                <div class="form-group">
+                    <label>Código de Verificación</label>
+                    <p style="font-size: 0.9rem; color: #666; margin-bottom: 10px;">Hemos enviado un código a <strong
+                            id="verifyEmailDisplay"></strong></p>
+                    <input type="text" id="verifyCode" placeholder="123456" maxlength="6"
+                        style="text-align: center; letter-spacing: 5px; font-size: 1.5rem; font-weight: bold;"
+                        required />
+                </div>
+                <!-- Hidden input to store email -->
+                <input type="hidden" id="verifyEmailHidden">
+
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-check-circle"></i> Verificar Cuenta
+                </button>
+
+                <div style="text-align: center; margin-top: 15px;">
+                    <a href="#" onclick="resendCode(event)" id="resendLink"
+                        style="color: #044bab; text-decoration: none; font-size: 0.9rem;">
+                        <i class="fas fa-sync-alt"></i> ¿No recibiste el código? Reenviar
+                    </a>
+                </div>
+            </form>
+
             <div class="back-link">
                 <a href="index.html">
                     <i class="fas fa-arrow-left"></i>
@@ -80,6 +105,7 @@
     </div>
 
     <script src="js/api.js"></script>
+    <script src="js/components.js"></script>
     <script src="js/login.js"></script>
 </body>
 

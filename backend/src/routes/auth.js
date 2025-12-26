@@ -6,6 +6,10 @@ const jwt = require("jsonwebtoken");
 const { PrismaClient } = require("@prisma/client");
 const { validate } = require("../middleware/validation");
 const { authMiddleware } = require("../middleware/auth");
+const {
+  generateVerificationCode,
+  sendVerificationEmail,
+} = require("../services/email");
 
 const prisma = new PrismaClient();
 
@@ -49,6 +53,15 @@ router.post(
       // Verificar si el usuario ya existe
       const existingUser = await prisma.user.findUnique({ where: { email } });
       if (existingUser) {
+        // Si existe pero está pendiente de verificación, permitir reenviar código
+        if (existingUser.status === "PENDING_VERIFICATION") {
+          return res.status(400).json({
+            success: false,
+            error:
+              "Este email ya está registrado pero pendiente de verificación. Usa 'Reenviar código'.",
+            needsVerification: true,
+          });
+        }
         return res.status(400).json({
           success: false,
           error: "Este email ya está registrado",
@@ -58,7 +71,7 @@ router.post(
       // Hashear contraseña
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Crear usuario
+      // Crear usuario con status PENDING_VERIFICATION
       const user = await prisma.user.create({
         data: {
           email,
@@ -66,6 +79,7 @@ router.post(
           fullName,
           phone,
           role: "CLIENT",
+          status: "PENDING_VERIFICATION",
         },
         select: {
           id: true,
@@ -73,6 +87,7 @@ router.post(
           fullName: true,
           phone: true,
           role: true,
+          status: true,
           createdAt: true,
         },
       });
@@ -82,20 +97,184 @@ router.post(
         data: { userId: user.id },
       });
 
-      // Generar token
-      const token = generateToken(user);
+      // Generar código de verificación
+      const code = generateVerificationCode();
 
+      // Guardar código en BD (expira en 15 minutos)
+      await prisma.verificationCode.create({
+        data: {
+          userId: user.id,
+          code: code,
+          expiresAt: new Date(Date.now() + 15 * 60 * 1000), // 15 minutos
+        },
+      });
+
+      // Enviar email con código
+      await sendVerificationEmail(email, code, fullName);
+
+      // NO devolver token - el usuario debe verificar primero
       res.status(201).json({
         success: true,
-        message: "Usuario registrado exitosamente",
-        token,
-        user,
+        message:
+          "Cuenta creada. Revisa tu email para el código de verificación.",
+        requiresVerification: true,
+        email: user.email,
       });
     } catch (error) {
       console.error("Error en registro:", error);
       res.status(500).json({
         success: false,
         error: "Error al registrar usuario",
+      });
+    }
+  }
+);
+
+/**
+ * POST /api/auth/verify-email
+ * Verificar código de email y activar cuenta
+ */
+router.post(
+  "/verify-email",
+  [
+    body("email").isEmail().normalizeEmail().withMessage("Email inválido"),
+    body("code").isLength({ min: 6, max: 6 }).withMessage("Código inválido"),
+  ],
+  validate,
+  async (req, res) => {
+    try {
+      const { email, code } = req.body;
+
+      // Buscar usuario
+      const user = await prisma.user.findUnique({ where: { email } });
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          error: "Usuario no encontrado",
+        });
+      }
+
+      // Verificar si ya está activo
+      if (user.status === "ACTIVE") {
+        return res.status(400).json({
+          success: false,
+          error: "Esta cuenta ya está verificada",
+        });
+      }
+
+      // Buscar código válido
+      const verificationCode = await prisma.verificationCode.findFirst({
+        where: {
+          userId: user.id,
+          code: code,
+          used: false,
+          expiresAt: { gt: new Date() }, // No expirado
+        },
+        orderBy: { createdAt: "desc" },
+      });
+
+      if (!verificationCode) {
+        return res.status(400).json({
+          success: false,
+          error: "Código inválido o expirado",
+        });
+      }
+
+      // Marcar código como usado y activar usuario
+      await prisma.$transaction([
+        prisma.verificationCode.update({
+          where: { id: verificationCode.id },
+          data: { used: true },
+        }),
+        prisma.user.update({
+          where: { id: user.id },
+          data: { status: "ACTIVE" },
+        }),
+      ]);
+
+      // Generar token
+      const token = generateToken(user);
+
+      res.json({
+        success: true,
+        message: "¡Email verificado! Tu cuenta está activa.",
+        token,
+        user: {
+          id: user.id,
+          email: user.email,
+          fullName: user.fullName,
+          role: user.role,
+        },
+      });
+    } catch (error) {
+      console.error("Error en verificación:", error);
+      res.status(500).json({
+        success: false,
+        error: "Error al verificar el código",
+      });
+    }
+  }
+);
+
+/**
+ * POST /api/auth/resend-verification
+ * Reenviar código de verificación
+ */
+router.post(
+  "/resend-verification",
+  [body("email").isEmail().normalizeEmail().withMessage("Email inválido")],
+  validate,
+  async (req, res) => {
+    try {
+      const { email } = req.body;
+
+      // Buscar usuario
+      const user = await prisma.user.findUnique({ where: { email } });
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          error: "Usuario no encontrado",
+        });
+      }
+
+      // Verificar si necesita verificación
+      if (user.status !== "PENDING_VERIFICATION") {
+        return res.status(400).json({
+          success: false,
+          error: "Esta cuenta ya está verificada",
+        });
+      }
+
+      // Invalidar códigos anteriores
+      await prisma.verificationCode.updateMany({
+        where: { userId: user.id, used: false },
+        data: { used: true },
+      });
+
+      // Generar nuevo código
+      const code = generateVerificationCode();
+
+      // Guardar nuevo código
+      await prisma.verificationCode.create({
+        data: {
+          userId: user.id,
+          code: code,
+          expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+        },
+      });
+
+      // Enviar email
+      await sendVerificationEmail(email, code, user.fullName);
+
+      res.json({
+        success: true,
+        message: "Nuevo código enviado a tu email",
+      });
+    } catch (error) {
+      console.error("Error al reenviar código:", error);
+      res.status(500).json({
+        success: false,
+        error: "Error al reenviar el código",
       });
     }
   }
@@ -126,6 +305,7 @@ router.post(
           fullName: true,
           phone: true,
           role: true,
+          status: true,
           isActive: true,
         },
       });
@@ -137,8 +317,19 @@ router.post(
         });
       }
 
-      // Verificar si está activo
-      if (!user.isActive) {
+      // Verificar si requiere verificación de email
+      if (user.status === "PENDING_VERIFICATION") {
+        return res.status(403).json({
+          success: false,
+          error:
+            "Tu cuenta no está verificada. Revisa tu email e ingresa el código de verificación.",
+          needsVerification: true,
+          email: user.email,
+        });
+      }
+
+      // Verificar si está suspendido
+      if (user.status === "SUSPENDED" || !user.isActive) {
         return res.status(403).json({
           success: false,
           error: "Cuenta desactivada. Contacta al soporte.",

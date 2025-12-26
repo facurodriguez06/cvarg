@@ -217,8 +217,8 @@ async function loadUserOrders() {
       return;
     }
 
-    // Obtener pedidos del servidor
-    const response = await fetch(`${api.baseURL}/orders/user`, {
+    // Obtener pedidos del servidor - endpoint correcto es /orders
+    const response = await fetch(`${api.baseURL}/orders`, {
       headers: {
         Authorization: `Bearer ${authToken}`,
       },
@@ -228,7 +228,8 @@ async function loadUserOrders() {
       throw new Error("Error al cargar pedidos");
     }
 
-    const orders = await response.json();
+    const data = await response.json();
+    const orders = data.orders || data || [];
 
     if (orders.length === 0) {
       content.innerHTML = `
@@ -264,15 +265,39 @@ function renderOrders(orders) {
 
   const ordersHTML = orders
     .map((order) => {
-      const statusInfo = getOrderStatusInfo(order.status);
+      // Determinar estado del pedido y formulario
       const hasPendingForm = order.status === "PAID" && !order.formCompleted;
+      const formSent = order.formCompleted === true;
+
+      // Estado visual
+      let statusInfo;
+      if (hasPendingForm) {
+        statusInfo = {
+          label: "Formulario Pendiente",
+          icon: "📝",
+          class: "status-pending",
+        };
+      } else if (formSent) {
+        statusInfo = {
+          label: "Formulario Enviado",
+          icon: "✅",
+          class: "status-completed",
+        };
+      } else {
+        statusInfo = getOrderStatusInfo(order.status);
+      }
+
+      const orderId = order.orderNumber || order.id;
+      const orderDate = order.createdAt
+        ? formatDate(order.createdAt)
+        : formatDate(order.date);
 
       return `
       <div class="order-card">
         <div class="order-header">
-          <div>
-            <strong>#${order.id}</strong>
-            <span class="order-date">${formatDate(order.date)}</span>
+          <div class="order-id-section">
+            <strong class="order-id">#${orderId}</strong>
+            <span class="order-date">${orderDate}</span>
           </div>
           <span class="order-status ${statusInfo.class}">
             ${statusInfo.icon} ${statusInfo.label}
@@ -280,35 +305,25 @@ function renderOrders(orders) {
         </div>
         
         <div class="order-body">
-          <div class="order-items">
-            ${order.items_summary || "Sin detalles"}
-          </div>
           <div class="order-total">
-            <strong>$${order.total.toLocaleString("es-AR")}</strong>
+            <span>Total:</span>
+            <strong>$${parseFloat(order.total || 0).toLocaleString(
+              "es-AR"
+            )}</strong>
           </div>
         </div>
         
-        ${
-          hasPendingForm
-            ? `
-          <div class="order-footer">
-            <button onclick="goToForm('${order.id}')" class="btn-complete-form">
-              <i class="fas fa-edit"></i> Completar datos
-            </button>
-          </div>
-        `
-            : ""
-        }
-        
-        ${
-          order.observations
-            ? `
-          <div class="order-observations">
-            <small><i class="fas fa-comment"></i> ${order.observations}</small>
-          </div>
-        `
-            : ""
-        }
+        <div class="order-footer">
+          ${
+            hasPendingForm
+              ? `<button onclick="goToForm('${order.id}')" class="btn-complete-form">
+                  <i class="fas fa-edit"></i> Completar datos
+                </button>`
+              : `<button onclick="viewOrderReceipt('${order.id}')" class="btn-view-receipt">
+                  <i class="fas fa-receipt"></i> Ver Comprobante
+                </button>`
+          }
+        </div>
       </div>
     `;
     })
@@ -317,8 +332,24 @@ function renderOrders(orders) {
   content.innerHTML = ordersHTML;
 }
 
+// Función para ver el comprobante del pedido
+function viewOrderReceipt(orderId) {
+  window.location.href = `exito.html?id=${orderId}`;
+}
+
 function getOrderStatusInfo(status) {
   const statusMap = {
+    // Estados en inglés (del backend)
+    PENDING: { label: "Pendiente", icon: "🟡", class: "status-pending" },
+    PAID: { label: "Pagado", icon: "🟢", class: "status-paid" },
+    IN_PROGRESS: {
+      label: "En proceso",
+      icon: "🔵",
+      class: "status-processing",
+    },
+    COMPLETED: { label: "Completado", icon: "✅", class: "status-completed" },
+    CANCELLED: { label: "Cancelado", icon: "❌", class: "status-cancelled" },
+    // Estados en español (por si acaso)
     PENDIENTE: { label: "Pendiente", icon: "🟡", class: "status-pending" },
     PAGADO: { label: "Pagado", icon: "🟢", class: "status-paid" },
     PROCESANDO: { label: "En proceso", icon: "🔵", class: "status-processing" },
@@ -350,54 +381,30 @@ function goToForm(orderId) {
 // =========================================
 
 async function checkPendingForm() {
-  // No mostrar en la página de formulario
+  // No mostrar en la página de formulario ni en éxito
   if (window.location.pathname.includes("formulario.html")) return;
+  if (window.location.pathname.includes("exito.html")) return;
 
   // Si no hay token, no podemos verificar
   if (!api.isAuthenticated()) return;
 
   try {
-    // Primero verificar si hay un orderId guardado en localStorage
-    const pendingOrder = localStorage.getItem("pending_form_order");
-
-    if (pendingOrder) {
-      const order = await api.getOrder(pendingOrder);
-
-      // Verificar si está PAGADO y sin formulario completado
-      if (order && order.status === "PAID" && !order.formCompleted) {
-        showFormBanner(pendingOrder);
-        return;
-      } else {
-        // Ya no es válido, limpiar
-        localStorage.removeItem("pending_form_order");
-      }
-    }
-
-    // Si no hay en localStorage, buscar en las órdenes del usuario
-    const response = await fetch(`${api.baseURL}/orders/user`, {
+    // Buscar CVSubmissions PENDING del usuario
+    const response = await fetch(`${api.baseURL}/cvform/pending`, {
       headers: { Authorization: `Bearer ${api.getToken()}` },
     });
 
     if (response.ok) {
-      const orders = await response.json();
+      const data = await response.json();
 
-      // Buscar órdenes pagadas sin formulario completado
-      const pendingFormOrder = orders.find(
-        (o) => o.status === "PAID" && !o.formCompleted
-      );
-
-      if (pendingFormOrder) {
-        // Guardar en localStorage para futuras visitas
-        localStorage.setItem("pending_form_order", pendingFormOrder.id);
-        showFormBanner(pendingFormOrder.id);
+      if (data.hasPending && data.submission) {
+        // Hay un formulario pendiente - mostrar banner
+        const orderId = data.submission.orderId || data.submission.id;
+        showFormBanner(orderId);
       }
     }
   } catch (error) {
     console.warn("Error verificando formularios pendientes:", error);
-    // Si da error 404 o 403, limpiar localStorage
-    if (error.message?.includes("404") || error.message?.includes("403")) {
-      localStorage.removeItem("pending_form_order");
-    }
   }
 }
 

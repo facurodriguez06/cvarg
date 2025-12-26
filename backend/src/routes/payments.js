@@ -253,6 +253,26 @@ router.post("/webhook", async (req, res) => {
           },
         });
 
+        // Crear CVSubmission vacío en estado PENDING para este pedido
+        const existingSubmission = await prisma.cVSubmission.findFirst({
+          where: { orderId: orderId },
+        });
+
+        if (!existingSubmission) {
+          await prisma.cVSubmission.create({
+            data: {
+              userId: order.userId,
+              orderId: orderId,
+              status: "PENDING",
+              hardSkills: [],
+              softSkills: [],
+            },
+          });
+          console.log(
+            `📝 CVSubmission PENDING creado para orden ${order.orderNumber}`
+          );
+        }
+
         // Registrar uso del cupón si existe
         if (order.couponId) {
           await prisma.couponUsage.create({
@@ -356,6 +376,26 @@ router.get("/status/:orderId", authMiddleware, async (req, res) => {
               paymentMethod: "mercadopago",
             },
           });
+
+          // Crear CVSubmission vacío en estado PENDING
+          const existingSubmission = await prisma.cVSubmission.findFirst({
+            where: { orderId: req.params.orderId },
+          });
+
+          if (!existingSubmission) {
+            await prisma.cVSubmission.create({
+              data: {
+                userId: order.userId,
+                orderId: req.params.orderId,
+                status: "PENDING",
+                hardSkills: [],
+                softSkills: [],
+              },
+            });
+            console.log(
+              `📝 CVSubmission PENDING creado (auto-verify) para orden ${order.orderNumber}`
+            );
+          }
 
           // Registrar uso del cupón si existe
           if (order.couponId) {
@@ -495,6 +535,26 @@ router.post("/confirm-payment/:orderId", authMiddleware, async (req, res) => {
             paymentMethod: "mercadopago",
           },
         });
+
+        // Crear CVSubmission vacío en estado PENDING
+        const existingSubmission = await prisma.cVSubmission.findFirst({
+          where: { orderId: orderId },
+        });
+
+        if (!existingSubmission) {
+          await prisma.cVSubmission.create({
+            data: {
+              userId: order.userId,
+              orderId: orderId,
+              status: "PENDING",
+              hardSkills: [],
+              softSkills: [],
+            },
+          });
+          console.log(
+            `📝 CVSubmission PENDING creado (confirm-payment) para orden ${order.orderNumber}`
+          );
+        }
 
         // Registrar uso del cupón si existe
         if (order.couponId) {

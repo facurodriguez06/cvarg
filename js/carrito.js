@@ -12,26 +12,7 @@ function initCarrito() {
       console.warn("⚠️ Error en checkPaymentResponse:", e.message);
     }
 
-    // DEBUG: Si el carrito está vacío, agregar un producto de prueba para facilitar el testing del usuario
-    const cart = JSON.parse(localStorage.getItem("temp_cart") || "[]");
-    if (
-      cart.length === 0 &&
-      !window.location.search.includes("payment=success")
-    ) {
-      localStorage.setItem(
-        "temp_cart",
-        JSON.stringify([
-          {
-            id: 999,
-            name: "CV Profesional (Test)",
-            price: 5000,
-            quantity: 1,
-            icon: "fas fa-file-alt",
-          },
-        ])
-      );
-      console.log("TEST: Carrito recargado automáticamente para pruebas");
-    }
+    // Carrito inicializado correctamente
 
     loadAndDisplayCart();
     updateCartCounter();

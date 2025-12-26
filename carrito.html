@@ -10,11 +10,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/carrito.css">
+  <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/title-effects.css">
   <link rel="stylesheet" href="css/auth-nav.css">
-  <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/carrito.css">
+  <link rel="stylesheet" href="css/navbar.css">
 
 
 </head>
@@ -52,44 +52,44 @@
   </header>
 
 
-    <section class="cart-section">
-      <div class="cart-items" id="cartItemsContainer"></div>
-      <div class="empty-cart" id="emptyCartMessage">
-        <i class="fas fa-shopping-basket" style="font-size: 5rem; color: #cbd5e1; margin-bottom: 20px"></i>
-        <h2 style="font-size: 2rem; margin-bottom: 10px; color: var(--text-dark)">
-          Tu carrito está vacío
-        </h2>
-        <p style="color: var(--text-light); margin-bottom: 30px">
-          Parece que aún no has elegido tu plan de éxito.
-        </p>
-        <a href="catalogo.html" class="btn-shop">Ver Catálogo</a>
+  <section class="cart-section">
+    <div class="cart-items" id="cartItemsContainer"></div>
+    <div class="empty-cart" id="emptyCartMessage">
+      <i class="fas fa-shopping-basket" style="font-size: 5rem; color: #cbd5e1; margin-bottom: 20px"></i>
+      <h2 style="font-size: 2rem; margin-bottom: 10px; color: var(--text-dark)">
+        Tu carrito está vacío
+      </h2>
+      <p style="color: var(--text-light); margin-bottom: 30px">
+        Parece que aún no has elegido tu plan de éxito.
+      </p>
+      <a href="catalogo.html" class="btn-shop">Ver Catálogo</a>
+    </div>
+    <aside class="cart-summary" id="cartSummary">
+      <h2 class="summary-title">Resumen del Pedido</h2>
+      <div class="coupon-box">
+        <input type="text" id="couponInput" class="coupon-input" placeholder="Código promocional" />
+        <button class="btn-apply" onclick="applyCoupon()">Aplicar</button>
       </div>
-      <aside class="cart-summary" id="cartSummary">
-        <h2 class="summary-title">Resumen del Pedido</h2>
-        <div class="coupon-box">
-          <input type="text" id="couponInput" class="coupon-input" placeholder="Código promocional" />
-          <button class="btn-apply" onclick="applyCoupon()">Aplicar</button>
-        </div>
-        <div class="summary-row">
-          <span>Subtotal</span><span id="subtotalPrice">$0</span>
-        </div>
-        <div class="summary-row discount" id="discountRow">
-          <span>Descuento <small id="discountName"></small></span><span id="discountAmount">-$0</span>
-        </div>
-        <div class="summary-row total">
-          <span>Total</span><span id="totalPrice" style="color: var(--primary-blue)">$0</span>
-        </div>
-        <a href="#" id="checkout-btn" class="btn-checkout" onclick="proceedToCheckout(); return false;">Pagar con
-          Mercado Pago <i class="fas fa-lock"></i></a>
+      <div class="summary-row">
+        <span>Subtotal</span><span id="subtotalPrice">$0</span>
+      </div>
+      <div class="summary-row discount" id="discountRow">
+        <span>Descuento <small id="discountName"></small></span><span id="discountAmount">-$0</span>
+      </div>
+      <div class="summary-row total">
+        <span>Total</span><span id="totalPrice" style="color: var(--primary-blue)">$0</span>
+      </div>
+      <a href="#" id="checkout-btn" class="btn-checkout" onclick="proceedToCheckout(); return false;">Pagar con
+        Mercado Pago <i class="fas fa-lock"></i></a>
 
-        <!-- Botón de confirmación manual (aparece después de pagar) -->
-        <button id="confirm-payment-btn" class="btn-checkout"
-          style="display: none; background: var(--success); margin-top: 10px;"
-          onclick="confirmPaymentManually(); return false;">
-          <i class="fas fa-check-circle"></i> Ya pagué - Confirmar pago
-        </button>
+      <!-- Botón de confirmación manual (aparece después de pagar) -->
+      <button id="confirm-payment-btn" class="btn-checkout"
+        style="display: none; background: var(--success); margin-top: 10px;"
+        onclick="confirmPaymentManually(); return false;">
+        <i class="fas fa-check-circle"></i> Ya pagué - Confirmar pago
+      </button>
 
-        <div style="
+      <div style="
             text-align: center;
             margin-top: 15px;
             font-size: 0.8rem;
@@ -99,11 +99,11 @@
             justify-content: center;
             gap: 5px;
           ">
-          <i class="fas fa-shield-alt" style="color: var(--success)"></i> Pago
-          100% Seguro y Encriptado
-        </div>
-      </aside>
-    </section>
+        <i class="fas fa-shield-alt" style="color: var(--success)"></i> Pago
+        100% Seguro y Encriptado
+      </div>
+    </aside>
+  </section>
   </div>
 
   <section id="postPaymentForm" class="wizard-section">
@@ -316,7 +316,12 @@
   </section>
 
   <footer>
-    <img src="img/logo.png" alt="Logo" style="height: 80px; margin-bottom: 20px;">
+    <div style="margin-bottom: 20px">
+      <img src="img/logo.png" alt="CV Arg Logo" class="footer-logo" />
+    </div>
+    <p style="opacity: 0.7; font-size: 0.9rem">
+      Impulsando carreras desde 2025.
+    </p>
     <div class="copyright">
       &copy; 2025 CvArg. Todos los derechos reservados.
     </div>
