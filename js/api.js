@@ -3,7 +3,11 @@
  * Maneja autenticación, headers y errores de forma consistente
  */
 
-const API_URL = "http://localhost:3000/api"; // Cambiar en producción
+const API_URL =
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "127.0.0.1"
+    ? "http://localhost:3000/api"
+    : "https://cvarg.onrender.com/api"; // URL de producción en Render
 
 class APIService {
   constructor() {
