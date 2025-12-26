@@ -28,14 +28,31 @@ const PORT = process.env.PORT || 3000;
 app.use(helmet());
 
 // CORS - Permite peticiones desde el frontend
+// CORS - Permite peticiones desde el frontend
 app.use(
   cors({
-    origin: [
-      process.env.FRONTEND_URL,
-      "http://localhost:5500",
-      "http://127.0.0.1:5500",
-    ].filter(Boolean),
+    origin: function (origin, callback) {
+      const allowedOrigins = [
+        process.env.FRONTEND_URL,
+        "http://localhost:5500",
+        "http://127.0.0.1:5500",
+      ];
 
+      // Permitir requests sin origen (como Postman o mobile apps)
+      if (!origin) return callback(null, true);
+
+      // Permitir cualquier subdominio de pages.dev (Cloudflare) y localhost
+      if (
+        allowedOrigins.indexOf(origin) !== -1 ||
+        origin.endsWith(".pages.dev") ||
+        origin.includes("localhost")
+      ) {
+        callback(null, true);
+      } else {
+        console.warn(`Bloqueado por CORS: ${origin}`);
+        callback(new Error("No permitido por CORS"));
+      }
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
