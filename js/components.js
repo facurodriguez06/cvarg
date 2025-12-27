@@ -453,6 +453,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Verificar si hay formulario pendiente
   checkPendingForm();
+
+  // === MOBILE MENU TOGGLE ===
+  const menuToggle = document.querySelector(".menu-toggle");
+  const navLinks = document.querySelector(".nav-links");
+
+  if (menuToggle && navLinks) {
+    menuToggle.addEventListener("click", () => {
+      navLinks.classList.toggle("active");
+
+      // Cambiar ícono de hamburguesa a X
+      const icon = menuToggle.querySelector("i");
+      if (icon) {
+        if (navLinks.classList.contains("active")) {
+          icon.classList.remove("fa-bars");
+          icon.classList.add("fa-times");
+        } else {
+          icon.classList.remove("fa-times");
+          icon.classList.add("fa-bars");
+        }
+      }
+    });
+
+    // Cerrar menú al hacer click en un link
+    navLinks.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        navLinks.classList.remove("active");
+        const icon = menuToggle.querySelector("i");
+        if (icon) {
+          icon.classList.remove("fa-times");
+          icon.classList.add("fa-bars");
+        }
+      });
+    });
+  }
 });
 
 console.log("✅ Components.js loaded");
