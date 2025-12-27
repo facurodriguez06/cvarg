@@ -22,6 +22,7 @@ async function seed() {
         fullName: "Administrador",
         phone: "+54 11 1234-5678",
         role: "ADMIN",
+        status: "ACTIVE", // Importante: Activarlo directamente
       },
     });
     console.log("✅ Usuario admin creado:", admin.email);
