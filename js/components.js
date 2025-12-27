@@ -454,16 +454,30 @@ document.addEventListener("DOMContentLoaded", () => {
   // Verificar si hay formulario pendiente
   checkPendingForm();
 
-  // === MOBILE MENU TOGGLE ===
+  // Inicializar menú móvil
+  setupMobileMenu();
+});
+
+function setupMobileMenu() {
   const menuToggle = document.querySelector(".menu-toggle");
   const navLinks = document.querySelector(".nav-links");
 
-  if (menuToggle && navLinks) {
-    menuToggle.addEventListener("click", () => {
-      navLinks.classList.toggle("active");
+  console.log("📱 Setup mobile menu:", { menuToggle, navLinks });
 
-      // Cambiar ícono de hamburguesa a X
-      const icon = menuToggle.querySelector("i");
+  if (menuToggle && navLinks) {
+    // Clonar para eliminar listeners previos (si los hubiera)
+    const newToggle = menuToggle.cloneNode(true);
+    menuToggle.parentNode.replaceChild(newToggle, menuToggle);
+
+    newToggle.addEventListener("click", (e) => {
+      e.stopPropagation(); // Evitar burbujeo
+      navLinks.classList.toggle("active");
+      console.log(
+        "🍔 Toggle menu. Active:",
+        navLinks.classList.contains("active")
+      );
+
+      const icon = newToggle.querySelector("i");
       if (icon) {
         if (navLinks.classList.contains("active")) {
           icon.classList.remove("fa-bars");
@@ -475,18 +489,42 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // Cerrar menú al hacer click en un link
+    // Cerrar al clickear links
     navLinks.querySelectorAll("a").forEach((link) => {
       link.addEventListener("click", () => {
         navLinks.classList.remove("active");
-        const icon = menuToggle.querySelector("i");
+        const icon = newToggle.querySelector("i");
         if (icon) {
           icon.classList.remove("fa-times");
           icon.classList.add("fa-bars");
         }
       });
     });
+
+    // Cerrar al clickear afuera
+    document.addEventListener("click", (e) => {
+      if (
+        navLinks.classList.contains("active") &&
+        !navLinks.contains(e.target) &&
+        !newToggle.contains(e.target)
+      ) {
+        navLinks.classList.remove("active");
+        const icon = newToggle.querySelector("i");
+        if (icon) {
+          icon.classList.remove("fa-times");
+          icon.classList.add("fa-bars");
+        }
+      }
+    });
   }
-});
+}
+
+// Ejecutar si ya cargó (por si acaso)
+if (
+  document.readyState === "complete" ||
+  document.readyState === "interactive"
+) {
+  setupMobileMenu();
+}
 
 console.log("✅ Components.js loaded");

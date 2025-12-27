@@ -163,6 +163,11 @@ nav.scrolled .logo-img {
   }
 }
 
+/* Ocultar toggle en desktop */
+.menu-toggle {
+  display: none;
+}
+
 /* Responsividad básica para el navbar */
 @media (max-width: 768px) {
   nav {
