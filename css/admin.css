@@ -700,6 +700,7 @@
   .data-table td {
     padding: 10px;
     font-size: 0.85rem;
+    white-space: nowrap; /* Evitar saltos de línea y forzar scroll horizontal */
   }
 }
 

@@ -22,10 +22,9 @@ nav.scrolled {
 
 .logo {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   cursor: pointer;
   margin-right: auto;
-  margin-top: -10px;
   position: relative;
   z-index: 1001;
   transition: transform 0.3s ease;
@@ -52,7 +51,7 @@ nav.scrolled .logo-img {
   gap: 3rem;
   list-style: none;
   margin-right: 3rem;
-  margin-top: 25px;
+  align-items: center;
 }
 
 .nav-links a {
@@ -119,7 +118,6 @@ nav.scrolled .logo-img {
 .cart-icon-link {
   text-decoration: none;
   display: block;
-  margin-top: 23px;
   position: relative;
   z-index: 1001;
 }
