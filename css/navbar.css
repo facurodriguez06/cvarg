@@ -5,7 +5,7 @@ nav {
   width: 100%;
   padding: 1.5rem 5% 0 5%;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   z-index: 1000;
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   background: transparent;
