@@ -1,16 +1,13 @@
-﻿// ============================================
-// API URL - Cargar productos desde la base de datos
-const API_BASE_URL = "http://localhost:3000/api";
+﻿// API URL - Cargar productos desde la base de datos
+// Se utiliza api.js para manejar la URL base
 // ============================================
 
+// CARGA DE PRODUCTOS DESDE LA BASE DE DATOS
 // CARGA DE PRODUCTOS DESDE LA BASE DE DATOS
 async function loadServices() {
   const container = document.getElementById("productsContainer");
   try {
-    const response = await fetch(`${API_BASE_URL}/products`);
-    if (!response.ok) throw new Error("Error de conexión");
-
-    const data = await response.json();
+    const data = await api.getProducts();
 
     // La API devuelve { products: [...] } o array directo
     const products = Array.isArray(data) ? data : data.products || [];
