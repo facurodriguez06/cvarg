@@ -4,8 +4,32 @@
 
 // CARGA DE PRODUCTOS DESDE LA BASE DE DATOS
 // CARGA DE PRODUCTOS DESDE LA BASE DE DATOS
+// CARGA DE PRODUCTOS DESDE LA BASE DE DATOS
 async function loadServices() {
   const container = document.getElementById("productsContainer");
+  const CACHE_KEY = "products_cache";
+  const CACHE_DURATION = 60 * 60 * 1000; // 1 hora en milisegundos
+
+  // 1. Intentar cargar desde caché primero (para velocidad instantánea)
+  const cached = localStorage.getItem(CACHE_KEY);
+  if (cached) {
+    try {
+      const { data, timestamp } = JSON.parse(cached);
+      const isFresh = Date.now() - timestamp < CACHE_DURATION;
+
+      if (isFresh && data && data.length > 0) {
+        console.log("⚡ Cargando desde caché local");
+        renderProducts(data);
+        // Si es fresco, terminamos aquí (no hacemos fetch)
+        return;
+      }
+    } catch (e) {
+      console.warn("Error al leer caché", e);
+      localStorage.removeItem(CACHE_KEY);
+    }
+  }
+
+  // 2. Si no hay caché o es viejo, cargar de la API
   try {
     const data = await api.getProducts();
 
@@ -20,9 +44,31 @@ async function loadServices() {
         '<p style="text-align:center; width:100%;">No hay servicios disponibles.</p>';
     } else {
       renderProducts(activeProducts);
+
+      // 3. Guardar en caché para la próxima
+      localStorage.setItem(
+        CACHE_KEY,
+        JSON.stringify({
+          data: activeProducts,
+          timestamp: Date.now(),
+        })
+      );
     }
   } catch (error) {
     console.error(error);
+    // Si falló la API pero tenemos caché (aunque sea viejo), usarlo como fallback
+    if (cached) {
+      console.warn("⚠️ API falló, usando caché expirado como fallback");
+      try {
+        const { data } = JSON.parse(cached);
+        if (data && data.length > 0) {
+          renderProducts(data);
+          showToast("Modo offline: mostrando datos guardados");
+          return;
+        }
+      } catch (e) {}
+    }
+
     container.innerHTML = `
             <div style="text-align:center; width:100%; grid-column:1/-1;">
                 <i class="fas fa-wifi" style="font-size: 2rem; color: #cbd5e1; margin-bottom:10px;"></i>
